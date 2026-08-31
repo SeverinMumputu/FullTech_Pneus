@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth bg-[#050505]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FullTech Congo | Des pneus conçus pour avancer</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Rajdhani (Technical/Industrial) & Inter (Readability) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (Premium SVG Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ft: {
+                            black: '#050505',
+                            dark: '#0f0f11',
+                            gray: '#1a1a1c',
+                            light: '#e5e5e5',
+                            red: '#d91c1c',
+                            redHover: '#b01515'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Industrial Styles */
+        body { background-color: #050505; color: #e5e5e5; overflow-x: hidden; }
+        
+        /* Typography System */
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+            color: transparent;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #d91c1c; }
+
+        /* Asymmetric borders & accents */
+        .border-tech { border: 1px solid #2a2a2c; }
+        .accent-corner { position: relative; }
+        .accent-corner::before {
+            content: ''; position: absolute; top: -1px; left: -1px;
+            width: 12px; height: 12px; border-top: 2px solid #d91c1c; border-left: 2px solid #d91c1c;
+            transition: all 0.3s ease;
+        }
+        .group:hover .accent-corner::before { width: 24px; height: 24px; }
+
+        /* Stepper styles */
+        .step-active { border-color: #d91c1c; background: rgba(217, 28, 28, 0.1); color: #d91c1c; }
+        .step-completed { border-color: #333; background: #1a1a1c; color: #666; }
+        
+        /* Animations */
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-reveal { animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        /* Hide view sections by default */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: revealUp 0.4s ease-out; }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-ft-red selection:text-white flex flex-col min-h-screen">
+
+    <!-- HEADER SYSTEM -->
+    <header class="fixed w-full top-0 z-50 bg-ft-black/90 backdrop-blur-md border-b border-ft-gray transition-all" id="main-header">
+        <!-- Top Header (Primary) -->
+        <div class="border-b border-ft-gray/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer" onclick="app.navigate('home')">
+                    <div class="w-8 h-8 bg-ft-red flex items-center justify-center font-tech font-bold text-xl tracking-tighter">FT</div>
+                    <span class="font-tech font-bold text-2xl tracking-wide">FULLTECH <span class="text-ft-red">CONGO</span></span>
+                </div>
+                
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6">
+                    <button class="text-gray-400 hover:text-white transition-colors flex items-center gap-2 font-tech uppercase text-sm tracking-widest" onclick="app.toggleSearch()">
+                        <i class="ph ph-magnifying-glass text-xl"></i>
+                        <span class="hidden md:inline">Recherche</span>
+                    </button>
+                    <button class="text-gray-400 hover:text-white transition-colors relative flex items-center gap-2" onclick="app.toggleCart()">
+                        <i class="ph ph-shopping-cart text-xl"></i>
+                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-ft-red text-white text-[10px] font-mono w-4 h-4 flex items-center justify-center rounded-full opacity-0">0</span>
+                    </button>
+                    <!-- Mobile Burger -->
+                    <button class="md:hidden text-white" onclick="app.toggleMobileMenu()">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Header (Secondary Navigation) -->
+        <div class="hidden md:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12">
+            <nav class="flex h-full items-center gap-8 font-tech text-sm uppercase tracking-[0.2em] text-gray-400">
+                <a href="#" onclick="app.navigate('home')" class="hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-ft-red">Compagnie</a>
+                <a href="#" onclick="app.navigate('catalog')" class="hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-ft-red">Achat</a>
+                <a href="#" onclick="app.navigate('distributors')" class="hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-ft-red">Distributeurs</a>
+                <a href="#" class="hover:text-white transition-colors h-full flex items-center border-b-2 border-transparent hover:border-ft-red">Partenaires</a>
+            </nav>
+        </div>
+        
+        <!-- Search Reveal Dropdown -->
+        <div id="search-panel" class="absolute top-full left-0 w-full bg-ft-dark border-b border-ft-gray hidden overflow-hidden transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="font-tech text-ft-red uppercase tracking-widest mb-4">Recherche Rapide</div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <select class="bg-ft-black border border-ft-gray text-white p-3 font-mono text-sm focus:border-ft-red outline-none appearance-none cursor-pointer rounded-none">
+                        <option value="">Largeur</option>
+                        <option value="90">90</option>
+                        <option value="110">110</option>
+                        <option value="130">130</option>
+                        <option value="150">150</option>
+                    </select>
+                    <select class="bg-ft-black border border-ft-gray text-white p-3 font-mono text-sm focus:border-ft-red outline-none appearance-none cursor-pointer rounded-none">
+                        <option value="">Hauteur</option>
+                        <option value="70">70</option>
+                        <option value="80">80</option>
+                        <option value="90">90</option>
+                    </select>
+                    <select class="bg-ft-black border border-ft-gray text-white p-3 font-mono text-sm focus:border-ft-red outline-none appearance-none cursor-pointer rounded-none">
+                        <option value="">Diamètre</option>
+                        <option value="17">17"</option>
+                        <option value="18">18"</option>
+                        <option value="19">19"</option>
+                    </select>
+                    <select class="bg-ft-black border border-ft-gray text-white p-3 font-mono text-sm focus:border-ft-red outline-none appearance-none cursor-pointer rounded-none">
+                        <option value="">Type de Moto</option>
+                        <option value="wewa">Wewa (Taxis)</option>
+                        <option value="route">Route</option>
+                        <option value="trail">Trail / Terre</option>
+                    </select>
+                    <button onclick="app.navigate('catalog'); app.toggleSearch();" class="bg-ft-red hover:bg-ft-redHover text-white font-tech uppercase tracking-wider font-bold transition-colors">
+                        Rechercher
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-ft-black z-40 flex flex-col justify-center items-center gap-8 hidden pt-16">
+        <nav class="flex flex-col text-center gap-6 font-tech text-2xl uppercase tracking-widest text-gray-400">
+            <a href="#" onclick="app.navigate('home'); app.toggleMobileMenu()" class="hover:text-white">Compagnie</a>
+            <a href="#" onclick="app.navigate('catalog'); app.toggleMobileMenu()" class="hover:text-white">Catalogue & Achat</a>
+            <a href="#" onclick="app.navigate('distributors'); app.toggleMobileMenu()" class="hover:text-white">Distributeurs Locaux</a>
+            <a href="#" class="hover:text-white">Partenaires</a>
+        </nav>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="flex-grow pt-[112px] md:pt-[112px]" id="app-content">
+        
+        <!-- ========================================== -->
+        <!-- VIEW 1 : ACCUEIL -->
+        <!-- ========================================== -->
+        <div id="view-home" class="view-section active">
+            <!-- Hero Section -->
+            <section class="relative h-[80vh] min-h-[600px] flex items-center overflow-hidden">
+                <!-- Abstract dark background instead of standard placeholder -->
+                <div class="absolute inset-0 z-0 bg-[#0a0a0a]">
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d91c1c 1px, transparent 1px); background-size: 32px 32px;"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-ft-black via-ft-black/80 to-transparent"></div>
+                    <!-- Decorative technical elements -->
+                    <div class="absolute top-1/4 right-[10%] w-64 h-64 border border-ft-gray/30 rounded-full"></div>
+                    <div class="absolute bottom-1/4 right-[20%] w-96 h-96 border border-ft-gray/20 rounded-full"></div>
+                </div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+                    <div class="font-tech text-[8vw] md:text-[6vw] font-bold leading-none tracking-tighter text-outline mb-2 select-none">
+                        FULLTECHCONGO
+                    </div>
+                    <h1 class="font-tech text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-wide text-white mb-8 max-w-2xl border-l-4 border-ft-red pl-6">
+                        Des pneus conçus <br/> pour avancer
+                    </h1>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+                        <button onclick="app.navigate('catalog')" class="bg-ft-red hover:bg-ft-redHover text-white px-8 py-4 font-tech uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center gap-2 group">
+                            Acheter nos pneus
+                            <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button onclick="app.navigate('catalog')" class="border border-ft-gray hover:border-white text-white px-8 py-4 font-tech uppercase tracking-widest font-bold text-sm transition-all flex items-center justify-center bg-ft-dark/50 backdrop-blur-sm">
+                            Découvrir la gamme
+                        </button>
+                    </div>
+
+                    <!-- Technical specs decoration -->
+                    <div class="absolute bottom-8 right-8 hidden md:block font-mono text-xs text-gray-500 text-right">
+                        <div>SYS_COORD: -4.3224, 15.3070</div>
+                        <div>ENV: KINSHASA_DRC</div>
+                        <div>STATUS: OPERATIONAL</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Major News (Editorial Style) -->
+            <section class="py-24 bg-ft-dark border-t border-ft-gray">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row gap-12 items-center">
+                        <div class="w-full md:w-5/12">
+                            <h2 class="font-tech text-3xl font-bold uppercase tracking-widest mb-6">Nouveauté <span class="text-ft-red">Wewa Pro</span></h2>
+                            <p class="text-gray-400 mb-6 leading-relaxed">
+                                Face aux défis des routes kinoises, FullTech Congo lance sa nouvelle gamme renforcée. Une carcasse ultra-résistante pensée pour les professionnels du transport local (Motos-taxis / Wewa).
+                            </p>
+                            <div class="grid grid-cols-2 gap-4 border-t border-ft-gray pt-6 font-mono text-sm text-gray-300">
+                                <div><span class="text-ft-red block mb-1">DURÉE DE VIE</span> +40% constatée</div>
+                                <div><span class="text-ft-red block mb-1">STRUCTURE</span> 6 Plis Renforcés</div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-7/12 relative group accent-corner bg-ft-black p-4 border border-ft-gray">
+                            <!-- Abstract placeholder for tire image -->
+                            <div class="w-full aspect-video bg-[#111] flex items-center justify-center relative overflow-hidden">
+                                <i class="ph ph-circle-notch text-6xl text-ft-gray absolute opacity-20"></i>
+                                <span class="font-tech tracking-[0.5em] text-ft-gray/50 uppercase z-10">Visuel Technique ft-wp-2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2 : CATALOGUE -->
+        <!-- ========================================== -->
+        <div id="view-catalog" class="view-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="flex items-end justify-between mb-12 border-b border-ft-gray pb-6">
+                    <div>
+                        <h2 class="font-tech text-4xl font-bold uppercase tracking-wide">Catalogue <span class="text-ft-red">Produits</span></h2>
+                        <p class="font-mono text-sm text-gray-500 mt-2">FILTRAGE DYNAMIQUE ACTIF</p>
+                    </div>
+                    <div class="hidden md:flex gap-4">
+                        <button class="text-sm font-tech uppercase tracking-widest text-ft-red border-b border-ft-red pb-1">Tous</button>
+                        <button class="text-sm font-tech uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Route</button>
+                        <button class="text-sm font-tech uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Wewa</button>
+                        <button class="text-sm font-tech uppercase tracking-widest text-gray-500 hover:text-white transition-colors">Off-Road</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="catalog-grid">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3 : FICHE PRODUIT DETAILLEE -->
+        <!-- ========================================== -->
+        <div id="view-product" class="view-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="product-detail-container">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 4 : CHECKOUT (STEPPER) -->
+        <!-- ========================================== -->
+        <div id="view-checkout" class="view-section">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                
+                <!-- Stepper Header -->
+                <div class="flex items-center justify-between mb-12 relative">
+                    <div class="absolute left-0 top-1/2 w-full h-[1px] bg-ft-gray -z-10"></div>
+                    <div class="flex flex-col items-center bg-ft-black px-2 step-item" data-step="1">
+                        <div class="w-8 h-8 border border-ft-red bg-ft-black text-ft-red font-tech font-bold flex items-center justify-center mb-2">1</div>
+                        <span class="font-mono text-[10px] uppercase text-gray-400">Panier</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-ft-black px-2 step-item" data-step="2">
+                        <div class="w-8 h-8 border border-ft-gray bg-ft-black text-gray-600 font-tech font-bold flex items-center justify-center mb-2">2</div>
+                        <span class="font-mono text-[10px] uppercase text-gray-500">Client</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-ft-black px-2 step-item" data-step="3">
+                        <div class="w-8 h-8 border border-ft-gray bg-ft-black text-gray-600 font-tech font-bold flex items-center justify-center mb-2">3</div>
+                        <span class="font-mono text-[10px] uppercase text-gray-500">Livraison</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-ft-black px-2 step-item" data-step="4">
+                        <div class="w-8 h-8 border border-ft-gray bg-ft-black text-gray-600 font-tech font-bold flex items-center justify-center mb-2">4</div>
+                        <span class="font-mono text-[10px] uppercase text-gray-500">Paiement</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-ft-black px-2 step-item" data-step="5">
+                        <div class="w-8 h-8 border border-ft-gray bg-ft-black text-gray-600 font-tech font-bold flex items-center justify-center mb-2">5</div>
+                        <span class="font-mono text-[10px] uppercase text-gray-500">Reçu</span>
+                    </div>
+                </div>
+
+                <!-- Step Content Container -->
+                <div class="border border-ft-gray bg-ft-dark p-6 md:p-10 accent-corner relative">
+                    <!-- Step 1 : Panier -->
+                    <div id="step-1" class="checkout-step">
+                        <h3 class="font-tech text-2xl uppercase tracking-widest border-l-2 border-ft-red pl-4 mb-8">Vérification du Panier</h3>
+                        <div id="checkout-cart-items" class="space-y-4 mb-8">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div class="border-t border-ft-gray pt-6 flex justify-between items-end">
+                            <div class="font-mono text-gray-400">Total estimé</div>
+                            <div class="text-right">
+                                <div class="font-tech text-3xl font-bold text-white" id="checkout-total-usd">$0.00</div>
+                                <div class="font-mono text-sm text-ft-red" id="checkout-total-cdf">0 CDF</div>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-end">
+                            <button onclick="app.nextStep()" class="bg-ft-red text-white px-8 py-3 font-tech uppercase font-bold tracking-widest hover:bg-ft-redHover transition-colors">Continuer</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 : Client -->
+                    <div id="step-2" class="checkout-step hidden">
+                        <h3 class="font-tech text-2xl uppercase tracking-widest border-l-2 border-ft-red pl-4 mb-8">Informations Client</h3>
+                        <form class="space-y-6" onsubmit="event.preventDefault(); app.nextStep();">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block font-mono text-xs text-gray-400 mb-2 uppercase">Nom complet *</label>
+                                    <input type="text" required class="w-full bg-ft-black border border-ft-gray p-3 text-white focus:border-ft-red outline-none font-sans rounded-none">
+                                </div>
+                                <div>
+                                    <label class="block font-mono text-xs text-gray-400 mb-2 uppercase">Téléphone (Mobile Money) *</label>
+                                    <input type="tel" required placeholder="08..." class="w-full bg-ft-black border border-ft-gray p-3 text-white focus:border-ft-red outline-none font-sans rounded-none">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block font-mono text-xs text-gray-400 mb-2 uppercase">Commune *</label>
+                                    <select required class="w-full bg-ft-black border border-ft-gray p-3 text-white focus:border-ft-red outline-none font-sans rounded-none appearance-none">
+                                        <option value="">Sélectionner (Kinshasa)</option>
+                                        <option value="gombe">Gombe</option>
+                                        <option value="limete">Limete</option>
+                                        <option value="bandal">Bandalungwa</option>
+                                        <option value="kintambo">Kintambo</option>
+                                        <option value="ngaliema">Ngaliema</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-mono text-xs text-gray-400 mb-2 uppercase">Quartier / Avenue</label>
+                                    <input type="text" class="w-full bg-ft-black border border-ft-gray p-3 text-white focus:border-ft-red outline-none font-sans rounded-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-mono text-xs text-gray-400 mb-2 uppercase">Repère (Ex: Près du rond-point Victoire) *</label>
+                                <input type="text" required class="w-full bg-ft-black border border-ft-gray p-3 text-white focus:border-ft-red outline-none font-sans rounded-none">
+                            </div>
+                            <div class="mt-8 flex justify-between">
+                                <button type="button" onclick="app.prevStep()" class="text-gray-400 font-tech uppercase tracking-widest hover:text-white">Retour</button>
+                                <button type="submit" class="bg-ft-red text-white px-8 py-3 font-tech uppercase font-bold tracking-widest hover:bg-ft-redHover transition-colors">Étape Suivante</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Step 3 : Livraison -->
+                    <div id="step-3" class="checkout-step hidden">
+                        <h3 class="font-tech text-2xl uppercase tracking-widest border-l-2 border-ft-red pl-4 mb-8">Mode de Livraison</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Option 1 -->
+                            <div class="border border-ft-red bg-ft-red/5 p-4 cursor-pointer">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="font-tech font-bold uppercase tracking-wider text-white">Retrait en Dépôt</div>
+                                    <div class="font-mono text-sm text-ft-red">GRATUIT</div>
+                                </div>
+                                <p class="text-sm text-gray-400 font-sans">Retirez votre commande dans notre dépôt central ou chez un partenaire certifié.</p>
+                            </div>
+                            <!-- Option 2 -->
+                            <div class="border border-ft-gray hover:border-white p-4 cursor-pointer transition-colors">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="font-tech font-bold uppercase tracking-wider text-white">Livraison Express (Wewa)</div>
+                                    <div class="font-mono text-sm text-white">+$5.00</div>
+                                </div>
+                                <p class="text-sm text-gray-400 font-sans">Livraison directement à votre adresse par notre réseau de motards partenaires.</p>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex justify-between">
+                            <button onclick="app.prevStep()" class="text-gray-400 font-tech uppercase tracking-widest hover:text-white">Retour</button>
+                            <button onclick="app.nextStep()" class="bg-ft-red text-white px-8 py-3 font-tech uppercase font-bold tracking-widest hover:bg-ft-redHover transition-colors">Payer</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 : Paiement -->
+                    <div id="step-4" class="checkout-step hidden">
+                        <h3 class="font-tech text-2xl uppercase tracking-widest border-l-2 border-ft-red pl-4 mb-8">Paiement Mobile Money</h3>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            <div class="border border-ft-gray bg-ft-black aspect-video flex flex-col items-center justify-center cursor-pointer hover:border-[#ff0000] transition-colors relative group">
+                                <div class="font-tech font-bold text-white mb-1">M-PESA</div>
+                                <div class="text-[10px] font-mono text-gray-500">Vodacom</div>
+                                <div class="absolute inset-0 border-2 border-[#ff0000] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            </div>
+                            <div class="border border-ft-gray bg-ft-black aspect-video flex flex-col items-center justify-center cursor-pointer hover:border-[#ff6600] transition-colors">
+                                <div class="font-tech font-bold text-white mb-1">ORANGE</div>
+                                <div class="text-[10px] font-mono text-gray-500">Money</div>
+                            </div>
+                            <div class="border border-ft-gray bg-ft-black aspect-video flex flex-col items-center justify-center cursor-pointer hover:border-[#ff0000] transition-colors">
+                                <div class="font-tech font-bold text-white mb-1">AIRTEL</div>
+                                <div class="text-[10px] font-mono text-gray-500">Money</div>
+                            </div>
+                            <div class="border border-ft-gray bg-ft-black aspect-video flex flex-col items-center justify-center cursor-pointer hover:border-[#a32a29] transition-colors">
+                                <div class="font-tech font-bold text-white mb-1">AFRICELL</div>
+                                <div class="text-[10px] font-mono text-gray-500">Money</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-ft-black border border-ft-gray p-6 mb-8 text-center" id="payment-processing" style="display: none;">
+                            <i class="ph ph-spinner animate-spin text-4xl text-ft-red mb-4 mx-auto"></i>
+                            <div class="font-mono text-sm text-gray-400 uppercase tracking-widest">Attente de confirmation réseau...</div>
+                            <div class="text-xs text-gray-600 mt-2">Veuillez valider sur votre téléphone.</div>
+                        </div>
+
+                        <div class="mt-8 flex justify-between" id="payment-actions">
+                            <button onclick="app.prevStep()" class="text-gray-400 font-tech uppercase tracking-widest hover:text-white">Retour</button>
+                            <button onclick="app.simulatePayment()" class="bg-ft-red text-white px-8 py-3 font-tech uppercase font-bold tracking-widest hover:bg-ft-redHover transition-colors flex items-center gap-2">
+                                <i class="ph ph-lock-key"></i> Confirmer le paiement
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 : Facturation -->
+                    <div id="step-5" class="checkout-step hidden">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 bg-green-900/20 border border-green-500 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                                <i class="ph ph-check"></i>
+                            </div>
+                            <h3 class="font-tech text-3xl uppercase tracking-widest font-bold text-white">Commande Confirmée</h3>
+                            <p class="font-mono text-sm text-gray-400 mt-2">Statut: PAYÉE</p>
+                        </div>
+
+                        <!-- Fake PDF Invoice Block -->
+                        <div class="bg-[#f0f0f0] p-8 text-black max-w-2xl mx-auto relative overflow-hidden shadow-2xl">
+                            <!-- Texture overlay -->
+                            <div class="absolute inset-0 opacity-[0.03]" style="background-image: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%); background-size: 8px 8px;"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-end mb-8 border-b-2 border-black pb-4">
+                                    <div>
+                                        <div class="font-tech font-bold text-2xl uppercase tracking-tighter">FULLTECH CONGO</div>
+                                        <div class="font-mono text-xs text-gray-600">Kinshasa, DRC</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-tech text-xl font-bold">FACTURE</div>
+                                        <div class="font-mono text-xs">N° FTC-260830-492</div>
+                                        <div class="font-mono text-xs">Date: 30/08/2026</div>
+                                    </div>
+                                </div>
+                                <table class="w-full font-mono text-xs mb-8">
+                                    <thead class="border-b border-gray-400">
+                                        <tr class="text-left"><th class="pb-2">Réf</th><th class="pb-2">Désignation</th><th class="pb-2 text-center">Qté</th><th class="pb-2 text-right">Prix</th></tr>
+                                    </thead>
+                                    <tbody id="invoice-items">
+                                        <!-- Injected by JS -->
+                                    </tbody>
+                                </table>
+                                <div class="flex justify-end border-t border-gray-400 pt-4">
+                                    <div class="w-48 text-right">
+                                        <div class="font-mono text-xs mb-1 flex justify-between"><span>TOTAL USD:</span> <strong id="invoice-usd"></strong></div>
+                                        <div class="font-mono text-[10px] text-gray-600 flex justify-between"><span>TOTAL CDF:</span> <span id="invoice-cdf"></span></div>
+                                    </div>
+                                </div>
+                                <div class="mt-12 text-center border-t border-gray-300 pt-4">
+                                    <div class="font-tech text-sm uppercase font-bold">Merci de votre confiance</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-center">
+                            <button onclick="app.navigate('home')" class="border border-ft-gray text-white px-8 py-3 font-tech uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Retour à l'accueil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 5 : DISTRIBUTEURS -->
+        <!-- ========================================== -->
+        <div id="view-distributors" class="view-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="font-tech text-4xl font-bold uppercase tracking-wide mb-2">Réseau Local <span class="text-ft-red">Kinshasa</span></div>
+                <p class="font-sans text-gray-400 mb-12 max-w-2xl">Trouvez le point de vente ou le relais wewa partenaire le plus proche pour monter vos pneus FullTech Congo.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- List -->
+                    <div class="col-span-1 space-y-4">
+                        <div class="bg-ft-dark border-l-4 border-ft-red p-4 cursor-pointer hover:bg-ft-gray transition-colors">
+                            <div class="font-tech font-bold uppercase text-lg text-white mb-1">Dépôt Central Limete</div>
+                            <div class="font-mono text-xs text-gray-400 mb-2"><i class="ph ph-map-pin text-ft-red"></i> Limete, 7ème Rue Industriel</div>
+                            <div class="font-sans text-sm text-gray-500">Repère : Derrière l'usine de panification.</div>
+                        </div>
+                        <div class="bg-ft-black border border-ft-gray p-4 cursor-pointer hover:border-white transition-colors">
+                            <div class="font-tech font-bold uppercase text-lg text-white mb-1">Garage Kintambo Magasin</div>
+                            <div class="font-mono text-xs text-gray-400 mb-2"><i class="ph ph-map-pin text-ft-red"></i> Kintambo</div>
+                            <div class="font-sans text-sm text-gray-500">Repère : Rond-point Kintambo magasin, côté station.</div>
+                        </div>
+                        <div class="bg-ft-black border border-ft-gray p-4 cursor-pointer hover:border-white transition-colors">
+                            <div class="font-tech font-bold uppercase text-lg text-white mb-1">Relais Wewa Victoire</div>
+                            <div class="font-mono text-xs text-gray-400 mb-2"><i class="ph ph-map-pin text-ft-red"></i> Kalamu</div>
+                            <div class="font-sans text-sm text-gray-500">Repère : Rond-point Victoire, parking motos.</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Abstract Map Area -->
+                    <div class="col-span-1 lg:col-span-2 bg-ft-dark border border-ft-gray relative min-h-[400px] flex items-center justify-center overflow-hidden">
+                        <!-- Grid background to simulate technical map -->
+                        <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                        <!-- Radar sweep effect -->
+                        <div class="w-64 h-64 border border-ft-red/30 rounded-full relative">
+                            <div class="absolute inset-0 border border-ft-red/50 rounded-full animate-ping" style="animation-duration: 3s;"></div>
+                            <div class="absolute top-1/2 left-1/2 w-2 h-2 bg-ft-red rounded-full -mt-1 -ml-1"></div>
+                            <!-- Fake points -->
+                            <div class="absolute top-10 left-20 w-1 h-1 bg-white rounded-full"></div>
+                            <div class="absolute bottom-12 right-10 w-2 h-2 bg-ft-red rounded-full"></div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 bg-ft-black/80 p-2 border border-ft-gray font-mono text-[10px] text-gray-400 uppercase">
+                            Cartographie simplifiée - KINSHASA
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- PANIER LATERAL (DRAWER) -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 bg-ft-dark border-l border-ft-gray transform translate-x-full transition-transform duration-300 z-50 flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-ft-gray flex justify-between items-center bg-ft-black">
+            <h2 class="font-tech text-2xl uppercase tracking-widest font-bold">Votre Panier</h2>
+            <button onclick="app.toggleCart()" class="text-gray-400 hover:text-white"><i class="ph ph-x text-2xl"></i></button>
+        </div>
+        
+        <div class="flex-grow overflow-y-auto p-6 space-y-6" id="cart-items-container">
+            <!-- Items injected by JS -->
+            <div class="text-center font-mono text-sm text-gray-500 mt-10">Le panier est vide.</div>
+        </div>
+
+        <div class="p-6 border-t border-ft-gray bg-ft-black">
+            <div class="flex justify-between font-mono text-sm mb-4">
+                <span class="text-gray-400">TOTAL</span>
+                <div class="text-right">
+                    <span class="text-xl text-white font-tech font-bold block" id="cart-total-usd">$0.00</span>
+                    <span class="text-xs text-ft-red" id="cart-total-cdf">0 CDF</span>
+                </div>
+            </div>
+            <button onclick="app.startCheckout()" class="w-full bg-ft-red hover:bg-ft-redHover text-white py-4 font-tech uppercase tracking-widest font-bold transition-colors">
+                Commander
+            </button>
+        </div>
+    </div>
+    <!-- Cart Overlay backdrop -->
+    <div id="cart-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm transition-opacity opacity-0" onclick="app.toggleCart()"></div>
+
+    <!-- FOOTER -->
+    <footer class="bg-ft-black border-t border-ft-gray pt-16 pb-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-ft-red flex items-center justify-center font-tech font-bold text-sm tracking-tighter text-white">FT</div>
+                        <span class="font-tech font-bold text-xl tracking-wide text-white">FULLTECH <span class="text-ft-red">CONGO</span></span>
+                    </div>
+                    <p class="font-sans text-sm text-gray-500 max-w-sm mb-6">La marque de pneus de référence pour la République Démocratique du Congo. Conçus pour la résistance, pensés pour notre réalité.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 border border-ft-gray flex items-center justify-center text-gray-400 hover:border-ft-red hover:text-white transition-colors rounded-full"><i class="ph ph-facebook-logo text-lg"></i></a>
+                        <a href="#" class="w-10 h-10 border border-ft-gray flex items-center justify-center text-gray-400 hover:border-ft-red hover:text-white transition-colors rounded-full"><i class="ph ph-instagram-logo text-lg"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-tech uppercase tracking-widest font-bold text-white mb-4">Navigation</h4>
+                    <ul class="font-sans text-sm text-gray-500 space-y-2">
+                        <li><a href="#" class="hover:text-ft-red transition-colors">Catalogue Pneus</a></li>
+                        <li><a href="#" class="hover:text-ft-red transition-colors">Réseau Distributeurs</a></li>
+                        <li><a href="#" class="hover:text-ft-red transition-colors">Suivi de Commande</a></li>
+                        <li><a href="#" class="hover:text-ft-red transition-colors">Devenir Partenaire</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-tech uppercase tracking-widest font-bold text-white mb-4">Contact</h4>
+                    <ul class="font-mono text-xs text-gray-500 space-y-2">
+                        <li>Kinshasa, Gombe</li>
+                        <li>Boulevard du 30 Juin</li>
+                        <li><span class="text-ft-red">T</span> +243 81 000 0000</li>
+                        <li><span class="text-ft-red">E</span> contact@fulltech.cd</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-ft-gray/50 pt-8 flex flex-col md:flex-row justify-between items-center font-mono text-[10px] text-gray-600 uppercase">
+                <p>&copy; 2026 FULLTECH CONGO. TOUS DROITS RÉSERVÉS.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gray-300">CONFIDENTIALITÉ</a>
+                    <a href="#" class="hover:text-gray-300">CGV</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- APPLICATION LOGIC -->
+    <script>
+        const app = {
+            state: {
+                currentView: 'home',
+                cart: [],
+                checkoutStep: 1,
+                conversionRate: 2850, // 1 USD = 2850 CDF (Taux approximatif kinois)
+                isCartOpen: false,
+                isMobileMenuOpen: false,
+                isSearchOpen: false
+            },
+            
+            // Base de données simulée des pneus FullTech Congo
+            products: [
+                {
+                    id: 'ft-trk-200',
+                    name: 'FT-TRACKER 200',
+                    ref: 'FT-TRK-200-TL',
+                    type: 'Tubeless',
+                    position: 'Arrière',
+                    dimensions: '130/80-17',
+                    loadSpeed: '65S',
+                    structure: 'Renforcée (Route/Chemin)',
+                    usage: 'Mixte',
+                    warranty: '12 mois',
+                    priceUSD: 65.00,
+                    category: 'Off-Road',
+                    desc: 'Le pneu polyvalent par excellence. Conçu pour alterner entre l\'asphalte de Kinshasa et les pistes en terre sans compromis sur l\'adhérence.'
+                },
+                {
+                    id: 'ft-wewa-pro',
+                    name: 'WEWA PRO 150',
+                    ref: 'FT-WWP-150-TT',
+                    type: 'Tube Type',
+                    position: 'Arrière',
+                    dimensions: '110/90-16',
+                    loadSpeed: '59P',
+                    structure: 'Ultra-Renforcée (6 plis)',
+                    usage: 'Motos-taxis',
+                    warranty: '6 mois',
+                    priceUSD: 35.00,
+                    category: 'Wewa',
+                    desc: 'Développé spécifiquement pour les wewas. Carcasse à 6 plis pour une résistance maximale aux crevaisons et à la charge quotidienne.'
+                },
+                {
+                    id: 'ft-sport-r',
+                    name: 'SPORT-R',
+                    ref: 'FT-SPR-120-TL',
+                    type: 'Tubeless',
+                    position: 'Avant',
+                    dimensions: '120/70-17',
+                    loadSpeed: '58W',
+                    structure: 'Radiale',
+                    usage: 'Route / Sport',
+                    warranty: '12 mois',
+                    priceUSD: 85.00,
+                    category: 'Route',
+                    desc: 'Grip exceptionnel sur asphalte sec et mouillé. Profil sportif pour les motos de moyenne et grosse cylindrée circulant en ville.'
+                }
+            ],
+
+            init() {
+                this.renderCatalog();
+                this.updateCartUI();
+                
+                // Header scroll effect
+                window.addEventListener('scroll', () => {
+                    const header = document.getElementById('main-header');
+                    if (window.scrollY > 20) {
+                        header.classList.add('shadow-lg', 'border-ft-red/20');
+                    } else {
+                        header.classList.remove('shadow-lg', 'border-ft-red/20');
+                    }
+                });
+            },
+
+            // --- NAVIGATION ---
+            navigate(viewId) {
+                // Masquer toutes les vues
+                document.querySelectorAll('.view-section').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // Afficher la vue demandée
+                document.getElementById(`view-${viewId}`).classList.add('active');
+                this.state.currentView = viewId;
+                window.scrollTo(0, 0);
+
+                if(this.state.isCartOpen) this.toggleCart();
+                if(this.state.isSearchOpen) this.toggleSearch();
+            },
+
+            // --- UI TOGGLES ---
+            toggleCart() {
+                const drawer = document.getElementById('cart-drawer');
+                const backdrop = document.getElementById('cart-backdrop');
+                this.state.isCartOpen = !this.state.isCartOpen;
+                
+                if (this.state.isCartOpen) {
+                    drawer.classList.remove('translate-x-full');
+                    backdrop.classList.remove('hidden');
+                    setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                } else {
+                    drawer.classList.add('translate-x-full');
+                    backdrop.classList.add('opacity-0');
+                    setTimeout(() => backdrop.classList.add('hidden'), 300);
+                }
+            },
+
+            toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                this.state.isMobileMenuOpen = !this.state.isMobileMenuOpen;
+                menu.classList.toggle('hidden');
+            },
+
+            toggleSearch() {
+                const panel = document.getElementById('search-panel');
+                this.state.isSearchOpen = !this.state.isSearchOpen;
+                panel.classList.toggle('hidden');
+            },
+
+            // --- UTILS ---
+            formatPriceUSD(price) { return `$${price.toFixed(2)}`; },
+            formatPriceCDF(price) { return `${(price * this.state.conversionRate).toLocaleString('fr-FR')} CDF`; },
+
+            // --- RENDERING ---
+            renderCatalog() {
+                const grid = document.getElementById('catalog-grid');
+                grid.innerHTML = this.products.map(product => `
+                    <div class="group relative bg-ft-dark border border-ft-gray hover:border-ft-red/50 transition-all accent-corner p-6 flex flex-col">
+                        <div class="absolute top-4 right-4 font-mono text-[10px] uppercase text-gray-500 border border-ft-gray px-2 py-1">${product.category}</div>
+                        
+                        <!-- Image placeholder abstrait technique -->
+                        <div class="w-full h-48 bg-ft-black mb-6 relative overflow-hidden flex items-center justify-center border-b border-ft-gray">
+                            <div class="w-32 h-32 border-8 border-ft-gray rounded-full absolute -right-8 -top-8 group-hover:scale-110 transition-transform duration-500"></div>
+                            <i class="ph ph-tire text-6xl text-ft-gray z-10 group-hover:text-white transition-colors duration-300"></i>
+                        </div>
+                        
+                        <div class="font-tech text-2xl font-bold uppercase tracking-wide text-white mb-1 group-hover:text-ft-red transition-colors">${product.name}</div>
+                        <div class="font-mono text-xs text-gray-500 mb-4">${product.ref}</div>
+                        
+                        <div class="grid grid-cols-2 gap-2 font-mono text-xs text-gray-400 mb-6 flex-grow">
+                            <div><span class="text-ft-red block">DIMENSION</span> ${product.dimensions}</div>
+                            <div><span class="text-ft-red block">POSITION</span> ${product.position}</div>
+                            <div><span class="text-ft-red block">TYPE</span> ${product.type}</div>
+                        </div>
+                        
+                        <div class="flex items-end justify-between pt-4 border-t border-ft-gray/50">
+                            <div>
+                                <div class="font-tech text-2xl font-bold text-white">${this.formatPriceUSD(product.priceUSD)}</div>
+                            </div>
+                            <button onclick="app.showProductDetail('${product.id}')" class="w-10 h-10 bg-ft-red text-white flex items-center justify-center hover:bg-ft-redHover transition-colors">
+                                <i class="ph ph-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            showProductDetail(id) {
+                const product = this.products.find(p => p.id === id);
+                if (!product) return;
+
+                const container = document.getElementById('product-detail-container');
+                container.innerHTML = `
+                    <div class="mb-6">
+                        <button onclick="app.navigate('catalog')" class="text-gray-400 hover:text-white font-tech uppercase tracking-widest text-sm flex items-center gap-2">
+                            <i class="ph ph-arrow-left"></i> Retour au catalogue
+                        </button>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-12">
+                        <!-- Visuel technique -->
+                        <div class="w-full md:w-1/2 bg-ft-black border border-ft-gray aspect-square relative flex items-center justify-center accent-corner">
+                             <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 20px 20px;"></div>
+                             <i class="ph ph-tire text-[200px] text-ft-gray relative z-10 shadow-2xl drop-shadow-2xl"></i>
+                             
+                             <!-- UI Overlay type HUD -->
+                             <div class="absolute top-4 left-4 font-mono text-[10px] text-gray-500">SPEC_ID: ${product.ref}</div>
+                             <div class="absolute bottom-4 right-4 font-mono text-[10px] text-ft-red border border-ft-red p-1">CERTIFIED</div>
+                        </div>
+                        
+                        <!-- Données Techniques -->
+                        <div class="w-full md:w-1/2 flex flex-col justify-center">
+                            <div class="font-tech text-5xl font-bold uppercase tracking-wide text-white mb-2">${product.name}</div>
+                            <div class="font-mono text-sm text-ft-red mb-8 tracking-widest">${product.ref}</div>
+                            
+                            <p class="font-sans text-gray-400 mb-8 leading-relaxed">${product.desc}</p>
+                            
+                            <div class="grid grid-cols-2 gap-x-8 gap-y-4 font-mono text-sm text-gray-300 border-t border-b border-ft-gray py-6 mb-8">
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Marque</span> <span class="text-white">FullTech Congo</span>
+                                </div>
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Position</span> <span class="text-white">${product.position}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Dimension</span> <span class="text-white">${product.dimensions}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Type</span> <span class="text-white">${product.type}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Indice (Charge/Vit.)</span> <span class="text-white">${product.loadSpeed}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-ft-gray/30 pb-2">
+                                    <span class="text-gray-500">Structure</span> <span class="text-white">${product.structure}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="font-tech text-4xl font-bold text-white">${this.formatPriceUSD(product.priceUSD)}</div>
+                                    <div class="font-mono text-sm text-ft-red">${this.formatPriceCDF(product.priceUSD)}</div>
+                                </div>
+                                <button onclick="app.addToCart('${product.id}')" class="bg-ft-red text-white px-8 py-4 font-tech uppercase font-bold tracking-widest hover:bg-ft-redHover transition-colors flex items-center gap-2">
+                                    <i class="ph ph-shopping-cart-simple text-xl"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.navigate('product');
+            },
+
+            // --- CART LOGIC ---
+            addToCart(productId) {
+                const product = this.products.find(p => p.id === productId);
+                if (!product) return;
+
+                const existingItem = this.state.cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    this.state.cart.push({ ...product, quantity: 1 });
+                }
+                
+                this.updateCartUI();
+                this.toggleCart(); // Ouvre le panier pour confirmer l'ajout
+            },
+
+            removeFromCart(productId) {
+                this.state.cart = this.state.cart.filter(item => item.id !== productId);
+                this.updateCartUI();
+            },
+
+            updateCartUI() {
+                const badge = document.getElementById('cart-badge');
+                const totalItems = this.state.cart.reduce((sum, item) => sum + item.quantity, 0);
+                
+                if (totalItems > 0) {
+                    badge.textContent = totalItems;
+                    badge.classList.remove('opacity-0');
+                } else {
+                    badge.classList.add('opacity-0');
+                }
+
+                // Render cart items (Drawer)
+                const container = document.getElementById('cart-items-container');
+                if (this.state.cart.length === 0) {
+                    container.innerHTML = '<div class="text-center font-mono text-sm text-gray-500 mt-10">Le panier est vide.</div>';
+                } else {
+                    container.innerHTML = this.state.cart.map(item => `
+                        <div class="flex gap-4 border-b border-ft-gray pb-4">
+                            <div class="w-16 h-16 bg-ft-black flex-shrink-0 flex items-center justify-center border border-ft-gray">
+                                <i class="ph ph-tire text-2xl text-gray-400"></i>
+                            </div>
+                            <div class="flex-grow">
+                                <div class="font-tech uppercase font-bold text-white text-sm">${item.name}</div>
+                                <div class="font-mono text-[10px] text-gray-500 mb-1">${item.dimensions}</div>
+                                <div class="font-tech font-bold text-ft-red">${this.formatPriceUSD(item.priceUSD)}</div>
+                            </div>
+                            <div class="flex flex-col justify-between items-end">
+                                <button onclick="app.removeFromCart('${item.id}')" class="text-gray-600 hover:text-white"><i class="ph ph-trash"></i></button>
+                                <div class="font-mono text-xs text-white">x${item.quantity}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                // Update Totals
+                const totalUSD = this.state.cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
+                document.getElementById('cart-total-usd').textContent = this.formatPriceUSD(totalUSD);
+                document.getElementById('cart-total-cdf').textContent = this.formatPriceCDF(totalUSD);
+            },
+
+            // --- CHECKOUT LOGIC ---
+            startCheckout() {
+                if (this.state.cart.length === 0) return;
+                this.toggleCart(); // Close drawer
+                this.state.checkoutStep = 1;
+                this.renderCheckoutStep1();
+                this.updateStepperUI();
+                this.navigate('checkout');
+            },
+
+            renderCheckoutStep1() {
+                const container = document.getElementById('checkout-cart-items');
+                container.innerHTML = this.state.cart.map(item => `
+                    <div class="flex justify-between items-center bg-ft-black border border-ft-gray p-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-ft-dark border border-ft-gray flex items-center justify-center">
+                                <i class="ph ph-tire text-gray-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-tech font-bold uppercase text-white">${item.name}</div>
+                                <div class="font-mono text-xs text-gray-500">${item.dimensions} | Qté: ${item.quantity}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-tech font-bold text-white text-lg">${this.formatPriceUSD(item.priceUSD * item.quantity)}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const totalUSD = this.state.cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
+                document.getElementById('checkout-total-usd').textContent = this.formatPriceUSD(totalUSD);
+                document.getElementById('checkout-total-cdf').textContent = this.formatPriceCDF(totalUSD);
+            },
+
+            nextStep() {
+                if (this.state.checkoutStep < 5) {
+                    this.state.checkoutStep++;
+                    this.updateStepperUI();
+                    
+                    if(this.state.checkoutStep === 5) {
+                        this.generateInvoice();
+                    }
+                }
+            },
+
+            prevStep() {
+                if (this.state.checkoutStep > 1) {
+                    this.state.checkoutStep--;
+                    this.updateStepperUI();
+                }
+            },
+
+            updateStepperUI() {
+                // Update dots/lines
+                document.querySelectorAll('.step-item').forEach(item => {
+                    const stepNum = parseInt(item.dataset.step);
+                    const circle = item.querySelector('div');
+                    const text = item.querySelector('span');
+                    
+                    circle.className = `w-8 h-8 font-tech font-bold flex items-center justify-center mb-2 transition-colors ${
+                        stepNum === this.state.checkoutStep ? 'border border-ft-red bg-ft-red/10 text-ft-red' : 
+                        stepNum < this.state.checkoutStep ? 'border border-white bg-white text-black' : 'border border-ft-gray bg-ft-black text-gray-600'
+                    }`;
+                    text.className = `font-mono text-[10px] uppercase ${stepNum <= this.state.checkoutStep ? 'text-white' : 'text-gray-500'}`;
+                });
+
+                // Update View content
+                document.querySelectorAll('.checkout-step').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`step-${this.state.checkoutStep}`).classList.remove('hidden');
+                document.getElementById(`step-${this.state.checkoutStep}`).classList.add('animate-reveal');
+            },
+
+            simulatePayment() {
+                document.getElementById('payment-actions').style.display = 'none';
+                document.getElementById('payment-processing').style.display = 'block';
+                
+                // Simulate network delay for mobile money prompt
+                setTimeout(() => {
+                    this.nextStep();
+                    document.getElementById('payment-actions').style.display = 'flex';
+                    document.getElementById('payment-processing').style.display = 'none';
+                }, 2500);
+            },
+
+            generateInvoice() {
+                const tbody = document.getElementById('invoice-items');
+                let html = '';
+                let total = 0;
+                
+                this.state.cart.forEach(item => {
+                    const itemTotal = item.priceUSD * item.quantity;
+                    total += itemTotal;
+                    html += `
+                        <tr class="border-b border-gray-300">
+                            <td class="py-2">${item.ref}</td>
+                            <td class="py-2 font-bold">${item.name} <br><span class="text-[8px] text-gray-600">${item.dimensions}</span></td>
+                            <td class="py-2 text-center">${item.quantity}</td>
+                            <td class="py-2 text-right">$${itemTotal.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+                
+                tbody.innerHTML = html;
+                document.getElementById('invoice-usd').textContent = `$${total.toFixed(2)}`;
+                document.getElementById('invoice-cdf').textContent = `${(total * this.state.conversionRate).toLocaleString('fr-FR')} CDF`;
+                
+                // Vider le panier après facturation
+                this.state.cart = [];
+                this.updateCartUI();
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
