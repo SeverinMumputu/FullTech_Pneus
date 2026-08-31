@@ -1,783 +1,784 @@
-
-        // --- 1. CONFIGURATION & DONNÉES MOCK ---
-        const RATE_USD_CDF = 2850; // Taux de change fictif
-        
-        // Configuration du Carousel (Images et Vidéos)
-        const carouselData = [
-            {
-                type: 'image',
-                src: 'Carrousel_1.jpg',
-                alt: 'Moto sur asphalte'
-            },
-              {
-                type: 'image',
-                src: 'Carroussel_4.jpg',
-                alt: 'Moto sur asphalte'
-            },
-              {
-                type: 'image',
-                src: 'Carrousel_3.jpg',
-                alt: 'Moto sur asphalte'
-            },
-            {
-                type: 'video',
-                src: 'video.mp4',
-                poster: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=2070'
-            },
-            {
-                type: 'image',
-                src: 'FullTech.jpeg',
-                alt: 'Motard en ville'
-            }
-        ];
-
-        // Base de données des pneus FullTech
-        const productsDB = [
-            {
-                id: 'p01',
-                name: 'FT-URBAN GRIP',
-                ref: 'FT-UG-27517',
-                category: 'taxi',
-                position: 'arriere',
-                width: '2.75',
-                profile: '-',
-                diameter: '17',
-                type: 'Tube Type',
-                usage: 'ville',
-                loadSpeedIndex: '47P',
-                structure: 'Renforcée (6 PR)',
-                priceUSD: 22.00,
-                stock: 45,
-                image: 'pneu_1-removebg-preview.png',
-                desc: 'Spécialement conçu pour les motos-taxis (Wewa). Résistance accrue aux crevaisons et excellente longévité sur asphalte dégradé.'
-            },
-            {
-                id: 'p02',
-                name: 'FT-PRO RIDER',
-                ref: 'FT-PR-909018',
-                category: 'route',
-                position: 'avant',
-                width: '90',
-                profile: '90',
-                diameter: '18',
-                type: 'Tubeless',
-                usage: 'route',
-                loadSpeedIndex: '51S',
-                structure: 'Standard',
-                priceUSD: 35.50,
-                stock: 20,
-                image:  'PNEU_2.png',
-                desc: 'Adhérence maximale sur route sèche et mouillée. Profil directionnel pour une maniabilité optimale.'
-            },
-            {
-                id: 'p03',
-                name: 'FT-DIRT CROSS',
-                ref: 'FT-DX-41018',
-                category: 'tout-terrain',
-                position: 'arriere',
-                width: '4.10',
-                profile: '-',
-                diameter: '18',
-                type: 'Tube Type',
-                usage: 'piste',
-                loadSpeedIndex: '59M',
-                structure: 'Crampons (8 PR)',
-                priceUSD: 42.00,
-                stock: 15,
-                image:  'pneu_1-removebg-preview.png',
-                desc: 'Le pneu ultime pour les routes en terre de RDC. Crampons agressifs pour une traction exceptionnelle dans la boue.'
-            },
-            {
-                id: 'p04',
-                name: 'FT-CITY FRONT',
-                ref: 'FT-CF-25017',
-                category: 'avant',
-                position: 'avant',
-                width: '2.50',
-                profile: '-',
-                diameter: '17',
-                type: 'Tube Type',
-                usage: 'ville',
-                loadSpeedIndex: '38P',
-                structure: 'Standard (4 PR)',
-                priceUSD: 18.00,
-                stock: 60,
-                image: 'Pneu_3-removebg-preview.png',
-                desc: 'Pneu avant idéal pour la circulation urbaine dense. Très bonne évacuation de l\'eau.'
-            },
-            {
-                id: 'p05',
-                name: 'FT-HEAVY DUTY',
-                ref: 'FT-HD-1109016',
-                category: 'taxi',
-                position: 'arriere',
-                width: '110',
-                profile: '90',
-                diameter: '16',
-                type: 'Tubeless',
-                usage: 'ville',
-                loadSpeedIndex: '59P',
-                structure: 'Renforcée',
-                priceUSD: 38.00,
-                stock: 30,
-                image: 'Pneu_4-removebg-preview.png',
-                desc: 'Pour supporter de lourdes charges. Profil large assurant stabilité et sécurité lors du transport de colis ou de multiples passagers.'
-            },
-            {
-                id: 'p06',
-                name: 'TUBE FT-17',
-                ref: 'FT-TUB-17',
-                category: 'chambre',
-                position: 'toutes',
-                width: '2.75/3.00',
-                profile: '-',
-                diameter: '17',
-                type: 'Chambre à air',
-                usage: 'tous',
-                loadSpeedIndex: '-',
-                structure: 'Caoutchouc naturel épais',
-                priceUSD: 5.50,
-                stock: 150,
-                image: 'Pneu_4-removebg-preview.png',
-                desc: 'Chambre à air premium, épaisseur renforcée pour limiter les crevaisons.'
-            }
-        ];
-
-        // État de l'application
-        let cart = [];
-        let currentDeliveryFee = 0;
-        let checkoutOrderData = {};
-
-        // --- 2. UTILITAIRES ---
-        const formatUSD = (price) => `$${price.toFixed(2)}`;
-        const formatCDF = (priceUSD) => new Intl.NumberFormat('fr-FR').format(Math.round(priceUSD * RATE_USD_CDF)) + ' CDF';
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-green-600' : (type === 'error' ? 'bg-red-600' : 'bg-gray-800');
-            toast.className = `${bgColor} text-white px-6 py-3 rounded-sm shadow-lg font-oswald tracking-wide animate-slide-in-right flex items-center`;
-            toast.innerHTML = `
-                ${type === 'success' ? '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                ${message}
-            `;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+    // --- Configuration & Données Mockées ---
+    const TAUX_CONVERSION = 2800; // 1 USD = 2800 CDF
+    let cart = []; // { product, quantity }
+    
+    // Base de données des produits
+    const productsDB = [
+        {
+            id: 'p1', ref: 'FT-R-1207017', name: 'RoadMax Pro', category: 'arriere, route', 
+            width: 120, ratio: 70, rim: 17, type: 'Tubeless', position: 'Arrière',
+            index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 65,
+            desc: 'Conçu pour la durabilité sur asphalte. Bande de roulement optimisée pour l\'évacuation d\'eau, garantissant une sécurité maximale même pendant la saison des pluies.',
+            img_bg: 'RoadMax_1.png',
+            img_iso: 'RoadMax_1.jpeg' // Using same for placeholder, conceptually would be transparent PNG
+        },
+        {
+            id: 'p2', ref: 'FT-A-909021', name: 'DirtCross X', category: 'avant, tout-terrain', 
+            width: 90, ratio: 90, rim: 21, type: 'Tube Type', position: 'Avant',
+            index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 55,
+            desc: 'Crampons espacés pour un débourrage parfait de la boue. Carcasse ultra-rigide pour résister aux chocs sur les pistes non aménagées du pays.',
+            img_bg: 'DirtyCross.png',
+            img_iso: 'Pneu_3-removebg-preview.png'
+        },
+        {
+            id: 'p3', ref: 'FT-W-1109017', name: 'Wewa Force HD', category: 'arriere, motos-taxis, renforcés', 
+            width: 110, ratio: 90, rim: 17, type: 'Tubeless', position: 'Arrière',
+            index: '62P', usage: 'Intensif/Charge lourde', warranty: '6 mois', price_usd: 70,
+            desc: 'Le pneu de référence pour les motos-taxis. Flancs renforcés (6 plis) pour supporter de lourdes charges et résister aux nids-de-poule sans déformation.',
+            img_bg: 'pneu_1.jpg',
+            img_iso: 'pneu_1-removebg-preview.png'
+        },
+        {
+            id: 'p4', ref: 'FT-C-27517', name: 'City Classic', category: 'avant, urbains', 
+            width: 2.75, ratio: null, rim: 17, type: 'Tube Type', position: 'Avant',
+            index: '41P', usage: 'Ville/Trajet court', warranty: '3 mois', price_usd: 35,
+            desc: 'Profil classique, maniable et économique. Gomme dure assurant une très longue durée de vie pour les trajets quotidiens.',
+            img_bg: 'Pneu_4.jpg',
+            img_iso: 'Pneu_4.jpg'
         }
+    ];
 
-        // --- 3. INITIALISATION & UI HEADER/HERO ---
-        
-        // Mobile Menu
-        const mobileMenu = document.getElementById('mobile-menu');
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('hidden');
-        }
-        document.getElementById('btn-mobile-menu').addEventListener('click', toggleMobileMenu);
+    // Helpers
+    const formatUSD = (amount) => `$${amount.toFixed(2)}`;
+    const formatCDF = (amount) => `${(amount * TAUX_CONVERSION).toLocaleString('fr-FR')} CDF`;
 
-        // Search Bar Toggle
-        const searchBar = document.getElementById('search-bar-container');
-        function toggleSearchBar() {
-            if(searchBar.classList.contains('hidden')) {
-                searchBar.classList.remove('hidden');
-                setTimeout(() => searchBar.classList.remove('opacity-0'), 10);
-                document.getElementById('global-search-input').focus();
-            } else {
-                closeSearchBar();
-            }
-        }
-        function closeSearchBar() {
-            searchBar.classList.add('opacity-0');
-            setTimeout(() => searchBar.classList.add('hidden'), 300);
-        }
-        document.getElementById('btn-search-toggle').addEventListener('click', toggleSearchBar);
+    // --- DOM Elements ---
+    const header = document.getElementById('main-header');
+    
+    // Toggles
+    const searchBtn = document.getElementById('search-btn');
+    const searchOverlay = document.getElementById('search-overlay');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const cartBtn = document.getElementById('cart-btn');
+    const closeCartBtn = document.getElementById('close-cart-btn');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartPanel = document.getElementById('cart-panel');
+    
+    // Catalog & Modal
+    const productGrid = document.getElementById('product-grid');
+    const modal = document.getElementById('product-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    let currentSelectedProduct = null;
 
-        // Hero Carousel Logic
-        let currentSlide = 0;
-        let carouselInterval;
+    // Checkout
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutModal = document.getElementById('checkout-modal');
+    const closeCheckoutBtn = document.getElementById('close-checkout-btn');
+    let currentStep = 1;
+    let deliveryFee = 5;
 
-    function initCarousel() {
-    const container = document.getElementById('hero-carousel');
-    const indicatorsContainer = document.getElementById('carousel-indicators');
+    // --- UI Interactions ---
 
-    container.innerHTML = '';
-    indicatorsContainer.innerHTML = '';
+const heroCarousel = document.getElementById('hero-carousel');
+const heroPagination = document.getElementById('hero-pagination');
 
-    carouselData.forEach((item, index) => {
-        // Créer le slide
-        const slide = document.createElement('div');
-        slide.className = `carousel-slide absolute inset-0 ${index === 0 ? 'opacity-100' : 'opacity-0'}`;
-        slide.id = `slide-${index}`;
+const heroSlides = [
+    {
+        type: 'video',
+        src: 'video.mp4',
+        alt: 'FullTech Congo - Pneus moto'
+    },
+    {
+        type: 'video',
+        src: 'video.mp4',
+        alt: 'FullTech Congo - Pneus en mouvement'
+    },
+    {
+        type: 'image',
+        src: 'PNEU_2.png',
+        alt: 'FullTech Congo - Performance et adhérence'
+    }
+];
 
-        let mediaContent = '';
+let currentHeroSlide = 0;
+let heroCarouselInterval = null;
 
-        if (item.type === 'video') {
-            // Vidéo : adaptée au format mobile et PC
-            mediaContent = `
-                <video
-                    src="${item.src}"
-                    poster="${item.poster || ''}"
-                    autoplay
-                    muted
-                    loop
-                    playsinline
-                    class="carousel-media"
-                ></video>
-            `;
+const renderHeroCarousel = () => {
+    if (!heroCarousel || !heroPagination || heroSlides.length === 0) return;
+
+    heroCarousel.innerHTML = '';
+    heroPagination.innerHTML = '';
+
+    heroSlides.forEach((slide, index) => {
+
+        // Création du média
+        let media;
+
+        if (slide.type === 'video') {
+            media = document.createElement('video');
+
+            media.src = slide.src;
+            media.autoplay = true;
+            media.muted = true;
+            media.loop = true;
+            media.playsInline = true;
+            media.preload = 'auto';
         } else {
-            // Image : adaptée au format mobile et PC
-            mediaContent = `
-                <img
-                    src="${item.src}"
-                    alt="${item.alt || ''}"
-                    class="carousel-media"
-                />
-            `;
+            media = document.createElement('img');
+
+            media.src = slide.src;
+            media.alt = slide.alt || 'FullTech Congo';
         }
+        media.className =
+            'absolute inset-0 w-full h-full object-cover transition-opacity duration-1000';
 
-        slide.innerHTML = `
-            <div class="absolute inset-0 bg-black/60 z-10 pointer-events-none"></div>
-            ${mediaContent}
-        `;
+        media.dataset.heroSlide = index;
 
-        container.appendChild(slide);
+        // Premier média visible
+        media.style.opacity = index === 0 ? '1' : '0';
 
-        // Créer l'indicateur
+        heroCarousel.appendChild(media);
+
+        // Création de l'indicateur de pagination
         const indicator = document.createElement('button');
-        indicator.className = `w-12 h-1 transition-all ${index === 0 ? 'bg-ft-red' : 'bg-gray-600 hover:bg-gray-400'}`;
-        indicator.id = `ind-${index}`;
-        indicator.onclick = () => goToSlide(index);
 
-        indicatorsContainer.appendChild(indicator);
+        indicator.type = 'button';
+        indicator.dataset.heroIndex = index;
+        indicator.setAttribute(
+            'aria-label',
+            `Afficher le média ${index + 1}`
+        );
+
+        indicator.className =
+            index === 0
+                ? 'w-12 h-1 bg-ft-red transition-colors'
+                : 'w-12 h-1 bg-ft-gray transition-colors';
+
+        indicator.addEventListener('click', () => {
+            goToHeroSlide(index);
+        });
+
+        heroPagination.appendChild(indicator);
+    });
+};
+
+const goToHeroSlide = (index) => {
+    if (!heroSlides.length) return;
+
+    currentHeroSlide =
+        (index + heroSlides.length) % heroSlides.length;
+
+    const medias = heroCarousel.querySelectorAll('[data-hero-slide]');
+    const indicators = heroPagination.querySelectorAll('[data-hero-index]');
+
+    medias.forEach((media, mediaIndex) => {
+
+        media.style.opacity =
+            mediaIndex === currentHeroSlide ? '1' : '0';
+
+        if (media.tagName === 'VIDEO') {
+
+            if (mediaIndex === currentHeroSlide) {
+                media.currentTime = 0;
+
+                const playPromise = media.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Le navigateur peut bloquer la lecture automatique.
+                    });
+                }
+
+            } else {
+                media.pause();
+                media.currentTime = 0;
+            }
+        }
+    });
+    // Synchronisation de la pagination
+    indicators.forEach((indicator, indicatorIndex) => {
+
+        if (indicatorIndex === currentHeroSlide) {
+            indicator.classList.remove('bg-ft-gray');
+            indicator.classList.add('bg-ft-red');
+        } else {
+            indicator.classList.remove('bg-ft-red');
+            indicator.classList.add('bg-ft-gray');
+        }
+    });
+};
+
+/*
+ * Passage automatique au média suivant
+ */
+const startHeroCarousel = () => {
+
+    if (heroCarouselInterval) {
+        clearInterval(heroCarouselInterval);
+    }
+
+    heroCarouselInterval = setInterval(() => {
+
+        goToHeroSlide(currentHeroSlide + 1);
+
+    }, 7000);
+};
+
+/*
+ * Initialisation du Hero Carousel
+ */
+const initHeroCarousel = () => {
+
+    if (!heroCarousel || !heroPagination || heroSlides.length === 0) {
+        return;
+    }
+
+    renderHeroCarousel();
+
+    goToHeroSlide(0);
+
+    startHeroCarousel();
+};
+
+initHeroCarousel();
+
+    // Scroll Header effect
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('shadow-lg');
+            header.querySelector('.bg-ft-black\\/90').classList.add('border-ft-red');
+        } else {
+            header.classList.remove('shadow-lg');
+            header.querySelector('.bg-ft-black\\/90').classList.remove('border-ft-red');
+        }
     });
 
-    startCarousel();
-}
+    // Search Toggle
+    searchBtn.addEventListener('click', () => {
+        searchOverlay.classList.toggle('active');
+        if(searchOverlay.classList.contains('active')) searchOverlay.querySelector('input').focus();
+    });
 
-        function switchSlide() {
-            const nextSlide = (currentSlide + 1) % carouselData.length;
-            goToSlide(nextSlide);
+    // Mobile Menu Toggle
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        const icon = mobileMenu.classList.contains('active') ? 
+            '<path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>' : 
+            '<path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+        mobileMenuBtn.querySelector('svg').innerHTML = icon;
+    });
+    
+    document.querySelectorAll('.mobile-link').forEach(link => {
+        link.addEventListener('click', () => mobileMenu.classList.remove('active'));
+    });
+
+    // Cart Toggle
+    const toggleCart = (show) => {
+        if (show) {
+            cartOverlay.classList.add('active');
+            cartPanel.classList.add('active');
+        } else {
+            cartOverlay.classList.remove('active');
+            cartPanel.classList.remove('active');
         }
+    };
+    cartBtn.addEventListener('click', () => toggleCart(true));
+    closeCartBtn.addEventListener('click', () => toggleCart(false));
+    cartOverlay.addEventListener('click', () => toggleCart(false));
 
-        function goToSlide(index) {
-            // Cacher le slide actuel
-            document.getElementById(`slide-${currentSlide}`).classList.remove('opacity-100');
-            document.getElementById(`slide-${currentSlide}`).classList.add('opacity-0');
-            document.getElementById(`ind-${currentSlide}`).classList.replace('bg-ft-red', 'bg-gray-600');
-            
-            // Afficher le nouveau slide
-            currentSlide = index;
-            document.getElementById(`slide-${currentSlide}`).classList.remove('opacity-0');
-            document.getElementById(`slide-${currentSlide}`).classList.add('opacity-100');
-            document.getElementById(`ind-${currentSlide}`).classList.replace('bg-gray-600', 'bg-ft-red');
+    // --- Catalog Logic ---
+    
+const renderProductCard = (product) => {
+    const dimStr = product.ratio
+        ? `${product.width}/${product.ratio}-${product.rim}`
+        : `${product.width}-${product.rim}`;
 
-            // Relancer le timer
-            startCarousel();
-        }
-
-        function startCarousel() {
-            clearInterval(carouselInterval);
-            carouselInterval = setInterval(switchSlide, 6000);
-        }
-
-        // --- 4. CATALOGUE & RECHERCHE ---
-        
-        function populateSearchSelects() {
-            const widths = [...new Set(productsDB.map(p => p.width))];
-            const heights = [...new Set(productsDB.map(p => p.profile).filter(h => h !== '-'))];
-            const diameters = [...new Set(productsDB.map(p => p.diameter))];
-
-            const fillSelect = (id, options) => {
-                const select = document.getElementById(id);
-                options.sort().forEach(opt => {
-                    select.insertAdjacentHTML('beforeend', `<option value="${opt}">${opt}</option>`);
-                });
-            };
-            fillSelect('search-width', widths);
-            fillSelect('search-height', heights);
-            fillSelect('search-diameter', diameters);
-        }
-
-        function getProductImage(product) {
-    // Si une vraie image existe, elle est prioritaire
-    if (product.image && typeof product.image === 'string' && product.image.trim() !== '') {
-        return `
-            <img
-                src="${product.image}"
-                alt="${product.name || 'Produit FullTech Congo'}"
-                class="w-full h-full object-contain drop-shadow-2xl"
-                loading="lazy"
-            >
-        `;
-    }
-
-    // Si aucune image n'est disponible, utiliser le SVG de secours
-    if (product.imageSvg) {
-        return product.imageSvg;
-    }
-
-    // Aucun visuel disponible
     return `
-        <div class="w-full h-full flex items-center justify-center text-gray-600 text-xs font-oswald uppercase text-center">
-            Image indisponible
+        <div class="product-card group relative h-[450px] w-full overflow-hidden border border-ft-gray bg-ft-dark" data-id="${product.id}">
+            
+            <!-- État 1: Cover avec image de fond -->
+            <div class="state-cover absolute inset-0 z-20 flex flex-col justify-end p-6 transition-transform duration-500 bg-ft-black">
+                <img src="${product.img_bg}" class="absolute inset-0 w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity">
+                <div class="absolute inset-0 bg-gradient-to-t from-ft-black via-ft-black/80 to-transparent"></div>
+
+                <div class="relative z-10 flex flex-col h-full justify-end">
+                    <h3 class="font-heading text-2xl uppercase tracking-wider text-white mb-2">
+                        ${product.name}
+                    </h3>
+
+                    <p class="font-mono text-sm text-ft-white/50 mb-6">
+                        ${product.category.split(',')[1] || product.category.split(',')[0]}
+                    </p>
+
+                    <button class="btn-decouvrir w-full border border-white text-white font-heading uppercase text-sm tracking-widest py-3 hover:bg-white hover:text-ft-black transition-colors">
+                        Découvrir
+                    </button>
+                </div>
+            </div>
+
+            <!-- État 2: Reveal technique -->
+            <div class="state-reveal absolute inset-0 z-10 bg-ft-dark flex flex-col p-6 opacity-0 transition-opacity duration-300">
+                
+                <!-- Background pattern subtil -->
+                <div
+                    class="absolute inset-0 opacity-5"
+                    style="background-image: linear-gradient(#f4f4f5 1px, transparent 1px), linear-gradient(90deg, #f4f4f5 1px, transparent 1px); background-size: 20px 20px;"
+                ></div>
+
+                <!-- En-tête -->
+                <div class="relative z-10 flex justify-between items-start w-full shrink-0">
+                    <div>
+                        <h3 class="font-heading text-xl uppercase tracking-wider text-white leading-none">
+                            ${product.name}
+                        </h3>
+
+                        <p class="font-mono text-xs text-ft-gray mt-1">
+                            ${product.ref}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pneu isolé au centre -->
+                <div class="flex-1 min-h-0 flex items-center justify-center relative py-4">
+                    <img
+                        src="${product.img_iso}"
+                        class="max-h-full max-w-full object-contain grayscale brightness-50 contrast-150 drop-shadow-[0_0_15px_rgba(0,0,0,1)]"
+                    >
+                </div>
+
+                <!-- Informations + bouton Détail -->
+                <div class="relative z-10 flex justify-between items-end w-full shrink-0">
+                    <div>
+                        <p class="font-heading text-xl text-ft-red">
+                            ${dimStr}
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-detail shrink-0 flex items-center gap-2 text-white font-heading uppercase text-sm tracking-widest hover:text-ft-red transition-colors group/btn"
+                    >
+                        Détail
+                        <svg
+                            class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="square"
+                                stroke-linejoin="miter"
+                                stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            ></path>
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
         </div>
     `;
-}
+};
 
-        function createProductCard(product) {
-            return `
-                <div class="product-card bg-ft-lightgray border border-ft-gray hover:border-ft-red transition-all duration-300 flex flex-col relative group overflow-hidden">
-                    <!-- Top Info -->
-                    <div class="p-4 z-10 relative">
-                        <h3 class="font-oswald text-xl text-white uppercase leading-tight">${product.name}</h3>
-                        <p class="text-xs text-gray-500 font-mono mt-1">${product.ref}</p>
-                    </div>
-                    
-                    <!-- Image -->
-                    <div class="w-32 h-32 product-image">
-                        ${getProductImage(product)}
-                    </div>
-                        <!-- Hover Overlay action -->
-                        <div class="absolute inset-0 bg-ft-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 backdrop-blur-[2px]">
-                            <button onclick="openProductDetail('${product.id}')" class="bg-ft-red text-white px-6 py-2 font-oswald uppercase tracking-wider text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                                Détail &rarr;
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Info -->
-                    <div class="p-4 mt-auto border-t border-ft-gray bg-ft-black z-10 relative flex justify-between items-end">
-                        <div>
-                            <span class="text-ft-red font-bold font-oswald text-xl">${product.width}${product.profile !== '-' ? '/'+product.profile : ''}-${product.diameter}</span>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-white font-oswald text-lg">${formatUSD(product.priceUSD)}</div>
-                            <div class="text-xs text-gray-500">${formatCDF(product.priceUSD)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+    const renderCatalog = (filter = 'all') => {
+        productGrid.innerHTML = '';
+        const filtered = filter === 'all' ? productsDB : productsDB.filter(p => p.category.includes(filter));
+        
+        if(filtered.length === 0) {
+            productGrid.innerHTML = '<p class="col-span-full text-center text-ft-white/50 py-10 font-sans">Aucun produit trouvé pour ce filtre.</p>';
+            return;
         }
 
-        function renderCatalog(filter = 'all') {
-            const grid = document.getElementById('catalog-grid');
-            grid.innerHTML = '';
+        filtered.forEach(product => {
+            productGrid.innerHTML += renderProductCard(product);
+        });
+
+        // Add Event Listeners for new cards
+        document.querySelectorAll('.product-card').forEach(card => {
+            const btnDecouvrir = card.querySelector('.btn-decouvrir');
+            const stateCover = card.querySelector('.state-cover');
+            const stateReveal = card.querySelector('.state-reveal');
+            const btnDetail = card.querySelector('.btn-detail');
+            const productId = card.getAttribute('data-id');
+
+            // Animation Reveal
+            btnDecouvrir.addEventListener('click', (e) => {
+                // Slide up the cover
+                stateCover.style.transform = 'translateY(-100%)';
+                // Show reveal behind it
+                stateReveal.style.opacity = '1';
+                stateReveal.style.zIndex = '30';
+            });
+
+            // Reset state if mouse leaves (optional, maybe keep it open for mobile friendliness, let's keep it open until click elsewhere, or just let them click detail)
+            // But for desktop a reset is nice. Let's make a simple toggle if they click the card background.
             
-            let filtered = productsDB;
-            if (filter !== 'all') {
-                filtered = productsDB.filter(p => p.category === filter || p.position === filter);
-            }
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center text-gray-500 font-oswald text-xl py-10">Aucun produit trouvé dans cette catégorie.</div>`;
-                return;
-            }
-
-            filtered.forEach(p => {
-                grid.insertAdjacentHTML('beforeend', createProductCard(p));
-            });
-        }
-
-        // Event listeners pour les filtres
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.cat-btn').forEach(b => {
-                    b.classList.remove('bg-ft-red', 'text-white', 'border-ft-red');
-                    b.classList.add('bg-ft-gray', 'text-gray-400', 'border-transparent');
-                });
-                e.target.classList.remove('bg-ft-gray', 'text-gray-400', 'border-transparent');
-                e.target.classList.add('bg-ft-red', 'text-white', 'border-ft-red');
-                renderCatalog(e.target.dataset.filter);
+            // Ouvrir le modal Detail
+            btnDetail.addEventListener('click', () => {
+                openProductModal(productId);
             });
         });
+    };
 
-        // Logique Formulaire de recherche
-        document.getElementById('quick-search-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const w = document.getElementById('search-width').value;
-            const h = document.getElementById('search-height').value;
-            const d = document.getElementById('search-diameter').value;
-            const u = document.getElementById('search-usage').value;
-
-            const results = productsDB.filter(p => {
-                return (!w || p.width === w) &&
-                       (!h || p.profile === h) &&
-                       (!d || p.diameter === d) &&
-                       (!u || p.usage === u);
+    // Filter Buttons logic
+    document.querySelectorAll('#catalog-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Remove active classes
+            document.querySelectorAll('#catalog-filters .filter-btn').forEach(b => {
+                b.classList.remove('bg-white', 'text-ft-black', 'border-white', 'active');
+                b.classList.add('bg-transparent', 'text-white', 'border-ft-gray');
             });
-
-            const resContainer = document.getElementById('search-results-container');
-            const resGrid = document.getElementById('search-results-grid');
-            resContainer.classList.remove('hidden');
-            resGrid.innerHTML = '';
-
-            if(results.length > 0) {
-                results.forEach(p => resGrid.insertAdjacentHTML('beforeend', createProductCard(p)));
-            } else {
-                resGrid.innerHTML = `<div class="col-span-full text-gray-400 py-4 font-inter">Aucun pneu ne correspond à ces critères. Ajustez votre recherche.</div>`;
-            }
+            // Set active class
+            e.target.classList.remove('bg-transparent', 'text-white', 'border-ft-gray');
+            e.target.classList.add('bg-white', 'text-ft-black', 'border-white', 'active');
+            
+            renderCatalog(e.target.getAttribute('data-category'));
         });
+    });
 
-        // --- 5. FICHE PRODUIT DETAIL ---
+    // --- Product Modal Logic ---
+    const openProductModal = (id) => {
+        const p = productsDB.find(prod => prod.id === id);
+        if(!p) return;
+        currentSelectedProduct = p;
+
+        const dimStr = p.ratio ? `${p.width}/${p.ratio}-${p.rim}` : `${p.width}-${p.rim}`;
         
-        const productModal = document.getElementById('product-modal');
-        const modalContent = document.getElementById('product-modal-content');
+        document.getElementById('modal-img').src = p.img_iso;
+        document.getElementById('modal-name').textContent = p.name;
+        document.getElementById('modal-ref').textContent = `REF: ${p.ref}`;
+        document.getElementById('modal-dim').textContent = dimStr;
+        document.getElementById('modal-pos').textContent = p.position;
+        document.getElementById('modal-type').textContent = p.type;
+        document.getElementById('modal-usage').textContent = p.usage;
+        document.getElementById('modal-index').textContent = p.index;
+        document.getElementById('modal-desc').textContent = p.desc;
+        document.getElementById('modal-price-usd').textContent = formatUSD(p.price_usd);
+        document.getElementById('modal-price-cdf').textContent = formatCDF(p.price_usd);
 
-        function openProductDetail(id) {
-            const product = productsDB.find(p => p.id === id);
-            if(!product) return;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+    };
 
-            modalContent.innerHTML = `
-                <!-- Left : Image -->
-                <div class="bg-ft-lightgray p-10 flex items-center justify-center relative">
-                     <!-- Texture bg -->
-                    <div class="absolute inset-0 bg-pattern opacity-10 pointer-events-none"></div>
-                    <div class="w-64 h-64 drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] relative z-10">
-                        ${getProductImage(product)}
-                    </div>
-                </div>
-                <!-- Right : Details -->
-                <div class="p-8 md:p-10 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <h2 class="font-oswald text-4xl text-white uppercase">${product.name}</h2>
-                            <span class="bg-ft-red text-white text-xs font-bold px-2 py-1 uppercase rounded-sm">${product.stock > 0 ? 'En Stock' : 'Rupture'}</span>
-                        </div>
-                        <p class="text-gray-500 font-mono text-sm mb-6 pb-4 border-b border-ft-gray">REF: ${product.ref}</p>
-                        
-                        <p class="text-gray-300 text-sm leading-relaxed mb-6">${product.desc}</p>
-                        
-                        <div class="grid grid-cols-2 gap-y-3 text-sm mb-8">
-                            <div class="text-gray-500">Marque: <span class="text-white">FULLTECH CONGO</span></div>
-                            <div class="text-gray-500">Position: <span class="text-white capitalize">${product.position}</span></div>
-                            <div class="text-gray-500">Dimension: <span class="text-ft-red font-bold">${product.width}${product.profile !== '-' ? '/'+product.profile : ''}-${product.diameter}</span></div>
-                            <div class="text-gray-500">Type: <span class="text-white">${product.type}</span></div>
-                            <div class="text-gray-500">Indice: <span class="text-white">${product.loadSpeedIndex}</span></div>
-                            <div class="text-gray-500">Structure: <span class="text-white">${product.structure}</span></div>
-                        </div>
-                    </div>
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
 
-                    <div class="mt-auto">
-                        <div class="flex justify-between items-end mb-6">
-                            <div>
-                                <div class="text-gray-500 text-sm">Prix unitaire</div>
-                                <div class="font-oswald text-4xl text-white">${formatUSD(product.priceUSD)}</div>
-                                <div class="text-gray-400 text-sm">${formatCDF(product.priceUSD)}</div>
-                            </div>
-                        </div>
-                        
-                        <button onclick="addToCart('${product.id}')" class="w-full bg-ft-red hover:bg-ft-redhover text-white py-4 font-oswald text-xl uppercase tracking-wider transition-colors flex justify-center items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            Ajouter au panier
-                        </button>
-                    </div>
-                </div>
-            `;
-            productModal.classList.remove('hidden');
+    // Add to Cart from Modal
+    document.getElementById('modal-add-btn').addEventListener('click', () => {
+        if(currentSelectedProduct) {
+            addToCart(currentSelectedProduct);
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            
+            // Show feedback
+            const btn = document.getElementById('modal-add-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Ajouté ! <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+            btn.classList.replace('bg-ft-red', 'bg-green-600');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.replace('bg-green-600', 'bg-ft-red');
+                toggleCart(true); // Open cart panel
+            }, 500);
         }
+    });
 
-        function closeProductModal() {
-            productModal.classList.add('hidden');
-        }
-
-        // --- 6. GESTION DU PANIER ---
+    // --- Cart Logic ---
+    const updateCartUI = () => {
+        const cartItemsContainer = document.getElementById('cart-items');
+        const countEl = document.getElementById('cart-count');
         
-        const cartSidebar = document.getElementById('cart-sidebar');
-        function toggleCart() {
-            if(cartSidebar.classList.contains('translate-x-full')) {
-                cartSidebar.classList.remove('translate-x-full');
-            } else {
-                cartSidebar.classList.add('translate-x-full');
-            }
-        }
-        document.getElementById('btn-cart-toggle').addEventListener('click', toggleCart);
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items-container');
-            const badge = document.getElementById('cart-count-badge');
-            let subtotalUSD = 0;
-            let count = 0;
-
-            if(cart.length === 0) {
-                container.innerHTML = `<div class="text-gray-500 text-center mt-10 font-oswald text-lg">Votre panier est vide.</div>`;
-                document.getElementById('btn-checkout').disabled = true;
-            } else {
-                container.innerHTML = '';
-                cart.forEach((item, index) => {
-                    const itemTotal = item.product.priceUSD * item.quantity;
-                    subtotalUSD += itemTotal;
-                    count += item.quantity;
-
-                    container.insertAdjacentHTML('beforeend', `
-                        <div class="flex items-center gap-4 border-b border-ft-gray py-4">
-                            <div class="w-16 h-16 bg-ft-black border border-ft-gray flex items-center justify-center p-1">
-                                ${getProductImage(item.product)}
+        let totalUSD = 0;
+        let totalItems = 0;
+        
+        cartItemsContainer.innerHTML = '';
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p class="text-ft-gray text-center font-sans mt-10">Votre panier est vide.</p>';
+            checkoutBtn.disabled = true;
+        } else {
+            checkoutBtn.disabled = false;
+            cart.forEach((item, index) => {
+                totalUSD += item.product.price_usd * item.quantity;
+                totalItems += item.quantity;
+                const dimStr = item.product.ratio ? `${item.product.width}/${item.product.ratio}-${item.product.rim}` : `${item.product.width}-${item.product.rim}`;
+                
+                cartItemsContainer.innerHTML += `
+                    <div class="flex gap-4 bg-ft-black p-4 border border-ft-gray">
+                        <div class="w-16 h-16 bg-ft-dark flex-shrink-0 border border-ft-gray flex items-center justify-center p-1">
+                            <img src="${item.product.img_iso}" class="h-full object-contain grayscale">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-heading uppercase text-sm tracking-wider text-white leading-tight">${item.product.name}</h4>
+                                    <span class="text-[10px] font-mono text-ft-white/50">${dimStr}</span>
+                                </div>
+                                <button onclick="removeFromCart(${index})" class="text-ft-gray hover:text-ft-red transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
                             </div>
-                            <div class="flex-1">
-                                <div class="font-oswald text-white leading-tight">${item.product.name}</div>
-                                <div class="text-xs text-gray-500 mb-2">${item.product.width}-${item.product.diameter}</div>
-                                <div class="flex items-center space-x-3">
-                                    <button onclick="updateQty(${index}, -1)" class="w-6 h-6 bg-ft-gray text-white flex items-center justify-center hover:bg-ft-red">-</button>
-                                    <span class="text-white text-sm font-bold">${item.quantity}</span>
-                                    <button onclick="updateQty(${index}, 1)" class="w-6 h-6 bg-ft-gray text-white flex items-center justify-center hover:bg-ft-red">+</button>
+                            <div class="flex justify-between items-end mt-2">
+                                <div class="flex items-center gap-2 border border-ft-gray bg-ft-dark">
+                                    <button onclick="updateQty(${index}, -1)" class="w-6 h-6 flex items-center justify-center text-white hover:bg-ft-lightgray">-</button>
+                                    <span class="font-mono text-xs w-4 text-center">${item.quantity}</span>
+                                    <button onclick="updateQty(${index}, 1)" class="w-6 h-6 flex items-center justify-center text-white hover:bg-ft-lightgray">+</button>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-heading text-ft-red">${formatUSD(item.product.price_usd * item.quantity)}</div>
                                 </div>
                             </div>
-                            <div class="text-right flex flex-col justify-between h-full">
-                                <button onclick="removeFromCart(${index})" class="text-gray-600 hover:text-ft-red self-end">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                </button>
-                                <div class="font-oswald text-ft-red mt-2">${formatUSD(itemTotal)}</div>
-                            </div>
-                        </div>
-                    `);
-                });
-                document.getElementById('btn-checkout').disabled = false;
-            }
-
-            badge.textContent = count;
-            document.getElementById('cart-subtotal').textContent = formatUSD(subtotalUSD);
-            document.getElementById('cart-total-usd').textContent = formatUSD(subtotalUSD);
-            document.getElementById('cart-total-cdf').textContent = '~ ' + formatUSD(subtotalUSD).replace('$','') * RATE_USD_CDF + ' CDF';
-            
-            // Si le checkout est ouvert, on met à jour aussi la vue du step 1
-            if(!document.getElementById('checkout-modal').classList.contains('hidden')) {
-                renderCheckoutCart();
-            }
-        }
-
-        function addToCart(productId) {
-            const product = productsDB.find(p => p.id === productId);
-            if(!product) return;
-
-            const existingIndex = cart.findIndex(item => item.product.id === productId);
-            if(existingIndex >= 0) {
-                cart[existingIndex].quantity += 1;
-            } else {
-                cart.push({ product, quantity: 1 });
-            }
-            
-            updateCartUI();
-            closeProductModal();
-            
-            // Ouvrir le panier pour feedback
-            if(cartSidebar.classList.contains('translate-x-full')) {
-                toggleCart();
-            }
-            showToast(`${product.name} ajouté au panier`);
-        }
-
-        function updateQty(index, delta) {
-            cart[index].quantity += delta;
-            if(cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
-            updateCartUI();
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        // --- 7. CHECKOUT (STEPPER) ---
-        
-        const checkoutModal = document.getElementById('checkout-modal');
-        let currentCheckoutStep = 1;
-
-        function openCheckout() {
-            if(cart.length === 0) return;
-            toggleCart(); // Fermer sidebar
-            checkoutModal.classList.remove('hidden');
-            renderCheckoutCart();
-            showStep(1);
-        }
-
-        function closeCheckout() {
-            checkoutModal.classList.add('hidden');
-            // reset stepper visuel (pas les données)
-        }
-
-        function getCartTotal() {
-            return cart.reduce((sum, item) => sum + (item.product.priceUSD * item.quantity), 0);
-        }
-
-        function renderCheckoutCart() {
-            const container = document.getElementById('checkout-cart-summary');
-            container.innerHTML = '';
-            cart.forEach((item, idx) => {
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="flex justify-between items-center bg-ft-black p-3 border border-ft-gray">
-                        <div class="flex items-center gap-4">
-                            <span class="text-ft-red font-bold px-2 py-1 bg-ft-dark border border-ft-red text-sm">${item.quantity}x</span>
-                            <div>
-                                <div class="text-white font-oswald tracking-wide">${item.product.name}</div>
-                                <div class="text-gray-500 text-xs">${item.product.width}-${item.product.diameter}</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-6">
-                            <div class="text-right">
-                                <div class="text-white font-oswald">${formatUSD(item.product.priceUSD * item.quantity)}</div>
-                            </div>
-                            <button onclick="removeFromCart(${idx})" class="text-gray-500 hover:text-ft-red">✕</button>
                         </div>
                     </div>
-                `);
+                `;
             });
-            document.getElementById('checkout-total').textContent = formatUSD(getCartTotal());
-            if(cart.length === 0) closeCheckout();
         }
+        
+        countEl.textContent = totalItems;
+        document.getElementById('cart-total-usd').textContent = formatUSD(totalUSD);
+        document.getElementById('cart-total-cdf').textContent = formatCDF(totalUSD);
+        
+        // Update checkout totals as well
+        document.getElementById('co-subtotal').textContent = formatUSD(totalUSD);
+        updateCheckoutTotal();
+    };
 
-        function updateDeliveryFee() {
-            const val = document.querySelector('input[name="delivery"]:checked').value;
-            currentDeliveryFee = (val === 'domicile') ? 5.00 : 0.00;
-            const finalTotal = getCartTotal() + currentDeliveryFee;
-            document.getElementById('checkout-total-with-delivery').textContent = formatUSD(finalTotal);
-            
-            // Update step 4 text
-            document.getElementById('final-pay-amount').textContent = formatUSD(finalTotal);
+    const addToCart = (product) => {
+        const existing = cart.find(i => i.product.id === product.id);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({ product, quantity: 1 });
         }
+        updateCartUI();
+    };
 
-        function showStep(step) {
-            // Hide all
-            for(let i=1; i<=5; i++) {
-                document.getElementById(`step-${i}`).classList.add('hidden');
-                const ind = document.getElementById(`indicator-${i}`);
-                if(i < step) {
-                    ind.className = "step-indicator completed w-10 h-10 rounded-full flex items-center justify-center font-oswald text-sm z-10";
-                    ind.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-                } else if (i === step) {
-                    ind.className = "step-indicator active w-10 h-10 rounded-full border-2 bg-ft-dark flex items-center justify-center font-oswald text-sm z-10";
-                    ind.innerHTML = i;
-                } else {
-                    ind.className = "step-indicator w-10 h-10 rounded-full border-2 border-ft-gray text-gray-500 bg-ft-dark flex items-center justify-center font-oswald text-sm z-10";
-                    ind.innerHTML = i;
-                }
+    window.removeFromCart = (index) => {
+        cart.splice(index, 1);
+        updateCartUI();
+    };
+
+    window.updateQty = (index, delta) => {
+        const item = cart[index];
+        item.quantity += delta;
+        if (item.quantity <= 0) cart.splice(index, 1);
+        updateCartUI();
+    };
+
+    // --- Checkout Logic ---
+    checkoutBtn.addEventListener('click', () => {
+        toggleCart(false);
+        openCheckout();
+    });
+
+    closeCheckoutBtn.addEventListener('click', () => {
+        checkoutModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    const openCheckout = () => {
+        checkoutModal.classList.remove('hidden');
+        checkoutModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        currentStep = 1;
+        updateStepperUI();
+        
+        // Populate Step 1 (Cart Review)
+        const coItemsContainer = document.getElementById('checkout-cart-items');
+        coItemsContainer.innerHTML = '';
+        cart.forEach(item => {
+            const dimStr = item.product.ratio ? `${item.product.width}/${item.product.ratio}-${item.product.rim}` : `${item.product.width}-${item.product.rim}`;
+            coItemsContainer.innerHTML += `
+                <div class="flex justify-between items-center border-b border-ft-gray pb-4">
+                    <div>
+                        <div class="font-heading uppercase tracking-wider">${item.product.name}</div>
+                        <div class="text-xs font-mono text-ft-white/50">${dimStr} - Qté: ${item.quantity}</div>
+                    </div>
+                    <div class="font-mono">${formatUSD(item.product.price_usd * item.quantity)}</div>
+                </div>
+            `;
+        });
+    };
+
+    const updateStepperUI = () => {
+        // Update Steps sidebar
+        document.querySelectorAll('.step-item').forEach(el => {
+            const stepNum = parseInt(el.getAttribute('data-step'));
+            el.classList.remove('active', 'completed');
+            if (stepNum < currentStep) {
+                el.classList.add('completed');
+            } else if (stepNum === currentStep) {
+                el.classList.add('active');
             }
-            // Show target
-            document.getElementById(`step-${step}`).classList.remove('hidden');
-            currentCheckoutStep = step;
-            
-            if(step === 3) updateDeliveryFee();
-        }
-
-        function nextStep(step) {
-            showStep(step);
-        }
-        function prevStep(step) {
-            showStep(step);
-        }
-
-        function validateStep2() {
-            const name = document.getElementById('c_name').value;
-            const phone = document.getElementById('c_phone').value;
-            const commune = document.getElementById('c_commune').value;
-            const address = document.getElementById('c_address').value;
-
-            if(!name || !phone || !commune || !address) {
-                showToast("Veuillez remplir tous les champs obligatoires (*)", "error");
-                return;
-            }
-            
-            checkoutOrderData.client = { name, phone, commune, address };
-            nextStep(3);
-        }
-
-        // Toggle phone input visibility based on payment method
-        document.querySelectorAll('input[name="payment"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                const instructions = document.getElementById('mobile-money-instructions');
-                const phoneInput = document.getElementById('pay_phone');
-                if(e.target.value === 'cash') {
-                    instructions.classList.add('hidden');
-                    document.getElementById('pay-btn-text').innerHTML = `Confirmer la commande <span id="final-pay-amount">${formatUSD(getCartTotal() + currentDeliveryFee)}</span>`;
-                } else {
-                    instructions.classList.remove('hidden');
-                    // Pre-fill phone if possible
-                    if(!phoneInput.value && checkoutOrderData.client) phoneInput.value = checkoutOrderData.client.phone;
-                    document.getElementById('pay-btn-text').innerHTML = `Payer via ${e.target.value.toUpperCase()} <span id="final-pay-amount">${formatUSD(getCartTotal() + currentDeliveryFee)}</span>`;
-                }
-            });
         });
 
-        function processPayment() {
-            const method = document.querySelector('input[name="payment"]:checked').value;
-            if(method !== 'cash') {
-                const phone = document.getElementById('pay_phone').value;
-                if(!phone) {
-                    showToast("Numéro de téléphone requis pour le paiement Mobile Money", "error");
+        // Show/Hide Content
+        document.querySelectorAll('.step-content').forEach(el => {
+            el.classList.add('hidden');
+            el.classList.remove('block');
+        });
+        const currentContent = document.getElementById(`step-content-${currentStep}`);
+        if(currentContent) {
+            currentContent.classList.remove('hidden');
+            currentContent.classList.add('block');
+        }
+    };
+
+    // Nav Buttons
+    document.querySelectorAll('.next-step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Basic validation
+            if (currentStep === 2) {
+                const name = document.getElementById('co-name').value;
+                const phone = document.getElementById('co-phone').value;
+                const commune = document.getElementById('co-commune').value;
+                if(!name || !phone || !commune) {
+                    alert('Veuillez remplir les champs obligatoires.'); // Only use if strictly necessary, but requested not to.
+                    // Better approach: highlight inputs
+                    document.getElementById('co-name').classList.add('border-ft-red');
                     return;
                 }
             }
 
-            // Simulate API Call
-            const btn = document.getElementById('btn-process-pay');
-            const loader = document.getElementById('pay-loader');
-            const text = document.getElementById('pay-btn-text');
-            
-            btn.disabled = true;
-            loader.classList.remove('hidden');
-            
-            setTimeout(() => {
-                // Success Simulation
-                generateInvoice(method);
-                cart = []; // Empty cart
-                updateCartUI();
-                showStep(5);
-                btn.disabled = false;
-                loader.classList.add('hidden');
-            }, 2000);
-        }
-
-        function generateInvoice(method) {
-            const date = new Date().toLocaleDateString('fr-FR') + ' ' + new Date().toLocaleTimeString('fr-FR');
-            document.getElementById('inv-date').textContent = date;
-            document.getElementById('inv-client').textContent = checkoutOrderData.client.name + ' (' + checkoutOrderData.client.phone + ') - ' + checkoutOrderData.client.commune;
-            
-            let methodText = "Paiement à la livraison";
-            if(method === 'mpesa') methodText = "M-PESA";
-            if(method === 'airtel') methodText = "Airtel Money";
-            if(method === 'orange') methodText = "Orange Money";
-            document.getElementById('inv-method').textContent = methodText;
-
-            const itemsContainer = document.getElementById('inv-items');
-            itemsContainer.innerHTML = '';
-            let total = 0;
-            
-            cart.forEach(item => {
-                const lineTotal = item.quantity * item.product.priceUSD;
-                total += lineTotal;
-                itemsContainer.insertAdjacentHTML('beforeend', `
-                    <div class="flex justify-between">
-                        <span>${item.quantity}x ${item.product.name}</span>
-                        <span>${formatUSD(lineTotal)}</span>
-                    </div>
-                `);
-            });
-
-            if(currentDeliveryFee > 0) {
-                 itemsContainer.insertAdjacentHTML('beforeend', `
-                    <div class="flex justify-between border-t border-gray-800 mt-2 pt-2 text-gray-400">
-                        <span>Frais de livraison</span>
-                        <span>${formatUSD(currentDeliveryFee)}</span>
-                    </div>
-                `);
-                total += currentDeliveryFee;
+            if (currentStep === 4) {
+                // Simulate payment processing before step 5
+                processPayment();
+                return;
             }
 
-            document.getElementById('inv-total').textContent = formatUSD(total);
-        }
+            if (currentStep < 5) {
+                currentStep++;
+                updateStepperUI();
+            }
+        });
+    });
 
-        function finishOrder() {
-            closeCheckout();
-            window.scrollTo(0,0);
-        }
+    document.querySelectorAll('.prev-step-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepperUI();
+            }
+        });
+    });
 
-        // --- INIT CALLS ---
-        initCarousel();
-        populateSearchSelects();
-        renderCatalog();
-        updateCartUI();
+    // Delivery Fee update
+    window.updateDeliveryFee = (fee) => {
+        deliveryFee = fee;
+        updateCheckoutTotal();
+    };
+
+    const updateCheckoutTotal = () => {
+        let subtotalUSD = cart.reduce((sum, item) => sum + (item.product.price_usd * item.quantity), 0);
+        let totalUSD = subtotalUSD + deliveryFee;
+        
+        const totUsdEl = document.getElementById('co-total-usd');
+        const totCdfEl = document.getElementById('co-total-cdf');
+        if(totUsdEl) totUsdEl.textContent = formatUSD(totalUSD);
+        if(totCdfEl) totCdfEl.textContent = formatCDF(totalUSD);
+
+        const finalTotUsdEl = document.getElementById('co-final-total-usd');
+        if(finalTotUsdEl) finalTotUsdEl.textContent = formatUSD(totalUSD);
+        
+        const payBtnAmt = document.getElementById('pay-btn-amount');
+        if(payBtnAmt) payBtnAmt.textContent = formatUSD(totalUSD);
+    };
+
+    // Mobile Money selection logic
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    const mmPrompt = document.getElementById('mm-prompt');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            // Reset borders
+            document.querySelectorAll('input[name="payment_method"]').forEach(r => r.parentElement.style.borderColor = '');
+            e.target.parentElement.style.borderColor = 'white';
+
+            if (e.target.value !== 'cash') {
+                mmPrompt.classList.remove('hidden');
+                mmPrompt.classList.add('block');
+            } else {
+                mmPrompt.classList.add('hidden');
+                mmPrompt.classList.remove('block');
+            }
+        });
+    });
+
+    // Simulation Paiement & Facture
+    const processPayment = () => {
+        const method = document.querySelector('input[name="payment_method"]:checked').value;
+        const navBtns = document.getElementById('payment-nav-btns');
+        const processing = document.getElementById('payment-processing');
+        const formContent = mmPrompt.parentElement; // the container of methods
+
+        // Hide methods, show loader
+        Array.from(formContent.children).forEach(c => {
+            if(c.id !== 'payment-processing') c.style.display = 'none';
+        });
+        processing.classList.remove('hidden');
+        processing.classList.add('flex');
+
+        setTimeout(() => {
+            // Generate Invoice Data
+            generateInvoice(method);
+            
+            currentStep = 5;
+            updateStepperUI();
+            
+            // Empty cart
+            cart = [];
+            updateCartUI();
+        }, 2000);
+    };
+
+    // Déclenchement du paiement depuis le bouton "Payer"
+const triggerPaymentBtn = document.getElementById('trigger-payment');
+
+if (triggerPaymentBtn) {
+    triggerPaymentBtn.addEventListener('click', () => {
+        processPayment();
+    });
+}
+
+    const generateInvoice = (methodMethod) => {
+        const clientName = document.getElementById('co-name').value || 'Client';
+        const clientCommune = document.getElementById('co-commune').value || 'Kinshasa';
+        const clientAddress = document.getElementById('co-address').value || '';
+        
+        let subtotalUSD = 0;
+        const invItemsBody = document.getElementById('inv-items');
+        invItemsBody.innerHTML = '';
+        
+        cart.forEach(item => {
+            const lineTotal = item.product.price_usd * item.quantity;
+            subtotalUSD += lineTotal;
+            invItemsBody.innerHTML += `
+                <tr class="border-b border-gray-100">
+                    <td class="py-2">
+                        <div class="font-bold">${item.product.name}</div>
+                        <div class="text-xs text-gray-500">${item.product.ref}</div>
+                    </td>
+                    <td class="py-2 text-center">${item.quantity}</td>
+                    <td class="py-2 text-right font-mono">${formatUSD(lineTotal)}</td>
+                </tr>
+            `;
+        });
+
+        const totalUSD = subtotalUSD + deliveryFee;
+        
+        document.getElementById('inv-date').textContent = new Date().toLocaleDateString('fr-FR');
+        document.getElementById('inv-client-name').textContent = clientName;
+        document.getElementById('inv-client-address').textContent = `${clientCommune}, ${clientAddress.substring(0,20)}...`;
+        
+        document.getElementById('inv-subtotal').textContent = formatUSD(subtotalUSD);
+        document.getElementById('inv-shipping').textContent = formatUSD(deliveryFee);
+        document.getElementById('inv-total').textContent = formatUSD(totalUSD);
+        
+        const methodNames = {
+            'orange': 'Orange Money', 'airtel': 'Airtel Money', 'mpesa': 'M-Pesa', 'africell': 'Africell Money', 'cash': 'Paiement à la livraison'
+        };
+        document.getElementById('inv-payment-method').textContent = methodNames[methodMethod];
+    };
+
+    // Quick Search logic (just scrolls to catalog for demo)
+    document.getElementById('btn-quick-search').addEventListener('click', () => {
+        document.getElementById('catalog').scrollIntoView({behavior: 'smooth'});
+        // In a real app, this would apply filters based on dropdowns.
+    });
+
+    // Init
+    renderCatalog();
+    updateCartUI();

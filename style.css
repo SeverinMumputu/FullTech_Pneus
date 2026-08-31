@@ -1,115 +1,75 @@
-
+        /* CSS Personnalisé pour parfaire le look anti-template */
         body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            background-color: #070707;
+            color: #f4f4f5;
+            -webkit-font-smoothing: antialiased;
         }
         
-        h1, h2, h3, h4, h5, h6, .font-oswald {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
+        /* Texture de bruit subtile sur les fonds sombres */
+        .bg-noise {
+            position: relative;
+        }
+        .bg-noise::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.03%22/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 0;
         }
 
-        /* Custom Scrollbar for Industrial Look */
+        /* Scrollbar personnalisée */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #D30000; }
+        ::-webkit-scrollbar-track { background: #070707; }
+        ::-webkit-scrollbar-thumb { background: #2d2d2d; }
+        ::-webkit-scrollbar-thumb:hover { background: #e60000; }
 
-        /* Premium Input Styles */
-        .premium-input {
-            background: #121212;
-            border: 1px solid #2a2a2a;
-            color: white;
-            transition: all 0.3s ease;
+        /* Animations */
+        .reveal-panel {
+            clip-path: inset(0 0 100% 0);
+            transition: clip-path 0.5s cubic-bezier(0.77, 0, 0.175, 1);
         }
-        .premium-input:focus {
-            border-color: #D30000;
+        .reveal-panel.active { clip-path: inset(0 0 0 0); }
+        
+        .fade-in { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .fade-in.active { opacity: 1; pointer-events: auto; }
+
+        .slide-right { transform: translateX(100%); transition: transform 0.4s ease; }
+        .slide-right.active { transform: translateX(0); }
+
+        /* Infinite Scroll Animation pour Partenaires */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-infinite-scroll {
+            display: flex;
+            width: 200%;
+            animation: scroll 20s linear infinite;
+        }
+        .animate-infinite-scroll:hover { animation-play-state: paused; }
+        
+        /* Blur effect progression */
+        .blur-edges {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        /* Forms & Inputs - Industrial styling */
+        input, select, textarea {
+            background-color: transparent;
+            border: 1px solid #2d2d2d;
+            color: white;
+            border-radius: 0;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            box-shadow: 0 0 10px rgba(211, 0, 0, 0.2);
-        }
-
-        /* Glassmorphism/Industrial overlays */
-        .glass-panel {
-            background: rgba(18, 18, 18, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Carousel specific */
-        .carousel-slide {
-            transition: opacity 0.8s ease-in-out;
-        }
-
-        /* Stepper UI */
-        .step-indicator.active {
-            border-color: #D30000;
-            color: #D30000;
-        }
-        .step-indicator.completed {
-            background-color: #D30000;
-            border-color: #D30000;
-            color: white;
+            border-color: #e60000;
+            
         }
         
-        /* Product Card Image Hover Effect */
-        .product-card:hover .product-image {
-            transform: scale(1.05) rotate(2deg);
-        }
-        .product-image {
-            transition: transform 0.4s ease;
-        }
-
-        /* SVG Tire background pattern pattern */
-        .bg-pattern {
-            background-image: radial-gradient(#2a2a2a 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        
-        /* Hide number input spinners */
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-
-      /* =========================================================
-   CARROUSEL - FORMAT MOBILE TYPE TIKTOK / YOUTUBE SHORTS
-   ========================================================= */
-
-.carousel-media {
-    width: 100%;
-    height: 100%;
-    object-position: center center;
-}
-
-/* MOBILE */
-@media (max-width: 767px) {
-
-    .carousel-slide {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-    }
-
-    .carousel-media {
-        width: 100% !important;
-        height: 100% !important;
-        /* object-fit: cover !important;*/
-        object-position: center center !important;
-    }
-}
-
-/* PC : on conserve le comportement actuel */
-@media (min-width: 768px) {
-
-    .carousel-media {
-        width: 100%;
-        height: 100%;
-         /* object-fit: cover !important;*/
-        object-position: center center !important;
-    }
-}
+        /* Stepper CSS */
+        .step-item.active .step-line { background-color: #e60000; }
+        .step-item.active .step-circle { border-color: #e60000; color: #e60000; }
+        .step-item.completed .step-circle { background-color: #e60000; border-color: #e60000; color: white; }
