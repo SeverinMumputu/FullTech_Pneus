@@ -108,57 +108,7 @@ const heroSlides = [
     },
     {
         type: 'image',
-        src: 'image_1.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_2.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_3.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_4.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_5.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
         src: 'image_6.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_7.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_8.jpeg',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_9.PNG',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_10.PNG',
-        alt: 'FullTech Congo - Performance et adhérence'
-    },
-     {
-        type: 'image',
-        src: 'image_11.PNG',
         alt: 'FullTech Congo - Performance et adhérence'
     }
 ];
