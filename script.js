@@ -9,8 +9,8 @@
         width: 120, ratio: 70, rim: 17, type: 'Tubeless', position: 'Arrière',
         index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 65,
         desc: 'Conçu pour la durabilité sur asphalte. Bande de roulement optimisée pour l\'évacuation d\'eau, garantissant une sécurité maximale même pendant la saison des pluies.',
-        img_bg: 'RoadMax_1.png',
-        img_iso: 'RoadMax_1.jpeg',
+        img_bg: 'photo_1.jpeg',
+        img_iso: 'photo_1.jpeg',
 
         idealFor: [
             { type: 'all-season', text: 'Toutes saisons' },
@@ -24,8 +24,8 @@
         width: 90, ratio: 90, rim: 21, type: 'Tube Type', position: 'Avant',
         index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 55,
         desc: 'Crampons espacés pour un débourrage parfait de la boue. Carcasse ultra-rigide pour résister aux chocs sur les pistes non aménagées du pays.',
-        img_bg: 'DirtyCross.png',
-        img_iso: 'Pneu_3-removebg-preview.png',
+        img_bg: 'photo_2.jpeg',
+        img_iso: 'photo_5.jpeg',
 
         idealFor: [
             { type: 'terrain', text: 'Tout-terrain' },
@@ -39,8 +39,8 @@
         width: 110, ratio: 90, rim: 17, type: 'Tubeless', position: 'Arrière',
         index: '62P', usage: 'Intensif/Charge lourde', warranty: '6 mois', price_usd: 70,
         desc: 'Le pneu de référence pour les motos-taxis. Flancs renforcés (6 plis) pour supporter de lourdes charges et résister aux nids-de-poule sans déformation.',
-        img_bg: 'pneu_1.jpg',
-        img_iso: 'pneu_1-removebg-preview.png',
+        img_bg: 'photo_3.jpeg',
+        img_iso: 'photo_3.jpeg',
 
         idealFor: [
             { type: 'heavy', text: 'Charge lourde' },
@@ -54,8 +54,8 @@
         width: 2.75, ratio: null, rim: 17, type: 'Tube Type', position: 'Avant',
         index: '41P', usage: 'Ville/Trajet court', warranty: '3 mois', price_usd: 35,
         desc: 'Profil classique, maniable et économique. Gomme dure assurant une très longue durée de vie pour les trajets quotidiens.',
-        img_bg: 'Pneu_4.jpg',
-        img_iso: 'Pneu_4.jpg',
+        img_bg: 'photo_4.jpeg',
+        img_iso: 'photo_4.jpeg',
 
         idealFor: [
             { type: 'urban', text: 'Usage urbain' },
@@ -92,8 +92,15 @@
     const checkoutBtn = document.getElementById('checkout-btn');
     const checkoutModal = document.getElementById('checkout-modal');
     const closeCheckoutBtn = document.getElementById('close-checkout-btn');
-    let currentStep = 1;
-    let deliveryFee = 5;
+
+    // Mes commandes
+const ordersBtn = document.getElementById('orders-btn');
+const ordersOverlay = document.getElementById('orders-overlay');
+const ordersPanel = document.getElementById('orders-panel');
+const closeOrdersBtn = document.getElementById('close-orders-btn');
+const myOrdersList = document.getElementById('my-orders-list');
+const ordersCount = document.getElementById('orders-count');
+ 
 
     // --- UI Interactions ---
 
@@ -255,16 +262,33 @@ const initHeroCarousel = () => {
 
 initHeroCarousel();
 
-    // Scroll Header effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('shadow-lg');
-            header.querySelector('.bg-ft-black\\/90').classList.add('border-ft-red');
-        } else {
-            header.classList.remove('shadow-lg');
-            header.querySelector('.bg-ft-black\\/90').classList.remove('border-ft-red');
-        }
-    });
+// Scroll Header effect
+window.addEventListener('scroll', () => {
+
+    const headerSecondary =
+        header?.querySelector('[class~="bg-ft-dark/95"]');
+
+    if (window.scrollY > 50) {
+
+        header?.classList.add('shadow-lg');
+
+        headerSecondary?.classList.add(
+            'border-ft-red'
+        );
+
+    } else {
+
+        header?.classList.remove(
+            'shadow-lg'
+        );
+
+        headerSecondary?.classList.remove(
+            'border-ft-red'
+        );
+
+    }
+
+});
 
     // Search Toggle
     searchBtn.addEventListener('click', () => {
@@ -931,224 +955,2884 @@ const renderProductCard = (product) => {
     };
 
     // --- Checkout Logic ---
-    checkoutBtn.addEventListener('click', () => {
-        toggleCart(false);
-        openCheckout();
-    });
 
-    closeCheckoutBtn.addEventListener('click', () => {
-        checkoutModal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    });
+checkoutBtn.addEventListener('click', () => {
+    toggleCart(false);
+    openCheckout();
+});
 
-    const openCheckout = () => {
-        checkoutModal.classList.remove('hidden');
-        checkoutModal.classList.add('flex');
-        document.body.style.overflow = 'hidden';
-        currentStep = 1;
-        updateStepperUI();
-        
-        // Populate Step 1 (Cart Review)
-        const coItemsContainer = document.getElementById('checkout-cart-items');
-        coItemsContainer.innerHTML = '';
-        cart.forEach(item => {
-            const dimStr = item.product.ratio ? `${item.product.width}/${item.product.ratio}-${item.product.rim}` : `${item.product.width}-${item.product.rim}`;
-            coItemsContainer.innerHTML += `
-                <div class="flex justify-between items-center border-b border-ft-gray pb-4">
-                    <div>
-                        <div class="font-heading uppercase tracking-wider">${item.product.name}</div>
-                        <div class="text-xs font-mono text-ft-white/50">${dimStr} - Qté: ${item.quantity}</div>
+closeCheckoutBtn.addEventListener('click', () => {
+    closeCheckout();
+});
+
+
+
+let currentStep = 1;
+let deliveryFee = 0;
+
+let checkoutOrder = null;
+let checkoutPaymentConfirmed = false;
+
+/*
+ * Gestion en mémoire uniquement.
+ *
+ * Aucune donnée de commande n'est conservée
+ * dans le navigateur avec LocalStorage.
+ *
+ * La persistance définitive appartient à
+ * la plateforme de gestion.
+ */
+let orderSequence = 0;
+let pendingOrders = [];
+
+
+/* ============================================================
+   HELPERS CHECKOUT
+============================================================ */
+
+const getCheckoutSubtotal = () => {
+    return cart.reduce(
+        (sum, item) =>
+            sum + (item.product.price_usd * item.quantity),
+        0
+    );
+};
+
+const generateOrderId = () => {
+
+    const currentYear =
+        new Date().getFullYear();
+
+    orderSequence += 1;
+
+    return `CMD-${currentYear}-${String(orderSequence).padStart(5, '0')}`;
+};
+
+
+/*
+ * Empreinte courte du contenu de la commande.
+ *
+ * Elle permet de créer un code plus difficile à deviner
+ * tout en restant suffisamment court pour être saisi
+ * manuellement.
+ *
+ * La donnée métier complète reste dans checkoutOrder.
+ */
+const generateOrderFingerprint = (input) => {
+
+    let hash = 2166136261;
+
+    for (let i = 0; i < input.length; i++) {
+
+        hash ^= input.charCodeAt(i);
+
+        hash +=
+            (hash << 1) +
+            (hash << 4) +
+            (hash << 7) +
+            (hash << 8) +
+            (hash << 24);
+    }
+
+    return (
+        hash >>> 0
+    )
+        .toString(36)
+        .toUpperCase()
+        .padStart(7, '0')
+        .slice(-7);
+};
+
+/*
+ * Génération du code unique de rapprochement.
+ *
+ * Le code est lié à :
+ * - l'identifiant de commande
+ * - l'identité du client
+ * - l'adresse email du client
+ * - la date/heure
+ * - le montant
+ *
+ * L'email est intégré à la source de calcul
+ * du fingerprint afin que le code soit lié
+ * à cette donnée client.
+ *
+ * Exemple :
+ * CMD-2026-00012-7F8A21B
+ */
+const generateUniqueOrderCode = ({
+    orderId,
+    name,
+    email,
+    createdAt,
+    amount
+}) => {
+
+    const normalizedEmail =
+        String(email || '')
+            .trim()
+            .toLowerCase();
+
+    const fingerprintSource =
+        `${orderId}|${name}|${normalizedEmail}|${createdAt}|${amount.toFixed(2)}`;
+
+    const fingerprint =
+        generateOrderFingerprint(
+            fingerprintSource
+        );
+
+    return `${orderId}-${fingerprint}`;
+};
+
+/* ============================================================
+   RÉCAPITULATIF PANIER
+============================================================ */
+
+const renderCheckoutCart = () => {
+
+    const coItemsContainer =
+        document.getElementById(
+            'checkout-cart-items'
+        );
+
+    if (!coItemsContainer) {
+        return;
+    }
+
+    coItemsContainer.innerHTML = '';
+
+    if (cart.length === 0) {
+
+        coItemsContainer.innerHTML = `
+            <p class="text-ft-gray text-center font-sans mt-10">
+                Votre panier est vide.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    cart.forEach(item => {
+
+        const dimStr = item.product.ratio
+            ? `${item.product.width}/${item.product.ratio}-${item.product.rim}`
+            : `${item.product.width}-${item.product.rim}`;
+
+        coItemsContainer.innerHTML += `
+            <div class="flex justify-between items-center border-b border-ft-gray pb-4">
+
+                <div>
+
+                    <div class="font-heading uppercase tracking-wider">
+                        ${item.product.name}
                     </div>
-                    <div class="font-mono">${formatUSD(item.product.price_usd * item.quantity)}</div>
+
+                    <div class="text-xs font-mono text-ft-white/50">
+                        ${dimStr} - Qté: ${item.quantity}
+                    </div>
+
                 </div>
-            `;
-        });
+
+                <div class="font-mono">
+                    ${formatUSD(
+                        item.product.price_usd * item.quantity
+                    )}
+                </div>
+
+            </div>
+        `;
+    });
+};
+
+
+
+/* ============================================================
+   TOTAUX CHECKOUT
+============================================================ */
+
+const updateCheckoutTotal = () => {
+
+    const subtotalUSD =
+        getCheckoutSubtotal();
+
+    /*
+     * La nouvelle architecture ne prévoit plus
+     * de frais de livraison dans le stepper.
+     */
+    const totalUSD =
+        subtotalUSD;
+
+
+    const subtotalEl =
+        document.getElementById(
+            'co-subtotal'
+        );
+
+    if (subtotalEl) {
+        subtotalEl.textContent =
+            formatUSD(subtotalUSD);
+    }
+
+
+    const totalUsdEl =
+        document.getElementById(
+            'co-total-usd'
+        );
+
+    if (totalUsdEl) {
+        totalUsdEl.textContent =
+            formatUSD(totalUSD);
+    }
+
+
+    const totalCdfEl =
+        document.getElementById(
+            'co-total-cdf'
+        );
+
+    if (totalCdfEl) {
+        totalCdfEl.textContent =
+            formatCDF(totalUSD);
+    }
+};
+
+
+
+/* ============================================================
+   LECTURE DES INFOS CLIENT
+============================================================ */
+
+const getClientCheckoutData = () => {
+
+    return {
+
+        name:
+            document.getElementById(
+                'co-name'
+            ).value.trim(),
+
+        phone:
+            document.getElementById(
+                'co-phone'
+            ).value.trim(),
+
+        email:
+            document.getElementById(
+                'co-email'
+            ).value.trim(),
+
+        commune:
+            document.getElementById(
+                'co-commune'
+            ).value.trim(),
+
+        quartier:
+            document.getElementById(
+                'co-quartier'
+            ).value.trim(),
+
+        reference:
+            document.getElementById(
+                'co-reference'
+            ).value.trim()
+
     };
+};
 
-    const updateStepperUI = () => {
-        // Update Steps sidebar
-        document.querySelectorAll('.step-item').forEach(el => {
-            const stepNum = parseInt(el.getAttribute('data-step'));
-            el.classList.remove('active', 'completed');
-            if (stepNum < currentStep) {
-                el.classList.add('completed');
-            } else if (stepNum === currentStep) {
-                el.classList.add('active');
-            }
-        });
+/* ============================================================
+   TICKETS DE COMMANDE
+============================================================ */
 
-        // Show/Hide Content
-        document.querySelectorAll('.step-content').forEach(el => {
-            el.classList.add('hidden');
-            el.classList.remove('block');
-        });
-        const currentContent = document.getElementById(`step-content-${currentStep}`);
-        if(currentContent) {
-            currentContent.classList.remove('hidden');
-            currentContent.classList.add('block');
+/*
+ * Génération déterministe des tickets liés à la commande.
+ *
+ * Aucun élément aléatoire n'est utilisé.
+ *
+ * La preuve du ticket est calculée à partir de :
+ * - l'identifiant unique de la commande
+ * - le code unique de rapprochement
+ * - la date/heure de création
+ * - le montant de la commande
+ *
+ * La plateforme de gestion pourra recalculer
+ * exactement cette même preuve.
+ */
+const generateOrderTicketOptions = ({
+    orderId,
+    uniqueCode,
+    createdAt,
+    amount
+}) => {
+
+    const cleanOrderId =
+        String(orderId)
+            .replace(/[^A-Z0-9]/gi, '')
+            .toUpperCase();
+
+
+    /*
+     * Source indépendante de liaison du ticket
+     * avec la commande.
+     */
+    const ticketBindingSource =
+        `${orderId}|${uniqueCode}|${createdAt}|${Number(amount).toFixed(2)}`;
+
+
+    /*
+     * Preuve déterministe du ticket.
+     *
+     * La même commande produira toujours
+     * la même preuve.
+     */
+    const ticketProof =
+        generateOrderFingerprint(
+            ticketBindingSource
+        );
+
+
+    /*
+     * Base commune aux 5 tickets.
+     */
+    const base =
+        `TCK-${cleanOrderId}-${ticketProof}`;
+
+
+    /*
+     * Les 5 tickets restent disponibles pour
+     * l'étape 3, mais aucun n'est généré
+     * avec une valeur aléatoire.
+     */
+    return Array.from(
+        { length: 5 },
+        (_, index) =>
+            `${base}-${String(index + 1).padStart(2, '0')}`
+    );
+
+};
+
+/* ============================================================
+   GÉNÉRATION DU DOSSIER DE COMMANDE
+============================================================ */
+
+const generateCheckoutOrder = (
+    reservedOrderId = null
+) => {
+
+    const client =
+        getClientCheckoutData();
+
+    const createdAt =
+        new Date().toISOString();
+
+    const amount =
+        getCheckoutSubtotal();
+
+    const orderId =
+    reservedOrderId ||
+    generateOrderId();
+
+const uniqueCode =
+    generateUniqueOrderCode({
+
+        orderId,
+
+        name:
+            client.name,
+
+        email:
+            client.email,
+
+        createdAt,
+
+        amount
+
+    });
+
+const ticketOptions =
+    generateOrderTicketOptions({
+        orderId,
+        uniqueCode,
+        createdAt,
+        amount
+    });
+
+checkoutOrder = {
+
+    orderId,
+
+    uniqueCode,
+
+    ticketOptions,
+
+    createdAt,
+
+        amount_usd:
+            Number(amount.toFixed(2)),
+
+        amount_cdf:
+            amount * TAUX_CONVERSION,
+
+        client: {
+            ...client
+        },
+
+        items:
+            cart.map(item => ({
+                product_id:
+                    item.product.id,
+
+                reference:
+                    item.product.ref,
+
+                name:
+                    item.product.name,
+
+                quantity:
+                    item.quantity,
+
+                unit_price_usd:
+                    item.product.price_usd,
+
+                line_total_usd:
+                    Number(
+                        (
+                            item.product.price_usd *
+                            item.quantity
+                        ).toFixed(2)
+                    )
+            })),
+
+        payment: {
+
+            status:
+                'PENDING_VERIFICATION',
+
+            channel:
+                null,
+
+            ticket:
+                null
+
         }
+
     };
 
-    // Nav Buttons
-    document.querySelectorAll('.next-step-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Basic validation
-            if (currentStep === 2) {
-                const name = document.getElementById('co-name').value;
-                const phone = document.getElementById('co-phone').value;
-                const commune = document.getElementById('co-commune').value;
-                if(!name || !phone || !commune) {
-                    alert('Veuillez remplir les champs obligatoires.'); // Only use if strictly necessary, but requested not to.
-                    // Better approach: highlight inputs
-                    document.getElementById('co-name').classList.add('border-ft-red');
+/* ============================================================
+   REMPLISSAGE DES OPTIONS DE TICKET — ÉTAPE 3
+============================================================ */
+
+const ticketStep3 =
+    document.getElementById(
+        'co-ticket-step3'
+    );
+
+const ticketOptionsHTML = `
+    <option value="">
+        Sélectionner un numéro de ticket...
+    </option>
+
+    ${checkoutOrder.ticketOptions.map(ticket => `
+        <option value="${ticket}">
+            ${ticket}
+        </option>
+    `).join('')}
+`;
+
+if (ticketStep3) {
+    ticketStep3.innerHTML =
+        ticketOptionsHTML;
+}
+
+    /*
+     * Affichage étape 3
+     */
+    document.getElementById(
+        'generated-order-code'
+    ).textContent =
+        checkoutOrder.uniqueCode;
+
+
+    document.getElementById(
+        'generated-order-id'
+    ).textContent =
+        checkoutOrder.orderId;
+
+
+    document.getElementById(
+        'generated-order-client'
+    ).textContent =
+        checkoutOrder.client.name;
+
+
+    document.getElementById(
+        'generated-order-date'
+    ).textContent =
+        new Date(
+            checkoutOrder.createdAt
+        ).toLocaleString(
+            'fr-FR',
+            {
+                dateStyle: 'long',
+                timeStyle: 'short'
+            }
+        );
+
+
+    document.getElementById(
+        'generated-order-amount'
+    ).textContent =
+        formatUSD(
+            checkoutOrder.amount_usd
+        );
+};
+
+/* ============================================================
+   PAYLOAD DESTINÉ À LA PLATEFORME DE GESTION
+============================================================ */
+
+/*
+ * Construit exclusivement l'objet JSON
+ * attendu par la plateforme de gestion.
+ *
+ * Les données internes au frontend comme
+ * ticketOptions ne sont pas transmises.
+ */
+const buildManagementOrderPayload = (order) => {
+
+    return {
+
+        orderId:
+            order.orderId,
+
+        uniqueCode:
+            order.uniqueCode,
+
+        createdAt:
+            order.createdAt,
+
+        amount_usd:
+            order.amount_usd,
+
+        amount_cdf:
+            order.amount_cdf,
+
+        client: {
+
+            name:
+                order.client?.name || '',
+
+            phone:
+                order.client?.phone || '',
+
+            email:
+                order.client?.email || '',
+
+            commune:
+                order.client?.commune || '',
+
+            quartier:
+                order.client?.quartier || '',
+
+            reference:
+                order.client?.reference || ''
+
+        },
+
+        items:
+            Array.isArray(order.items)
+                ? order.items
+                : [],
+
+        payment: {
+
+            status:
+                order.payment?.status ||
+                'PENDING_VERIFICATION',
+
+            channel:
+                order.payment?.channel ?? null,
+
+            ticket:
+                order.payment?.ticket ?? null
+
+        }
+
+    };
+};
+
+/* ============================================================
+   STEPPER
+============================================================ */
+
+const updateStepperUI = () => {
+
+    /*
+     * Sidebar
+     */
+    document.querySelectorAll(
+        '.step-item'
+    ).forEach(el => {
+
+        const stepNum =
+            parseInt(
+                el.getAttribute('data-step'),
+                10
+            );
+
+        el.classList.remove(
+            'active',
+            'completed'
+        );
+
+
+        if (stepNum < currentStep) {
+
+            el.classList.add(
+                'completed'
+            );
+
+        } else if (
+            stepNum === currentStep
+        ) {
+
+            el.classList.add(
+                'active'
+            );
+        }
+
+    });
+
+
+    /*
+     * Contenus
+     */
+    document.querySelectorAll(
+        '.step-content'
+    ).forEach(el => {
+
+        el.classList.add(
+            'hidden'
+        );
+
+        el.classList.remove(
+            'block'
+        );
+
+    });
+
+
+    const currentContent =
+        document.getElementById(
+            `step-content-${currentStep}`
+        );
+
+
+    if (currentContent) {
+
+        currentContent.classList.remove(
+            'hidden'
+        );
+
+        currentContent.classList.add(
+            'block'
+        );
+    }
+};
+
+
+
+/* ============================================================
+   OUVERTURE DU CHECKOUT
+============================================================ */
+
+const openCheckout = () => {
+
+    if (cart.length === 0) {
+        return;
+    }
+
+    checkoutModal.classList.remove(
+        'hidden'
+    );
+
+    checkoutModal.classList.add(
+        'flex'
+    );
+
+    document.body.style.overflow =
+        'hidden';
+
+
+    currentStep = 1;
+
+    checkoutOrder = null;
+
+    checkoutPaymentConfirmed =
+        false;
+
+
+    /*
+     * Réinitialisation de l'étape 4
+     */
+    const paymentStart =
+        document.getElementById(
+            'payment-confirmation-start'
+        );
+
+    const paymentForm =
+        document.getElementById(
+            'payment-confirmation-form'
+        );
+
+    const paymentSuccess =
+        document.getElementById(
+            'payment-confirmation-success'
+        );
+
+
+    paymentStart.classList.remove(
+        'hidden'
+    );
+
+
+    paymentForm.classList.add(
+        'hidden'
+    );
+
+    paymentForm.classList.remove(
+        'flex'
+    );
+
+
+    paymentSuccess.classList.add(
+        'hidden'
+    );
+const ticketStep3 =
+    document.getElementById(
+        'co-ticket-step3'
+    );
+
+if (ticketStep3) {
+    ticketStep3.value = '';
+}
+
+const ticketStep4 =
+    document.getElementById(
+        'co-ticket-step4'
+    );
+
+if (ticketStep4) {
+    ticketStep4.value = '';
+}
+
+const paymentChannel =
+    document.getElementById(
+        'co-payment-channel'
+    );
+
+if (paymentChannel) {
+    paymentChannel.value = 'mpesa';
+}
+
+const confirmationCode =
+    document.getElementById(
+        'co-confirmation-code'
+    );
+
+if (confirmationCode) {
+    confirmationCode.value = '';
+}
+    renderCheckoutCart();
+
+    updateCheckoutTotal();
+
+    updateStepperUI();
+};
+
+
+
+/* ============================================================
+   FERMETURE DU CHECKOUT
+============================================================ */
+
+const closeCheckout = () => {
+
+    checkoutModal.classList.add(
+        'hidden'
+    );
+
+    checkoutModal.classList.remove(
+        'flex'
+    );
+
+    document.body.style.overflow =
+        'auto';
+};
+
+
+
+/* ============================================================
+   NAVIGATION — NEXT
+============================================================ */
+
+document.querySelectorAll(
+    '.next-step-btn'
+).forEach(btn => {
+
+    btn.addEventListener(
+        'click',
+        async () => {
+
+            /*
+             * STEP 1
+             */
+            if (currentStep === 1) {
+
+                if (cart.length === 0) {
                     return;
                 }
-            }
 
-            if (currentStep === 4) {
-                // Simulate payment processing before step 5
-                processPayment();
+                currentStep = 2;
+
+                updateStepperUI();
+
                 return;
             }
 
-            if (currentStep < 5) {
-                currentStep++;
-                updateStepperUI();
-            }
-        });
-    });
 
-    document.querySelectorAll('.prev-step-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (currentStep > 1) {
-                currentStep--;
-                updateStepperUI();
-            }
-        });
-    });
+            /*
+             * STEP 2
+             */
+            if (currentStep === 2) {
 
-    // Delivery Fee update
-    window.updateDeliveryFee = (fee) => {
-        deliveryFee = fee;
-        updateCheckoutTotal();
-    };
+                const clientForm =
+                    document.getElementById(
+                        'client-info-form'
+                    );
 
-    const updateCheckoutTotal = () => {
-        let subtotalUSD = cart.reduce((sum, item) => sum + (item.product.price_usd * item.quantity), 0);
-        let totalUSD = subtotalUSD + deliveryFee;
-        
-        const totUsdEl = document.getElementById('co-total-usd');
-        const totCdfEl = document.getElementById('co-total-cdf');
-        if(totUsdEl) totUsdEl.textContent = formatUSD(totalUSD);
-        if(totCdfEl) totCdfEl.textContent = formatCDF(totalUSD);
 
-        const finalTotUsdEl = document.getElementById('co-final-total-usd');
-        if(finalTotUsdEl) finalTotUsdEl.textContent = formatUSD(totalUSD);
-        
-        const payBtnAmt = document.getElementById('pay-btn-amount');
-        if(payBtnAmt) payBtnAmt.textContent = formatUSD(totalUSD);
-    };
+                if (!clientForm.reportValidity()) {
+                    return;
+                }
+/*
+ * Réservation de l'identifiant de commande
+ * directement auprès du backend.
+ */
+try {
 
-    // Mobile Money selection logic
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-    const mmPrompt = document.getElementById('mm-prompt');
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            // Reset borders
-            document.querySelectorAll('input[name="payment_method"]').forEach(r => r.parentElement.style.borderColor = '');
-            e.target.parentElement.style.borderColor = 'white';
+    const reservedOrderId =
+        await reserveManagementOrderId();
 
-            if (e.target.value !== 'cash') {
-                mmPrompt.classList.remove('hidden');
-                mmPrompt.classList.add('block');
-            } else {
-                mmPrompt.classList.add('hidden');
-                mmPrompt.classList.remove('block');
-            }
-        });
-    });
 
-    // Simulation Paiement & Facture
-    const processPayment = () => {
-        const method = document.querySelector('input[name="payment_method"]:checked').value;
-        const navBtns = document.getElementById('payment-nav-btns');
-        const processing = document.getElementById('payment-processing');
-        const formContent = mmPrompt.parentElement; // the container of methods
+    /*
+     * Création du dossier de commande
+     * avec l'identifiant réservé.
+     */
+    generateCheckoutOrder(
+        reservedOrderId
+    );
 
-        // Hide methods, show loader
-        Array.from(formContent.children).forEach(c => {
-            if(c.id !== 'payment-processing') c.style.display = 'none';
-        });
-        processing.classList.remove('hidden');
-        processing.classList.add('flex');
 
-        setTimeout(() => {
-            // Generate Invoice Data
-            generateInvoice(method);
-            
-            currentStep = 5;
-            updateStepperUI();
-            
-            // Empty cart
-            cart = [];
-            updateCartUI();
-        }, 2000);
-    };
+    currentStep = 3;
 
-    // Déclenchement du paiement depuis le bouton "Payer"
-const triggerPaymentBtn = document.getElementById('trigger-payment');
+    updateStepperUI();
 
-if (triggerPaymentBtn) {
-    triggerPaymentBtn.addEventListener('click', () => {
-        processPayment();
-    });
+} catch (error) {
+
+    console.error(
+        '[FULLTECH] Impossible de préparer la commande :',
+        error
+    );
+
+
+    alert(
+        'Impossible de préparer la commande. Vérifiez que la plateforme de gestion est démarrée.'
+    );
+
 }
 
-    const generateInvoice = (methodMethod) => {
-        const clientName = document.getElementById('co-name').value || 'Client';
-        const clientCommune = document.getElementById('co-commune').value || 'Kinshasa';
-        const clientAddress = document.getElementById('co-address').value || '';
-        
-        let subtotalUSD = 0;
-        const invItemsBody = document.getElementById('inv-items');
-        invItemsBody.innerHTML = '';
-        
-        cart.forEach(item => {
-            const lineTotal = item.product.price_usd * item.quantity;
-            subtotalUSD += lineTotal;
-            invItemsBody.innerHTML += `
-                <tr class="border-b border-gray-100">
-                    <td class="py-2">
-                        <div class="font-bold">${item.product.name}</div>
-                        <div class="text-xs text-gray-500">${item.product.ref}</div>
-                    </td>
-                    <td class="py-2 text-center">${item.quantity}</td>
-                    <td class="py-2 text-right font-mono">${formatUSD(lineTotal)}</td>
-                </tr>
-            `;
-        });
+return;
+            }
 
-        const totalUSD = subtotalUSD + deliveryFee;
-        
-        document.getElementById('inv-date').textContent = new Date().toLocaleDateString('fr-FR');
-        document.getElementById('inv-client-name').textContent = clientName;
-        document.getElementById('inv-client-address').textContent = `${clientCommune}, ${clientAddress.substring(0,20)}...`;
-        
-        document.getElementById('inv-subtotal').textContent = formatUSD(subtotalUSD);
-        document.getElementById('inv-shipping').textContent = formatUSD(deliveryFee);
-        document.getElementById('inv-total').textContent = formatUSD(totalUSD);
-        
-        const methodNames = {
-            'orange': 'Orange Money', 'airtel': 'Airtel Money', 'mpesa': 'M-Pesa', 'africell': 'Africell Money', 'cash': 'Paiement à la livraison'
+
+/*
+ * STEP 3
+ */
+if (currentStep === 3) {
+
+    if (!checkoutOrder) {
+        generateCheckoutOrder();
+    }
+
+    const ticketStep3 =
+        document.getElementById(
+            'co-ticket-step3'
+        );
+
+    if (!ticketStep3) {
+        return;
+    }
+
+    if (!ticketStep3.reportValidity()) {
+        return;
+    }
+
+    const selectedTicket =
+        ticketStep3.value.trim();
+
+    if (!selectedTicket) {
+        return;
+    }
+
+    /*
+     * Conservation du ticket sélectionné
+     * pour l'étape 4.
+     */
+    checkoutOrder.payment.ticket =
+        selectedTicket;
+
+    /*
+     * L'étape 4 demande maintenant
+     * au client de saisir le ticket
+     * qu'il vient de copier.
+     */
+    const ticketStep4 =
+        document.getElementById(
+            'co-ticket-step4'
+        );
+
+    if (ticketStep4) {
+        ticketStep4.value = '';
+    }
+
+    const confirmationCode =
+        document.getElementById(
+            'co-confirmation-code'
+        );
+
+    if (confirmationCode) {
+        confirmationCode.value = '';
+    }
+
+    currentStep = 4;
+
+    updateStepperUI();
+
+    return;
+}
+
+        }
+    );
+
+});
+
+
+
+/* ============================================================
+   NAVIGATION — PREVIOUS
+============================================================ */
+
+document.querySelectorAll(
+    '.prev-step-btn'
+).forEach(btn => {
+
+    btn.addEventListener(
+        'click',
+        () => {
+
+            if (currentStep > 1) {
+
+                currentStep--;
+
+                updateStepperUI();
+
+            }
+
+        }
+    );
+
+});
+
+
+
+/* ============================================================
+   BOUTON "J'AI DÉJÀ PAYÉ"
+============================================================ */
+
+const alreadyPaidBtn =
+    document.getElementById(
+        'already-paid-btn'
+    );
+
+
+if (alreadyPaidBtn) {
+
+    alreadyPaidBtn.addEventListener(
+        'click',
+        () => {
+
+            if (!checkoutOrder) {
+                return;
+            }
+
+
+            const paymentStart =
+                document.getElementById(
+                    'payment-confirmation-start'
+                );
+
+            const paymentForm =
+                document.getElementById(
+                    'payment-confirmation-form'
+                );
+
+
+            paymentStart.classList.add(
+                'hidden'
+            );
+
+
+            paymentForm.classList.remove(
+                'hidden'
+            );
+
+            paymentForm.classList.add(
+                'flex'
+            );
+
+
+            document.getElementById(
+                'co-confirmation-code'
+            ).focus();
+
+        }
+    );
+
+}
+
+
+
+/* ============================================================
+   COPIE DU CODE UNIQUE
+============================================================ */
+
+const copyOrderCodeBtn =
+    document.getElementById(
+        'copy-order-code-btn'
+    );
+
+
+if (copyOrderCodeBtn) {
+
+    copyOrderCodeBtn.addEventListener(
+        'click',
+        async () => {
+
+            if (
+                !checkoutOrder ||
+                !checkoutOrder.uniqueCode
+            ) {
+                return;
+            }
+
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    checkoutOrder.uniqueCode
+                );
+
+
+                const originalText =
+                    copyOrderCodeBtn.textContent;
+
+
+                copyOrderCodeBtn.textContent =
+                    'Code copié';
+
+
+                setTimeout(() => {
+
+                    copyOrderCodeBtn.textContent =
+                        originalText;
+
+                }, 1500);
+
+
+            } catch (error) {
+
+                console.error(
+                    'Impossible de copier le code :',
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
+
+/* ============================================================
+   COPIE DU NUMÉRO DE TICKET
+============================================================ */
+
+const copyTicketBtn = document.getElementById(
+    'copy-ticket-btn'
+);
+
+if (copyTicketBtn) {
+
+    copyTicketBtn.addEventListener(
+        'click',
+        async () => {
+
+            const ticketInput = document.getElementById(
+                'co-ticket-step3'
+            );
+
+            if (!ticketInput) {
+                return;
+            }
+
+            const ticket = ticketInput.value.trim();
+
+            if (!ticket) {
+                ticketInput.focus();
+                ticketInput.reportValidity();
+                return;
+            }
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    ticket
+                );
+
+                const originalText =
+                    copyTicketBtn.textContent;
+
+                copyTicketBtn.textContent =
+                    'Ticket copié';
+
+                setTimeout(() => {
+
+                    copyTicketBtn.textContent =
+                        originalText;
+
+                }, 1500);
+
+            } catch (error) {
+
+                console.error(
+                    'Impossible de copier le ticket :',
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
+
+/* ============================================================
+   TRANSFERT VERS LA PLATEFORME DE GESTION
+============================================================ */
+
+const FT_MANAGEMENT_PLATFORM_ENDPOINT =
+    'http://localhost:3000/api/orders';
+
+const FT_MANAGEMENT_ORDER_ID_ENDPOINT =
+    'http://localhost:3000/api/orders/reserve-id';
+
+/* ============================================================
+   RÉSERVATION DE L'ID DE COMMANDE
+============================================================ */
+
+const reserveManagementOrderId = async () => {
+
+    try {
+
+        const response =
+            await fetch(
+                FT_MANAGEMENT_ORDER_ID_ENDPOINT,
+                {
+                    method:
+                        'POST',
+
+                    headers: {
+                        'Content-Type':
+                            'application/json'
+                    }
+                }
+            );
+
+
+        let data =
+            null;
+
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch (error) {
+
+            data =
+                null;
+
+        }
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                data?.message ||
+                `Erreur HTTP ${response.status}`
+            );
+
+        }
+
+
+        if (
+            !data?.orderId
+        ) {
+
+            throw new Error(
+                'Le backend n’a pas retourné d’identifiant de commande.'
+            );
+
+        }
+
+
+        console.log(
+            '[FULLTECH] ID de commande réservé par le backend :',
+            data.orderId
+        );
+
+
+        return data.orderId;
+
+    } catch (error) {
+
+        console.error(
+            '[FULLTECH] Impossible de réserver l’identifiant de commande :',
+            error
+        );
+
+
+        throw error;
+
+    }
+
+};
+
+
+const transferOrderToManagementPlatform = async (
+    order
+) => {
+
+    const payload =
+        buildManagementOrderPayload(
+            order
+        );
+
+    if (
+        !FT_MANAGEMENT_PLATFORM_ENDPOINT
+    ) {
+
+        console.info(
+            'Payload de commande prêt pour la plateforme de gestion :',
+            payload
+        );
+
+        return {
+
+            success:
+                true,
+
+            transferred:
+                false,
+
+            payload
+
         };
-        document.getElementById('inv-payment-method').textContent = methodNames[methodMethod];
-    };
+    }
 
+
+    try {
+
+        const response =
+            await fetch(
+                FT_MANAGEMENT_PLATFORM_ENDPOINT,
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type':
+                            'application/json'
+                    },
+
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Erreur HTTP ${response.status}`
+            );
+
+        }
+
+
+        let responseData =
+            null;
+
+        try {
+
+            responseData =
+                await response.json();
+
+        } catch (error) {
+
+            responseData =
+                null;
+
+        }
+
+
+        return {
+
+            success:
+                true,
+
+            transferred:
+                true,
+
+            payload,
+
+            response:
+                responseData
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            'Erreur lors du transfert vers la plateforme de gestion :',
+            error
+        );
+
+
+        return {
+
+            success:
+                false,
+
+            transferred:
+                false,
+
+            payload,
+
+            error
+
+        };
+
+    }
+
+};
+
+/* ============================================================
+   ENREGISTREMENT TEMPORAIRE EN MÉMOIRE
+============================================================ */
+
+const registerPendingOrder = async (
+    order
+) => {
+
+    try {
+
+        /*
+         * Conservation uniquement pendant
+         * la session actuelle.
+         */
+        pendingOrders.push(
+            order
+        );
+
+
+        /*
+         * Préparation / transfert éventuel
+         * vers la plateforme de gestion.
+         */
+        const transferResult =
+            await transferOrderToManagementPlatform(
+                order
+            );
+
+
+        return {
+
+            success:
+                transferResult.success,
+
+            transferred:
+                transferResult.transferred,
+
+            payload:
+                transferResult.payload
+
+        };
+
+    } catch (error) {
+
+        console.error(
+            'Erreur lors de l’enregistrement de la commande :',
+            error
+        );
+
+        return {
+
+            success: false,
+
+            transferred: false,
+
+            payload: null
+
+        };
+
+    }
+
+};
+
+/* ============================================================
+   MES COMMANDES
+============================================================ */
+
+const escapeHTML = (value = '') => {
+
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+};
+
+
+const getStoredOrders = () => {
+
+    return Array.isArray(
+        pendingOrders
+    )
+        ? [...pendingOrders]
+        : [];
+
+};
+
+/* ============================================================
+   SUPPRESSION INDIVIDUELLE D'UNE COMMANDE
+============================================================ */
+
+const deleteOrder = (
+    orderId
+) => {
+
+    if (!orderId) {
+        return;
+    }
+
+
+    const confirmed =
+        window.confirm(
+            'Voulez-vous supprimer cette commande de votre suivi ?'
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        pendingOrders =
+            pendingOrders.filter(
+                order =>
+                    order.orderId !== orderId
+            );
+
+
+        renderMyOrders();
+
+    } catch (error) {
+
+        console.error(
+            'Impossible de supprimer la commande :',
+            error
+        );
+
+    }
+
+};
+
+const getOrderStatusLabel = (order) => {
+
+    const status =
+        order?.payment?.status ||
+        order?.status ||
+        'PENDING_VERIFICATION';
+
+    if (status === 'VALIDATED') {
+        return 'COMMANDE VALIDÉE';
+    }
+
+    if (status === 'REJECTED') {
+        return 'PAIEMENT REFUSÉ';
+    }
+
+    return 'EN ATTENTE DE VÉRIFICATION';
+
+};
+
+
+const renderMyOrders = () => {
+
+    if (
+        !myOrdersList ||
+        !ordersCount
+    ) {
+        return;
+    }
+
+    const orders = getStoredOrders()
+        .sort(
+            (a, b) =>
+                new Date(b.createdAt) -
+                new Date(a.createdAt)
+        );
+
+    ordersCount.textContent =
+        orders.length;
+
+    if (orders.length === 0) {
+
+        myOrdersList.innerHTML = `
+            <div class="text-center text-ft-white/50 py-12">
+
+                <svg
+                    class="w-12 h-12 mx-auto mb-4 opacity-40"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="square"
+                        stroke-linejoin="miter"
+                        stroke-width="1.5"
+                        d="M7 3h10v18H7zM9.5 7h5M9.5 11h5M9.5 15h3"
+                    ></path>
+                </svg>
+
+                <p class="font-heading tracking-wider">
+                    Aucune commande enregistrée.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    myOrdersList.innerHTML =
+        orders.map(order => {
+
+            const status =
+                getOrderStatusLabel(order);
+
+            const createdAt =
+                new Date(
+                    order.createdAt
+                ).toLocaleString(
+                    'fr-FR',
+                    {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                    }
+                );
+
+            const itemsHTML =
+                Array.isArray(order.items)
+                    ? order.items.map(item => `
+                        <div class="flex justify-between gap-4 py-2 border-b border-ft-gray/50">
+
+                            <div>
+                                <div class="font-sans text-sm">
+                                    ${escapeHTML(item.name)}
+                                </div>
+
+                                <div class="text-xs text-ft-white/40">
+                                    Qté : ${escapeHTML(item.quantity)}
+                                </div>
+                            </div>
+
+                            <div class="font-mono text-xs text-right">
+                                ${formatUSD(
+                                    Number(item.line_total_usd || 0)
+                                )}
+                            </div>
+
+                        </div>
+                    `).join('')
+                    : '';
+
+
+            return `
+                <article class="bg-ft-black border border-ft-gray p-6">
+
+                <div class="flex justify-between items-start gap-4 mb-5">
+
+    <div>
+        <div class="text-xs uppercase tracking-widest text-ft-white/40">
+            Commande
+        </div>
+
+        <div class="font-mono text-sm text-ft-red mt-1">
+            ${escapeHTML(order.orderId)}
+        </div>
+    </div>
+
+
+    <div class="flex items-start gap-3">
+
+        <span class="text-[10px] uppercase tracking-widest text-yellow-400 text-right">
+            ${status}
+        </span>
+
+
+        <button
+            type="button"
+            class="delete-order-btn text-ft-white hover:text-ft-red transition-colors p-1"
+            data-order-id="${escapeHTML(order.orderId)}"
+            aria-label="Supprimer la commande ${escapeHTML(order.orderId)}"
+            title="Supprimer cette commande"
+        >
+            <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    stroke-width="1.8"
+                    d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"
+                ></path>
+            </svg>
+        </button>
+
+    </div>
+
+</div>
+
+
+                    <div class="space-y-3">
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Date
+                            </span>
+
+                            <span class="text-xs font-mono text-right">
+                                ${escapeHTML(createdAt)}
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Client
+                            </span>
+
+                            <span class="text-xs text-right">
+                                ${escapeHTML(order.client?.name || '—')}
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Téléphone
+                            </span>
+
+                            <span class="text-xs font-mono text-right">
+                                ${escapeHTML(order.client?.phone || '—')}
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Localisation
+                            </span>
+
+                            <span class="text-xs text-right">
+                                ${escapeHTML(
+                                    `${order.client?.commune || '—'} · ${order.client?.quartier || '—'}`
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Montant
+                            </span>
+
+                            <span class="text-xs font-mono text-right">
+                                ${formatUSD(
+                                    Number(order.amount_usd || 0)
+                                )}
+                                <br>
+                                <span class="text-ft-white/40">
+                                    ${Number(order.amount_cdf || 0).toLocaleString('fr-FR')} CDF
+                                </span>
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Canal
+                            </span>
+
+                            <span class="text-xs text-right">
+                                M-Pesa
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Ticket
+                            </span>
+
+                            <span class="text-xs font-mono text-right break-all">
+                                ${escapeHTML(
+                                    order.payment?.ticket || '—'
+                                )}
+                            </span>
+                        </div>
+
+
+                        <div class="flex justify-between gap-4">
+                            <span class="text-xs text-ft-white/40 uppercase tracking-widest">
+                                Code unique
+                            </span>
+
+                            <span class="text-xs font-mono text-ft-red text-right break-all">
+                                ${escapeHTML(
+                                    order.uniqueCode || '—'
+                                )}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-6 pt-5 border-t border-ft-gray">
+
+                        <div class="text-xs uppercase tracking-widest text-ft-white/40 mb-3">
+                            Articles
+                        </div>
+
+                        <div>
+                            ${itemsHTML}
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5 border-l-2 border-yellow-400 bg-ft-dark p-4">
+
+                        <p class="text-xs text-ft-white/60 leading-relaxed">
+                            Votre demande a été enregistrée.
+                            Elle reste en attente de vérification
+                            par le gestionnaire.
+                        </p>
+
+                    </div>
+
+                </article>
+            `;
+
+        }).join('');
+
+        /* ============================================================
+   ACTIONS DE SUPPRESSION
+============================================================ */
+
+myOrdersList
+    .querySelectorAll('.delete-order-btn')
+    .forEach(button => {
+
+        button.addEventListener(
+            'click',
+            () => {
+
+                const orderId =
+                    button.getAttribute(
+                        'data-order-id'
+                    );
+
+                deleteOrder(orderId);
+
+            }
+        );
+
+    });
+
+};
+
+
+const openOrders = () => {
+
+    if (
+        !ordersPanel ||
+        !ordersOverlay
+    ) {
+        return;
+    }
+
+    renderMyOrders();
+
+    ordersOverlay.classList.remove(
+        'hidden'
+    );
+
+    ordersPanel.classList.remove(
+        'hidden'
+    );
+
+    ordersPanel.classList.add(
+        'flex'
+    );
+
+    requestAnimationFrame(() => {
+
+        ordersPanel.classList.remove(
+            'translate-x-full'
+        );
+
+    });
+
+    document.body.style.overflow =
+        'hidden';
+
+};
+
+
+const closeOrders = () => {
+
+    if (
+        !ordersPanel ||
+        !ordersOverlay
+    ) {
+        return;
+    }
+
+    ordersPanel.classList.add(
+        'translate-x-full'
+    );
+
+    ordersPanel.classList.remove(
+        'flex'
+    );
+
+    setTimeout(() => {
+
+        ordersPanel.classList.add(
+            'hidden'
+        );
+
+        ordersOverlay.classList.add(
+            'hidden'
+        );
+
+    }, 300);
+
+    document.body.style.overflow =
+        'auto';
+
+};
+
+
+if (ordersBtn) {
+
+    ordersBtn.addEventListener(
+        'click',
+        openOrders
+    );
+
+}
+
+
+if (closeOrdersBtn) {
+
+    closeOrdersBtn.addEventListener(
+        'click',
+        closeOrders
+    );
+
+}
+
+
+if (ordersOverlay) {
+
+    ordersOverlay.addEventListener(
+        'click',
+        closeOrders
+    );
+
+}
+
+/* ============================================================
+   CONFIRMATION DU PAIEMENT
+============================================================ */
+
+const paymentConfirmationForm =
+    document.getElementById(
+        'payment-confirmation-form'
+    );
+
+
+if (paymentConfirmationForm) {
+
+    paymentConfirmationForm.addEventListener(
+        'submit',
+        async (event) => {
+
+            event.preventDefault();
+
+
+            if (!checkoutOrder) {
+                return;
+            }
+
+const paymentChannel =
+    document.getElementById(
+        'co-payment-channel'
+    ).value.trim();
+
+const ticketStep4 =
+    document.getElementById(
+        'co-ticket-step4'
+    );
+
+const confirmationCode =
+    document.getElementById(
+        'co-confirmation-code'
+    ).value.trim().toUpperCase();
+
+
+if (
+    !paymentChannel ||
+    !ticketStep4 ||
+    !ticketStep4.reportValidity() ||
+    !confirmationCode
+) {
+
+    paymentConfirmationForm.reportValidity();
+
+    return;
+}
+
+
+const enteredTicket =
+    ticketStep4.value.trim();
+
+
+const selectedTicket =
+    checkoutOrder.payment.ticket;
+
+
+/*
+ * Le ticket saisi à l'étape 4 doit
+ * correspondre exactement à celui
+ * sélectionné à l'étape 3.
+ */
+if (
+    !selectedTicket ||
+    enteredTicket !== selectedTicket
+) {
+
+    ticketStep4.setCustomValidity(
+        'Le numéro de ticket doit correspondre à celui sélectionné et copié à l’étape 3.'
+    );
+
+    ticketStep4.reportValidity();
+
+    ticketStep4.setCustomValidity('');
+
+    return;
+}
+
+
+            /*
+             * Mise à jour des données de paiement
+             */
+          checkoutOrder.payment.channel =
+            paymentChannel;
+
+    checkoutOrder.payment.ticket =
+    enteredTicket;
+
+            checkoutOrder.payment.confirmedAt =
+                new Date().toISOString();
+
+            checkoutOrder.payment.status =
+                'PENDING_VERIFICATION';
+
+
+            /*
+             * Enregistrement
+             */
+            const result =
+                await registerPendingOrder(
+                    checkoutOrder
+                );
+
+
+            if (!result.success) {
+
+                alert(
+                    'Impossible d’enregistrer la confirmation. Veuillez réessayer.'
+                );
+
+                return;
+            }
+
+
+            checkoutPaymentConfirmed =
+                true;
+
+
+            /*
+             * Affichage succès
+             */
+  document.getElementById(
+    'success-order-id'
+).textContent =
+    checkoutOrder.orderId;
+
+
+document.getElementById(
+    'success-order-ticket'
+).textContent =
+    checkoutOrder.payment.ticket;
+
+            document.getElementById(
+                'payment-confirmation-start'
+            ).classList.add(
+                'hidden'
+            );
+
+
+            document.getElementById(
+                'payment-confirmation-form'
+            ).classList.add(
+                'hidden'
+            );
+
+
+            document.getElementById(
+                'payment-confirmation-form'
+            ).classList.remove(
+                'flex'
+            );
+
+
+            document.getElementById(
+                'payment-confirmation-success'
+            ).classList.remove(
+                'hidden'
+            );
+
+
+            /*
+             * Le panier est vidé seulement après
+             * l'enregistrement réussi de la demande.
+             */
+            cart = [];
+
+            updateCartUI();
+
+        }
+    );
+
+}
+
+
+
+/* ============================================================
+   RETOUR DEPUIS LE FORMULAIRE DE PAIEMENT
+============================================================ */
+
+const cancelPaymentConfirmationBtn =
+    document.getElementById(
+        'cancel-payment-confirmation-btn'
+    );
+
+
+if (cancelPaymentConfirmationBtn) {
+
+    cancelPaymentConfirmationBtn.addEventListener(
+        'click',
+        () => {
+
+            currentStep = 3;
+
+            updateStepperUI();
+
+        }
+    );
+
+}
+
+
+
+/* ============================================================
+   FERMETURE APRÈS ENREGISTREMENT
+============================================================ */
+
+const finishCheckoutBtn =
+    document.getElementById(
+        'finish-checkout-btn'
+    );
+
+
+if (finishCheckoutBtn) {
+
+    finishCheckoutBtn.addEventListener(
+        'click',
+        () => {
+
+            closeCheckout();
+
+            renderMyOrders();
+
+            openOrders();
+
+        }
+    );
+
+}
+   
     // Quick Search logic (just scrolls to catalog for demo)
     document.getElementById('btn-quick-search').addEventListener('click', () => {
         document.getElementById('catalog').scrollIntoView({behavior: 'smooth'});
         // In a real app, this would apply filters based on dropdowns.
     });
+
+    /* ============================================================
+   DISTRIBUTEURS — GOOGLE MAP INTERACTIVE
+============================================================ */
+
+const ftDistributorData = [
+    {
+        id: "limete",
+        number: "01",
+        commune: "Limete",
+        type: "Point Relais",
+
+        name: "Garage Pro-Moto Limete",
+
+        address:
+            "7eme rue limete Industriel, Avenue kasuku",
+
+        landmark:
+            "7eme rue limete Industriel",
+
+        phone:
+            "+243 81 234 5678",
+
+        coverage:
+            "Limete",
+
+        /*
+         * Coordonnées cartographiques indicatives.
+         * Remplace-les par les coordonnées GPS exactes
+         * du véritable point de vente.
+         */
+        position: {
+            lat: -4.350554691594185,
+            lng: 15.336598576879075
+        }
+    },
+
+    {
+        id: "kalamu",
+        number: "02",
+        commune: "Kalamu",
+        type: "Livreur Wewa",
+
+        name: "Papa LeBlanc (Kalamu)",
+
+        address:
+            "Zone de distribution Kalamu, Kasa-Vubu et Bandalungwa.",
+
+        landmark:
+            "Stationnement : Rond-point Victoire",
+
+        phone:
+            "+243 89 987 6543",
+
+        coverage:
+            "Kalamu · Kasa-Vubu · Bandalungwa",
+
+        position: {
+            lat: -4.3331394358291355, 
+            lng: 15.280747136799926
+        }
+    },
+
+    {
+        id: "gombe",
+        number: "03",
+        commune: "Gombe",
+        type: "Dépôt Central",
+
+        name: "FullTech Gombe",
+
+        address:
+            "Quartier Socimat, Boulevard du 30 Juin.",
+
+        landmark:
+            "En face du supermarché",
+
+        phone:
+            "+243 82 000 1122",
+
+        coverage:
+            "Gombe",
+
+        position: {
+            lat: -4.3215062138074956, 
+            lng: 15.276176146490073
+        }
+    }
+];
+
+
+let ftDistributorMap = null;
+let ftDistributorMarkers = [];
+let ftDistributorActiveMarker = null;
+
+const ftDistributorMapCenter = {
+    lat: -4.3275,
+    lng: 15.3150
+};
+
+
+/* ============================================================
+   INITIALISATION GOOGLE MAPS
+============================================================ */
+
+async function initFtDistributorMap() {
+
+    const mapElement =
+        document.getElementById("ft-distributors-map");
+
+    if (!mapElement) {
+        return;
+    }
+
+    try {
+
+        const [
+            { Map }
+            ,
+            { AdvancedMarkerElement }
+        ] = await Promise.all([
+            google.maps.importLibrary("maps"),
+            google.maps.importLibrary("marker")
+        ]);
+
+
+        ftDistributorMap = new Map(mapElement, {
+
+            center: ftDistributorMapCenter,
+
+            zoom: 12,
+
+            minZoom: 10,
+
+            maxZoom: 17,
+
+            mapId: "c7535d4652077645cfe9e067", 
+
+            gestureHandling: "cooperative",
+
+            clickableIcons: false,
+
+            streetViewControl: false,
+
+            mapTypeControl: false,
+
+            fullscreenControl: false,
+
+            zoomControl: true,
+
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+
+            styles: [
+
+                {
+                    elementType: "geometry",
+                    stylers: [
+                        { color: "#101010" }
+                    ]
+                },
+
+                {
+                    elementType: "labels.text.fill",
+                    stylers: [
+                        { color: "#8a8a8a" }
+                    ]
+                },
+
+                {
+                    elementType: "labels.text.stroke",
+                    stylers: [
+                        {
+                            color: "#101010"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "administrative",
+                    elementType: "geometry",
+                    stylers: [
+                        {
+                            color: "#2d2d2d"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "administrative.locality",
+                    elementType: "labels.text.fill",
+                    stylers: [
+                        {
+                            color: "#d0d0d0"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "road",
+                    elementType: "geometry",
+                    stylers: [
+                        {
+                            color: "#292929"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "road",
+                    elementType: "geometry.stroke",
+                    stylers: [
+                        {
+                            color: "#181818"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "road.highway",
+                    elementType: "geometry",
+                    stylers: [
+                        {
+                            color: "#3c3c3c"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "road.highway",
+                    elementType: "geometry.stroke",
+                    stylers: [
+                        {
+                            color: "#1d1d1d"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "road",
+                    elementType: "labels.text.fill",
+                    stylers: [
+                        {
+                            color: "#6f6f6f"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "water",
+                    elementType: "geometry",
+                    stylers: [
+                        {
+                            color: "#050505"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "water",
+                    elementType: "labels.text.fill",
+                    stylers: [
+                        {
+                            color: "#3e3e3e"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "poi",
+                    elementType: "geometry",
+                    stylers: [
+                        {
+                            color: "#151515"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "poi",
+                    elementType: "labels.text.fill",
+                    stylers: [
+                        {
+                            color: "#5c5c5c"
+                        }
+                    ]
+                },
+
+                {
+                    featureType: "transit",
+                    stylers: [
+                        {
+                            visibility: "off"
+                        }
+                    ]
+                }
+
+            ]
+
+        });
+
+
+        /*
+         * Création des marqueurs
+         */
+        ftDistributorData.forEach(
+            (distributor, index) => {
+
+                const markerElement =
+                    document.createElement("button");
+
+                markerElement.type = "button";
+
+                markerElement.className =
+                    "ft-map-marker";
+
+                markerElement.setAttribute(
+                    "aria-label",
+                    `${distributor.name}, ${distributor.commune}`
+                );
+
+                markerElement.innerHTML = `
+                    <span class="ft-map-marker-core"></span>
+                    <span class="ft-map-marker-number">
+                        ${distributor.number}
+                    </span>
+                `;
+
+
+                const marker =
+                    new AdvancedMarkerElement({
+
+                        map: ftDistributorMap,
+
+                        position: distributor.position,
+
+                        content: markerElement,
+
+                        title:
+                            `${distributor.name} — ${distributor.commune}`,
+
+                        gmpClickable: true,
+
+                        zIndex: 10 + index
+
+                    });
+
+
+                marker.addEventListener(
+                    "gmp-click",
+                    () => {
+
+                        ftOpenDistributor(
+                            distributor,
+                            marker,
+                            markerElement
+                        );
+
+                    }
+                );
+
+
+                ftDistributorMarkers.push({
+                    marker,
+                    element: markerElement,
+                    distributor
+                });
+
+            }
+        );
+
+
+        /*
+         * Compteur dynamique
+         */
+        const countElement =
+            document.getElementById(
+                "ft-distributor-count"
+            );
+
+        if (countElement) {
+
+            countElement.textContent =
+                String(ftDistributorData.length)
+                    .padStart(2, "0");
+
+        }
+
+        /*
+         * Bouton recentrage
+         */
+        const resetButton =
+            document.getElementById(
+                "ft-map-reset"
+            );
+
+        if (resetButton) {
+
+            resetButton.addEventListener(
+                "click",
+                () => {
+
+                    ftDistributorMap.panTo(
+                        ftDistributorMapCenter
+                    );
+
+                    ftDistributorMap.setZoom(12);
+
+                }
+            );
+
+        }
+
+
+        /*
+         * Fermeture du popup
+         */
+        const closeButton =
+            document.getElementById(
+                "ft-distributor-popup-close"
+            );
+
+        if (closeButton) {
+
+            closeButton.addEventListener(
+                "click",
+                ftCloseDistributor
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Erreur d'initialisation de la carte des distributeurs :",
+            error
+        );
+
+        mapElement.innerHTML = `
+            <div style="
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:30px;
+                text-align:center;
+                background:#070707;
+                color:rgba(244,244,245,.48);
+                font-size:14px;
+                line-height:1.6;
+            ">
+                Impossible de charger la carte interactive.
+            </div>
+        `;
+
+    }
+
+}
+
+function ftOpenDistributor(
+    distributor,
+    marker,
+    markerElement,
+    centerMap = true
+) {
+
+    /*
+     * Réinitialisation de tous les marqueurs
+     */
+    ftDistributorMarkers.forEach(item => {
+
+        item.element.classList.remove(
+            "ft-marker-selected"
+        );
+
+    });
+
+
+    /*
+     * Active le marqueur sélectionné
+     */
+    markerElement.classList.add(
+        "ft-marker-selected"
+    );
+
+    ftDistributorActiveMarker = marker;
+
+
+    /*
+     * Déplacement caméra
+     */
+    if (
+        centerMap &&
+        ftDistributorMap
+    ) {
+
+        ftDistributorMap.panTo(
+            distributor.position
+        );
+
+        /*
+         * Sur mobile on évite un zoom excessif.
+         */
+        if (
+            window.innerWidth <= 640
+        ) {
+
+            ftDistributorMap.setZoom(14);
+
+        } else {
+
+            ftDistributorMap.setZoom(13.8);
+
+        }
+
+    }
+
+
+    /*
+     * Récupération du popup
+     */
+    const popup =
+        document.getElementById(
+            "ft-distributor-popup"
+        );
+
+    if (!popup) {
+        return;
+    }
+
+
+    /*
+     * Remplissage
+     */
+
+    const type =
+        document.getElementById(
+            "ft-popup-type"
+        );
+
+    const commune =
+        document.getElementById(
+            "ft-popup-commune"
+        );
+
+    const name =
+        document.getElementById(
+            "ft-popup-name"
+        );
+
+    const address =
+        document.getElementById(
+            "ft-popup-address"
+        );
+
+    const landmark =
+        document.getElementById(
+            "ft-popup-landmark"
+        );
+
+    const phone =
+        document.getElementById(
+            "ft-popup-phone"
+        );
+
+    const coverage =
+        document.getElementById(
+            "ft-popup-coverage"
+        );
+
+    const index =
+        document.getElementById(
+            "ft-popup-index"
+        );
+
+    const directions =
+        document.getElementById(
+            "ft-popup-directions"
+        );
+
+
+    if (type) {
+        type.textContent =
+            distributor.type.toUpperCase();
+    }
+
+    if (commune) {
+        commune.textContent =
+            distributor.commune.toUpperCase();
+    }
+
+    if (name) {
+        name.textContent =
+            distributor.name;
+    }
+
+    if (address) {
+        address.textContent =
+            distributor.address;
+    }
+
+    if (landmark) {
+        landmark.textContent =
+            distributor.landmark;
+    }
+
+    if (phone) {
+
+        phone.textContent =
+            distributor.phone;
+
+        phone.href =
+            `tel:${distributor.phone
+                .replace(/[^\d+]/g, "")}`;
+
+    }
+
+    if (coverage) {
+
+        coverage.textContent =
+            distributor.coverage;
+
+    }
+
+    if (index) {
+
+        index.textContent =
+            distributor.number;
+
+    }
+
+    if (directions) {
+
+        directions.href =
+            `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                `${distributor.position.lat},${distributor.position.lng}`
+            )}`;
+
+    }
+
+    popup.classList.add(
+        "is-open"
+    );
+
+    popup.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+function ftCloseDistributor() {
+
+    const popup =
+        document.getElementById(
+            "ft-distributor-popup"
+        );
+
+    if (!popup) {
+        return;
+    }
+
+    popup.classList.remove(
+        "is-open"
+    );
+
+    popup.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    ftDistributorMarkers.forEach(item => {
+
+        item.element.classList.remove(
+            "ft-marker-selected"
+        );
+
+    });
+
+    ftDistributorActiveMarker = null;
+
+}
 
     // Init
     renderCatalog();

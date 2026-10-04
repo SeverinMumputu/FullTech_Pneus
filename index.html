@@ -64,6 +64,35 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                     <span id="cart-count" class="absolute -top-2 -right-2 bg-ft-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm">0</span>
                 </button>
+                <button
+    id="orders-btn"
+    type="button"
+    class="text-ft-black hover:text-ft-red transition-colors relative"
+    aria-label="Mes commandes"
+    title="Mes commandes"
+>
+    <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+    >
+        <path
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+            stroke-width="1.8"
+            d="M7 3h10v18H7zM9.5 7h5M9.5 11h5M9.5 15h3"
+        ></path>
+    </svg>
+
+    <span
+        id="orders-count"
+        class="absolute -top-2 -right-2 bg-ft-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+    >
+        0
+    </span>
+</button>
                 <button id="mobile-menu-btn" class="md:hidden text-ft-black hover:text-ft-red transition-colors">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
@@ -127,6 +156,77 @@
         </button>
     </div>
 </div>
+
+<!-- ============================================================
+     MES COMMANDES — PANNEAU LATÉRAL
+============================================================ -->
+<div
+    id="orders-overlay"
+    class="fixed inset-0 bg-black/80 z-[60] hidden"
+></div>
+
+<aside
+    id="orders-panel"
+    class="fixed top-0 right-0 h-full w-full max-w-md bg-ft-dark z-[61] hidden translate-x-full transition-transform duration-300 border-l border-ft-gray shadow-2xl flex-col"
+>
+    <div class="p-6 border-b border-ft-gray flex justify-between items-center bg-ft-black">
+        <div>
+            <h2 class="font-heading text-2xl uppercase tracking-wider">
+                Mes commandes
+            </h2>
+
+            <p class="text-xs text-ft-white/40 mt-1">
+                Suivi de vos demandes
+            </p>
+        </div>
+
+        <button
+            id="close-orders-btn"
+            type="button"
+            class="text-ft-gray hover:text-white transition-colors"
+            aria-label="Fermer Mes commandes"
+        >
+            <svg
+                class="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                ></path>
+            </svg>
+        </button>
+    </div>
+
+    <div
+        id="my-orders-list"
+        class="flex-1 overflow-y-auto p-6 flex flex-col gap-6"
+    >
+        <div class="text-center text-ft-white/50 py-12">
+            <svg
+                class="w-12 h-12 mx-auto mb-4 opacity-40"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    stroke-width="1.5"
+                    d="M7 3h10v18H7zM9.5 7h5M9.5 11h5M9.5 15h3"
+                ></path>
+            </svg>
+
+            <p class="font-heading tracking-wider">
+                Aucune commande enregistrée.
+            </p>
+        </div>
+    </div>
+</aside>
 
 <!-- Section 2 - Hero -->
 <section class="relative h-screen min-h-[600px] w-full pt-20">
@@ -512,311 +612,958 @@
 
 <!-- Modal Processus de Commande -->
 <div id="checkout-modal" class="fixed inset-0 z-[70] bg-ft-black hidden flex-col">
+
     <!-- Header Checkout -->
     <div class="h-20 border-b border-ft-gray flex items-center justify-between px-8 bg-ft-dark">
-        <div class="font-heading text-xl tracking-widest">Finalisation Commande</div>
-        <button id="close-checkout-btn" class="text-ft-gray hover:text-white transition-colors flex items-center gap-2 text-sm font-heading ">
-            Annuler <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+
+        <div class="font-heading text-xl tracking-widest">
+            Finalisation Commande
+        </div>
+
+        <button
+            id="close-checkout-btn"
+            class="text-ft-gray hover:text-white transition-colors flex items-center gap-2 text-sm font-heading"
+        >
+            Annuler
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                ></path>
+            </svg>
         </button>
+
     </div>
-    
+
+
     <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
-        <!-- Sidebar Stepper -->
+
+        <!-- =========================================================
+             SIDEBAR STEPPER
+        ========================================================== -->
         <div class="w-full md:w-1/4 bg-ft-black border-r border-ft-gray p-8 overflow-y-auto">
+
             <div class="flex flex-col gap-8 relative">
+
                 <!-- Ligne de progression verticale -->
                 <div class="absolute left-4 top-4 bottom-4 w-px bg-ft-gray z-0"></div>
-                
-                <!-- Steps Indicators -->
-                <div class="step-item active z-10 flex items-start gap-4" data-step="1">
-                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">1</div>
-                    <div>
-                        <div class="font-heading tracking-wider text-white">Validation Panier</div>
-                        <div class="text-xs text-ft-white/50 font-sans mt-1">Vérification des articles</div>
+
+
+                <!-- STEP 1 -->
+                <div
+                    class="step-item active z-10 flex items-start gap-4"
+                    data-step="1"
+                >
+
+                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">
+                        1
                     </div>
-                </div>
-                <div class="step-item z-10 flex items-start gap-4" data-step="2">
-                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">2</div>
+
                     <div>
-                        <div class="font-heading tracking-wider text-white">Informations Client</div>
-                        <div class="text-xs text-ft-white/50 font-sans mt-1">Coordonnées & Adresse</div>
+
+                        <div class="font-heading tracking-wider text-white">
+                            Validation Panier
+                        </div>
+
+                        <div class="text-xs text-ft-white/50 font-sans mt-1">
+                            Vérification des articles
+                        </div>
+
                     </div>
+
                 </div>
-                <div class="step-item z-10 flex items-start gap-4" data-step="3">
-                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">3</div>
+
+
+                <!-- STEP 2 -->
+                <div
+                    class="step-item z-10 flex items-start gap-4"
+                    data-step="2"
+                >
+
+                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">
+                        2
+                    </div>
+
                     <div>
-                        <div class="font-heading tracking-wider text-white">Mode de Livraison</div>
-                        <div class="text-xs text-ft-white/50 font-sans mt-1">Retrait ou expédition</div>
+
+                        <div class="font-heading tracking-wider text-white">
+                            Informations Client
+                        </div>
+
+                        <div class="text-xs text-ft-white/50 font-sans mt-1">
+                            Coordonnées & adresse
+                        </div>
+
                     </div>
+
                 </div>
-                <div class="step-item z-10 flex items-start gap-4" data-step="4">
-                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">4</div>
+
+
+                <!-- STEP 3 -->
+                <div
+                    class="step-item z-10 flex items-start gap-4"
+                    data-step="3"
+                >
+
+                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">
+                        3
+                    </div>
+
                     <div>
-                        <div class="font-heading tracking-wider text-white">Paiement</div>
-                        <div class="text-xs text-ft-white/50 font-sans mt-1">Mobile Money ou Cash</div>
+
+                        <div class="font-heading tracking-wider text-white">
+                            Code Unique
+                        </div>
+
+                        <div class="text-xs text-ft-white/50 font-sans mt-1">
+                            Identification de la commande
+                        </div>
+
                     </div>
+
                 </div>
-                <div class="step-item z-10 flex items-start gap-4" data-step="5">
-                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">5</div>
+
+
+                <!-- STEP 4 -->
+                <div
+                    class="step-item z-10 flex items-start gap-4"
+                    data-step="4"
+                >
+
+                    <div class="step-circle w-8 h-8 rounded-full bg-ft-black border-2 border-ft-gray flex items-center justify-center font-heading text-sm text-ft-gray mt-0.5 transition-colors">
+                        4
+                    </div>
+
                     <div>
-                        <div class="font-heading tracking-wider text-white">Confirmation</div>
-                        <div class="text-xs text-ft-white/50 font-sans mt-1">Facture électronique</div>
+
+                        <div class="font-heading tracking-wider text-white">
+                            Confirmation Paiement
+                        </div>
+
+                        <div class="text-xs text-ft-white/50 font-sans mt-1">
+                            Ticket & code unique
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
-        
-        <!-- Contenu des Steps -->
+
+
+        <!-- =========================================================
+             CONTENU DES STEPS
+        ========================================================== -->
         <div class="w-full md:w-3/4 bg-ft-dark p-8 md:p-16 overflow-y-auto relative">
-            
-            <!-- Step 1: Panier -->
-            <div id="step-content-1" class="step-content block max-w-3xl mx-auto">
-                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">Récapitulatif</h3>
-                <div id="checkout-cart-items" class="flex flex-col gap-4 mb-8">
+
+
+            <!-- =====================================================
+                 STEP 1 — VALIDATION PANIER
+            ====================================================== -->
+            <div
+                id="step-content-1"
+                class="step-content block max-w-3xl mx-auto"
+            >
+
+                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">
+                    Récapitulatif
+                </h3>
+
+
+                <div
+                    id="checkout-cart-items"
+                    class="flex flex-col gap-4 mb-8"
+                >
                     <!-- Injecté par JS -->
                 </div>
-                
+
+
                 <div class="bg-ft-black border border-ft-gray p-6 mt-8">
-                    <div class="flex justify-between text-ft-white/70 mb-2 font-sans"><span class="uppercase text-xs">Sous-total</span><span id="co-subtotal">$0.00</span></div>
-                    <div class="flex justify-between text-ft-white/70 mb-4 font-sans border-b border-ft-gray pb-4"><span class="uppercase text-xs">Frais (calculés à l'étape 3)</span><span>--</span></div>
-                    <div class="flex justify-between items-end">
-                        <span class="font-heading uppercase tracking-widest">Total provisoire</span>
-                        <div class="text-right">
-                            <span class="font-heading text-3xl text-ft-red" id="co-total-usd">$0.00</span>
-                            <div class="font-mono text-sm text-ft-white/50" id="co-total-cdf">0 CDF</div>
-                        </div>
+
+                    <div class="flex justify-between text-ft-white/70 mb-2 font-sans">
+
+                        <span class="uppercase text-xs">
+                            Sous-total
+                        </span>
+
+                        <span id="co-subtotal">
+                            $0.00
+                        </span>
+
                     </div>
+
+
+                    <div class="flex justify-between text-ft-white/70 mb-4 font-sans border-b border-ft-gray pb-4">
+
+                        <span class="uppercase text-xs">
+                            Frais supplémentaires
+                        </span>
+
+                        <span>
+                            0.00
+                        </span>
+
+                    </div>
+
+
+                    <div class="flex justify-between items-end">
+
+                        <span class="font-heading uppercase tracking-widest">
+                            Total à payer
+                        </span>
+
+
+                        <div class="text-right">
+
+                            <span
+                                class="font-heading text-3xl text-ft-red"
+                                id="co-total-usd"
+                            >
+                                $0.00
+                            </span>
+
+
+                            <div
+                                class="font-mono text-sm text-ft-white/50"
+                                id="co-total-cdf"
+                            >
+                                0 CDF
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
+
+
                 <div class="mt-8 flex justify-end">
-                    <button class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover">Continuer</button>
+
+                    <button
+                        type="button"
+                        class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover"
+                    >
+                        Continuer
+                    </button>
+
                 </div>
+
             </div>
 
-            <!-- Step 2: Infos Client -->
-            <div id="step-content-2" class="step-content hidden max-w-2xl mx-auto">
-                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">Vos Coordonnées</h3>
-                <form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+
+
+            <!-- =====================================================
+                 STEP 2 — INFORMATIONS CLIENT
+            ====================================================== -->
+            <div
+                id="step-content-2"
+                class="step-content hidden max-w-2xl mx-auto"
+            >
+
+                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">
+                    Vos Coordonnées
+                </h3>
+
+
+                <form
+                    id="client-info-form"
+                    class="flex flex-col gap-6"
+                    onsubmit="event.preventDefault();"
+                >
+
+                    <!-- Nom + téléphone -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                         <div class="flex flex-col gap-2">
-                            <label class="font-heading text-xs tracking-widest text-ft-white/50">Nom complet *</label>
-                            <input type="text" id="co-name" required class="p-3 w-full" placeholder="Ex: Lumumba Jean">
+
+                            <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                                Nom complet *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="co-name"
+                                required
+                                class="p-3 w-full"
+                                placeholder="Ex: Lumumba Jean"
+                            >
+
                         </div>
+
+
                         <div class="flex flex-col gap-2">
-                            <label class="font-heading text-xs tracking-widest text-ft-white/50">Téléphone *</label>
-                            <input type="tel" id="co-phone" required class="p-3 w-full" placeholder="+243 00 000 0000">
+
+                            <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                                Téléphone *
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="co-phone"
+                                required
+                                class="p-3 w-full"
+                                placeholder="+243 00 000 0000"
+                            >
+
                         </div>
+
                     </div>
+
+
+                    <!-- Email -->
                     <div class="flex flex-col gap-2">
-                        <label class="font-heading text-xs tracking-widest text-ft-white/50">Email (Facultatif pour copie facture)</label>
-                        <input type="email" id="co-email" class="p-3 w-full" placeholder="jean@exemple.com">
+
+                        <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                            Email *
+                        </label>
+
+                        <input
+                            type="email"
+                            id="co-email"
+                            required
+                            class="p-3 w-full"
+                            placeholder="jean@exemple.com"
+                        >
+
                     </div>
-                    
-                    <h4 class="font-heading text-xl mt-4 mb-2">Localisation (Kinshasa)</h4>
+
+
+                    <!-- Localisation -->
+                    <h4 class="font-heading text-xl mt-4 mb-2">
+                        Localisation
+                    </h4>
+
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                        <!-- Commune -->
                         <div class="flex flex-col gap-2">
-                            <label class="font-heading text-xs tracking-widest text-ft-white/50">Commune *</label>
-                            <select id="co-commune" required class="p-3 w-full bg-black text-ft-white appearance-none cursor-pointer">
-                                <option value="">Sélectionner...</option>
-                                <option value="Gombe">Gombe</option>
-                                <option value="Limete">Limete</option>
-                                <option value="Ngaliema">Ngaliema</option>
-                                <option value="Kalamu">Kalamu</option>
-                                <option value="Bandalungwa">Bandalungwa</option>
-                                <option value="Autre">Autre</option>
+
+                            <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                                Commune *
+                            </label>
+
+                            <select
+                                id="co-commune"
+                                required
+                                class="p-3 w-full bg-black text-ft-white appearance-none cursor-pointer"
+                            >
+
+                                <option value="">
+                                    Sélectionner...
+                                </option>
+
+                                <option value="Gombe">
+                                    Gombe
+                                </option>
+
+                                <option value="Limete">
+                                    Limete
+                                </option>
+
+                                <option value="Ngaliema">
+                                    Ngaliema
+                                </option>
+
+                                <option value="Kalamu">
+                                    Kalamu
+                                </option>
+
+                                <option value="Bandalungwa">
+                                    Bandalungwa
+                                </option>
+
+                                <option value="Autre">
+                                    Autre
+                                </option>
+
                             </select>
+
                         </div>
+
+
+                        <!-- Quartier -->
                         <div class="flex flex-col gap-2">
-                            <label class="font-heading text-xs tracking-widest text-ft-white/50">Quartier *</label>
-                            <input type="text" id="co-quartier" required class="p-3 w-full">
+
+                            <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                                Quartier *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="co-quartier"
+                                required
+                                class="p-3 w-full"
+                                placeholder="Ex: Socimat"
+                            >
+
                         </div>
+
                     </div>
+
+
+                    <!-- Référence -->
                     <div class="flex flex-col gap-2">
-                        <label class="font-heading text-xs tracking-widest text-ft-white/50">Avenue / Numéro / Repère exact *</label>
-                        <textarea id="co-address" required class="p-3 w-full h-24 resize-none" placeholder="Ex: Av. Kasa-Vubu n°45, croisement avec..."></textarea>
+
+                        <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                            Référence *
+                        </label>
+
+                        <textarea
+                            id="co-reference"
+                            required
+                            class="p-3 w-full h-24 resize-none"
+                            placeholder="Avenue, numéro, bâtiment, repère ou autre indication utile..."
+                        ></textarea>
+
                     </div>
+
 
                     <div class="mt-8 flex justify-between">
-                        <button type="button" class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white">Retour</button>
-                        <button type="button" class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover">Continuer</button>
+
+                        <button
+                            type="button"
+                            class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white"
+                        >
+                            Retour
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover"
+                        >
+                            Continuer
+                        </button>
+
                     </div>
+
                 </form>
+
             </div>
 
-            <!-- Step 3: Livraison -->
-            <div id="step-content-3" class="step-content hidden max-w-2xl mx-auto">
-                 <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">Mode de Livraison</h3>
-                 
-                 <div class="flex flex-col gap-4">
-                     <!-- Option 1 -->
-                     <label class="flex items-start gap-4 p-4 border border-ft-gray cursor-pointer hover:border-ft-red transition-colors relative group">
-                         <input type="radio" name="delivery_method" value="domicile" class="mt-1" checked onchange="updateDeliveryFee(5)">
-                         <div>
-                             <div class="font-heading tracking-wider text-white">Livraison à domicile / Atelier</div>
-                             <div class="text-sm font-sans text-ft-white/60 mt-1">Un livreur partenaire dépose les pneus à l'adresse indiquée.</div>
-                         </div>
-                         <div class="ml-auto font-mono text-ft-red">+$5.00</div>
-                     </label>
-                     
-                     <!-- Option 2 -->
-                     <label class="flex items-start gap-4 p-4 border border-ft-gray cursor-pointer hover:border-ft-red transition-colors relative group">
-                         <input type="radio" name="delivery_method" value="wewa" class="mt-1" onchange="updateDeliveryFee(2)">
-                         <div>
-                             <div class="font-heading tracking-wider text-white">Retrait Point Relais (Wewa Local)</div>
-                             <div class="text-sm font-sans text-ft-white/60 mt-1">Récupérez chez un distributeur partenaire de votre commune.</div>
-                         </div>
-                         <div class="ml-auto font-mono text-ft-red">+$2.00</div>
-                     </label>
 
-                     <!-- Option 3 -->
-                     <label class="flex items-start gap-4 p-4 border border-ft-gray cursor-pointer hover:border-ft-red transition-colors relative group">
-                         <input type="radio" name="delivery_method" value="depot" class="mt-1" onchange="updateDeliveryFee(0)">
-                         <div>
-                             <div class="font-heading tracking-wider text-white">Retrait au Dépôt Central (Gombe)</div>
-                             <div class="text-sm font-sans text-ft-white/60 mt-1">Gratuit. Venez retirer votre commande avec votre numéro de bon.</div>
-                         </div>
-                         <div class="ml-auto font-mono text-green-500">Gratuit</div>
-                     </label>
-                 </div>
 
-                 <!-- Resume encadré -->
-                 <div class="mt-8 bg-ft-black p-6 border-l-2 border-ft-red flex justify-between items-center">
-                     <span class="font-heading uppercase tracking-widest">Nouveau Total :</span>
-                     <span class="font-heading text-2xl" id="co-final-total-usd">$0.00</span>
-                 </div>
+            <!-- =====================================================
+                 STEP 3 — GENERATION CODE UNIQUE
+            ====================================================== -->
+            <div
+                id="step-content-3"
+                class="step-content hidden max-w-2xl mx-auto"
+            >
 
-                 <div class="mt-8 flex justify-between">
-                    <button type="button" class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white">Retour</button>
-                    <button type="button" class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading  tracking-widest hover:bg-ft-redhover">Paiement</button>
-                </div>
-            </div>
+                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">
+                    Votre Code Unique
+                </h3>
 
-            <!-- Step 4: Paiement -->
-            <div id="step-content-4" class="step-content hidden max-w-2xl mx-auto">
-                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">Méthode de Paiement</h3>
-                <p class="font-sans text-sm text-ft-white/60 mb-6">Sélectionnez un opérateur Mobile Money ou le paiement à la livraison. Le paiement est sécurisé.</p>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Les logos seraient des SVG ou images, on simule avec des couleurs -->
-                    <label class="border border-ft-gray p-4 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-orange-500 transition-colors bg-ft-black text-center h-32 relative">
-                        <input type="radio" name="payment_method" value="orange" class="absolute top-2 left-2" checked>
-                        <div class="w-12 h-12 bg-orange-500 rounded-sm flex items-center justify-center font-bold text-white text-xs">OM</div>
-                        <span class="font-heading text-sm tracking-wider">Orange Money</span>
-                    </label>
 
-                    <label class="border border-ft-gray p-4 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-red-600 transition-colors bg-ft-black text-center h-32 relative">
-                        <input type="radio" name="payment_method" value="airtel" class="absolute top-2 left-2">
-                        <div class="w-12 h-12 bg-red-600 rounded-sm flex items-center justify-center font-bold text-white text-xs">AM</div>
-                        <span class="font-heading text-sm tracking-wider">Airtel Money</span>
-                    </label>
+                <p class="font-sans text-sm text-ft-white/60 mb-8 leading-relaxed">
+                    Votre commande possède maintenant une référence unique.
+                    Effectuez votre paiement via le canal de paiement communiqué
+                    par l'entreprise, puis sélectionnez un numéro de ticket
+                    de commande parmi les propositions ci-dessous.
+                </p>
 
-                    <label class="border border-ft-gray p-4 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-blue-600 transition-colors bg-ft-black text-center h-32 relative">
-                        <input type="radio" name="payment_method" value="mpesa" class="absolute top-2 left-2">
-                        <div class="w-12 h-12 bg-blue-600 rounded-sm flex items-center justify-center font-bold text-white text-xs">M-P</div>
-                        <span class="font-heading text-sm tracking-wider">M-Pesa</span>
-                    </label>
 
-                    <label class="border border-ft-gray p-4 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-purple-600 transition-colors bg-ft-black text-center h-32 relative">
-                        <input type="radio" name="payment_method" value="africell" class="absolute top-2 left-2">
-                        <div class="w-12 h-12 bg-purple-600 rounded-sm flex items-center justify-center font-bold text-white text-xs">AFM</div>
-                        <span class="font-heading text-sm tracking-wider">Africell Money</span>
-                    </label>
+                <!-- CODE -->
+                <div class="bg-ft-black border border-ft-gray p-8 text-center">
 
-                    <label class="col-span-2 border border-ft-gray p-4 flex items-center gap-4 cursor-pointer hover:border-ft-white transition-colors bg-ft-black relative">
-                        <input type="radio" name="payment_method" value="cash" class="ml-2">
-                        <svg class="w-8 h-8 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                        <span class="font-heading  text-sm tracking-wider">Paiement à la livraison (Cash)</span>
-                    </label>
-                </div>
-
-                <!-- Simulation interface Mobile Money (Phone input prompt) -->
-                <div class="mt-6 bg-ft-black border border-ft-gray p-6 hidden" id="mm-prompt">
-                    <label class="font-heading text-xs tracking-widest text-ft-white/50 mb-2 block">Numéro Mobile Money (format: 0xxxxxxxxx)</label>
-                    <div class="flex gap-2">
-                        <input type="text" class="flex-1 p-3" placeholder="Numéro pour initier le retrait...">
-                        <button type="button" id="trigger-payment" class="bg-ft-red text-white px-6 font-heading uppercase text-sm tracking-widest hover:bg-ft-redhover">Payer <span id="pay-btn-amount"></span></button>
+                    <div class="text-xs font-heading tracking-[0.25em] text-ft-white/40 mb-4">
+                        CODE UNIQUE DE COMMANDE
                     </div>
-                    <p class="text-xs text-ft-white/40 mt-2 font-sans">* Un message push apparaitra sur votre téléphone pour confirmer le code PIN.</p>
-                </div>
-                
-                <!-- Overlay de process de paiement -->
-                <div id="payment-processing" class="hidden flex-col items-center justify-center py-12">
-                    <div class="w-12 h-12 border-4 border-ft-gray border-t-ft-red rounded-full animate-spin mb-4"></div>
-                    <p class="font-heading tracking-widest animate-pulse">Vérification du paiement en cours...</p>
+
+
+                    <div
+                        id="generated-order-code"
+                        class="font-mono text-2xl md:text-3xl tracking-widest text-ft-red break-all"
+                    >
+                        —
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="copy-order-code-btn"
+                        class="mt-6 border border-ft-gray px-5 py-2 text-xs font-heading tracking-widest text-white hover:border-white transition-colors"
+                    >
+                        Copier le code
+                    </button>
+
                 </div>
 
-                <div class="mt-8 flex justify-between" id="payment-nav-btns">
-                    <button type="button" class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white">Retour</button>
+                <!-- NUMÉRO DE TICKET DE COMMANDE -->
+<div class="mt-8 bg-ft-black border border-ft-gray p-6">
+
+    <div class="text-xs font-heading tracking-[0.25em] text-ft-white/40 mb-3">
+        NUMÉRO DE TICKET DE COMMANDE
+    </div>
+
+
+    <select
+        id="co-ticket-step3"
+        required
+        class="p-3 w-full bg-black text-ft-white appearance-none cursor-pointer font-mono"
+    >
+
+        <option value="">
+            Sélectionner un numéro de ticket...
+        </option>
+
+    </select>
+
+
+    <button
+        type="button"
+        id="copy-ticket-btn"
+        class="mt-4 border border-ft-gray px-5 py-2 text-xs font-heading tracking-widest text-white hover:border-white transition-colors"
+    >
+        Copier le ticket
+    </button>
+
+
+    <p class="text-xs text-ft-white/40 mt-3 leading-relaxed">
+        Sélectionnez d'abord votre numéro de ticket,
+        puis cliquez sur « Copier le ticket » afin de
+        pouvoir le saisir à l'étape suivante.
+    </p>
+
+</div>
+
+                <!-- ALERTE DE CONSERVATION -->
+                <div class="mt-6 border-l-2 border-ft-red bg-ft-black p-5">
+
+                    <p class="font-sans text-sm text-ft-white/70 leading-relaxed">
+
+                        <strong class="text-white">
+                            Important :
+                        </strong>
+
+                        conservez soigneusement votre
+                        <strong class="text-white">
+                            code unique
+                        </strong>
+                        et votre
+                        <strong class="text-white">
+                            numéro de ticket
+                        </strong>.
+
+                        Ces informations pourront être demandées
+                        pour le suivi et la vérification de votre commande.
+
+                    </p>
+
                 </div>
+
+
+                <!-- DONNÉES DE LA COMMANDE -->
+                <div class="mt-8 bg-ft-black border border-ft-gray p-6">
+
+                    <div class="flex justify-between py-3 border-b border-ft-gray">
+
+                        <span class="text-ft-white/50 text-xs uppercase tracking-widest">
+                            Identifiant
+                        </span>
+
+                        <span
+                            id="generated-order-id"
+                            class="font-mono text-sm"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="flex justify-between py-3 border-b border-ft-gray">
+
+                        <span class="text-ft-white/50 text-xs uppercase tracking-widest">
+                            Client
+                        </span>
+
+                        <span
+                            id="generated-order-client"
+                            class="font-sans text-sm text-right"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="flex justify-between py-3 border-b border-ft-gray">
+
+                        <span class="text-ft-white/50 text-xs uppercase tracking-widest">
+                            Date & Heure
+                        </span>
+
+                        <span
+                            id="generated-order-date"
+                            class="font-mono text-sm text-right"
+                        >
+                            —
+                        </span>
+
+                    </div>
+
+
+                    <div class="flex justify-between py-3">
+
+                        <span class="text-ft-white/50 text-xs uppercase tracking-widest">
+                            Montant à payer
+                        </span>
+
+                        <span
+                            id="generated-order-amount"
+                            class="font-heading text-ft-red text-lg"
+                        >
+                            $0.00
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-8 border-l-2 border-ft-red bg-ft-black p-5">
+
+                    <p class="font-sans text-sm text-ft-white/70 leading-relaxed">
+                        Effectuez votre paiement selon le moyen de paiement
+                        communiqué par l'entreprise, puis revenez ici pour
+                        confirmer votre paiement à l'étape suivante.
+                    </p>
+
+                </div>
+
+
+                <div class="mt-8 flex justify-between">
+
+                    <button
+                        type="button"
+                        class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white"
+                    >
+                        Retour
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover"
+                    >
+                        J'ai payé
+                    </button>
+
+                </div>
+
             </div>
 
-            <!-- Step 5: Confirmation & Facture -->
-            <div id="step-content-5" class="step-content hidden max-w-3xl mx-auto text-center py-12">
-                <div class="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h3 class="font-heading text-4xl  tracking-widest mb-4">Commande Confirmée !</h3>
-                <p class="font-sans text-ft-white/70 mb-8 max-w-lg mx-auto">Merci pour votre confiance. Votre statut de paiement est <strong class="text-green-500">PAYÉ</strong>. Le stock a été mis à jour.</p>
-                
-                <!-- Simulation Facture PDF visuelle -->
-                <div class="bg-white text-black p-8 text-left max-w-2xl mx-auto border-t-8 border-ft-red relative shadow-2xl transform rotate-1 hover:rotate-0 transition-transform">
-                    <div class="flex justify-between items-start mb-8 border-b pb-4">
-                        <div>
-                            <div class="font-heading font-bold text-2xl tracking-tighter text-ft-black mb-1">FT CONGO</div>
-                            <div class="text-xs font-sans text-gray-500">Kinshasa, RDC<br>RCCM: CD/KNG/RCCM/20-A-03681</div>
-                            <div class="text-xs font-sans text-gray-500">Identification nationale<br>61-A0101-N7332QL</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-heading text-xl tracking-wider text-ft-red">Facture</div>
-                            <div class="text-sm font-mono mt-1" id="inv-number">#FC-2026-001</div>
-                            <div class="text-xs font-sans text-gray-500 mt-1" id="inv-date"></div>
-                        </div>
+
+
+            <!-- =====================================================
+                 STEP 4 — CONFIRMATION PAIEMENT
+            ====================================================== -->
+            <div
+                id="step-content-4"
+                class="step-content hidden max-w-2xl mx-auto"
+            >
+
+                <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">
+                    Confirmation du Paiement
+                </h3>
+
+
+                <!-- ÉTAT INITIAL -->
+                <div id="payment-confirmation-start">
+
+                    <p class="font-sans text-sm text-ft-white/60 mb-8 leading-relaxed">
+
+                        Cette étape ne déclenche aucun paiement automatique.
+                        Elle permet simplement de signaler à l'entreprise
+                        qu'un paiement a déjà été effectué afin que celui-ci
+                        soit vérifié par le système de gestion.
+
+                    </p>
+
+
+                    <div class="border-l-2 border-ft-red bg-ft-black p-5">
+
+                        <p class="font-sans text-sm text-ft-white/70 leading-relaxed">
+
+                            Pour des raisons de sécurité, le code unique
+                            n'est volontairement ni affiché ni pré-rempli
+                            à cette étape.
+
+                            Vous devrez saisir manuellement le code que
+                            vous avez conservé précédemment.
+
+                        </p>
+
                     </div>
+
+
+                    <button
+                        type="button"
+                        id="already-paid-btn"
+                        class="mt-8 w-full bg-ft-red text-white py-4 px-8 font-heading tracking-widest hover:bg-ft-redhover transition-colors"
+                    >
+                        J'ai déjà payé
+                    </button>
+
+
+                    <div class="mt-8 flex justify-start">
+
+                        <button
+                            type="button"
+                            class="prev-step-btn border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white"
+                        >
+                            Retour
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FORMULAIRE DE CONFIRMATION -->
+                <form
+                    id="payment-confirmation-form"
+                    class="hidden flex-col gap-6"
+                    onsubmit="event.preventDefault();"
+                >
+
+                    <!-- Canal de paiement -->
+                    <div class="flex flex-col gap-2">
+
+                        <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                            Canal utilisé pour le paiement *
+                        </label>
+
+                        <select
+                            id="co-payment-channel"
+                            required
+                            class="p-3 w-full bg-black text-ft-white appearance-none cursor-pointer"
+                        >
+
+                            <option value="mpesa" selected>
+                                M-Pesa
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
                     
-                    <div class="mb-6">
-                        <div class="text-xs font-bold tracking-wider text-gray-400 mb-1">Facturé à:</div>
-                        <div class="font-sans font-medium" id="inv-client-name">Client Name</div>
-                        <div class="text-sm text-gray-600" id="inv-client-address">Address</div>
+                    <!-- Numéro de ticket de commande -->
+<div class="flex flex-col gap-2">
+
+    <label
+        class="font-heading text-xs tracking-widest text-ft-white/50"
+    >
+        Numéro de ticket de commande *
+    </label>
+
+
+    <input
+        type="text"
+        id="co-ticket-step4"
+        required
+        class="p-3 w-full font-mono uppercase"
+        placeholder="Insérez le numéro de ticket copié à l'étape 3"
+        autocomplete="off"
+    >
+
+
+    <p class="text-xs text-ft-white/40 leading-relaxed">
+        Insérez ici le numéro de ticket que vous avez
+        sélectionné puis copié à l'étape 3.
+    </p>
+
+</div>
+
+
+                    <!-- Code unique -->
+                    <div class="flex flex-col gap-2">
+
+                        <label class="font-heading text-xs tracking-widest text-ft-white/50">
+                            Code unique de commande *
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="co-confirmation-code"
+                            required
+                            class="p-3 w-full font-mono uppercase"
+                            placeholder="CMD-2026-00012-XXXXXXX"
+                            autocomplete="off"
+                        >
+
                     </div>
 
-                    <table class="w-full text-sm font-sans mb-6">
-                        <thead>
-                            <tr class="border-y border-gray-200 text-left text-gray-500  text-xs">
-                                <th class="py-2 font-normal">Description</th>
-                                <th class="py-2 font-normal text-center">Qté</th>
-                                <th class="py-2 font-normal text-right">Prix (USD)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inv-items">
-                            <!-- Items injectés -->
-                        </tbody>
-                        <tfoot>
-                            <tr class="border-t border-gray-200">
-                                <td colspan="2" class="py-2 text-right text-xs uppercase text-gray-500">Sous-total:</td>
-                                <td class="py-2 text-right font-mono" id="inv-subtotal">$0.00</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="py-1 text-right text-xs text-gray-500">Livraison:</td>
-                                <td class="py-1 text-right font-mono" id="inv-shipping">$0.00</td>
-                            </tr>
-                            <tr class="font-bold text-lg">
-                                <td colspan="2" class="py-3 text-right font-heading uppercase tracking-widest text-ft-black">Total:</td>
-                                <td class="py-3 text-right font-mono text-ft-red" id="inv-total">$0.00</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                    
-                    <div class="text-xs text-gray-400 text-center mt-8 border-t pt-4">
-                        Document généré automatiquement. Moyen de paiement: <span id="inv-payment-method">Mobile Money</span>
+
+                    <div class="mt-2 border border-ft-gray bg-ft-black p-5">
+
+                        <p class="text-xs text-ft-white/50 font-sans leading-relaxed">
+                            Le numéro de ticket de commande sélectionné
+                            et le code unique saisi ici seront transmis
+                            ensemble à l'application de gestion pour
+                            vérification.
+                        </p>
+
                     </div>
+
+
+                    <div class="mt-4 flex justify-between">
+
+                        <button
+                            type="button"
+                            id="cancel-payment-confirmation-btn"
+                            class="border border-ft-gray py-3 px-8 font-heading tracking-widest hover:border-white"
+                        >
+                            Retour
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            id="submit-payment-confirmation-btn"
+                            class="bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover"
+                        >
+                            Envoyer pour vérification
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+
+                <!-- =================================================
+                     ÉTAT APRÈS ENVOI
+                ================================================== -->
+                <div
+                    id="payment-confirmation-success"
+                    class="hidden text-center py-8"
+                >
+
+                    <div class="w-24 h-24 bg-ft-red/10 rounded-full flex items-center justify-center mx-auto mb-6">
+
+                        <svg
+                            class="w-12 h-12 text-ft-red"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path
+                                stroke-linecap="square"
+                                stroke-linejoin="miter"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"
+                            ></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <h3 class="font-heading text-3xl tracking-widest mb-4">
+                        Demande enregistrée
+                    </h3>
+
+
+                    <p class="font-sans text-ft-white/70 max-w-lg mx-auto leading-relaxed">
+                        Votre déclaration de paiement a bien été enregistrée.
+                        La transaction doit maintenant être vérifiée par
+                        l'entreprise avant validation définitive de la commande.
+                    </p>
+
+
+                    <!-- RÉCAPITULATIF APRÈS ENVOI -->
+                    <div class="mt-8 bg-ft-black border border-ft-gray p-6 text-left">
+
+
+                        <!-- COMMANDE -->
+                        <div class="flex justify-between py-3 border-b border-ft-gray">
+
+                            <span class="text-xs uppercase tracking-widest text-ft-white/40">
+                                Commande
+                            </span>
+
+
+                            <span
+                                id="success-order-id"
+                                class="font-mono text-sm text-right"
+                            >
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <!-- TICKET -->
+                        <div class="flex justify-between py-3 border-b border-ft-gray">
+
+                            <span class="text-xs uppercase tracking-widest text-ft-white/40">
+                                Ticket
+                            </span>
+
+
+                            <span
+                                id="success-order-ticket"
+                                class="font-mono text-sm text-ft-red text-right break-all"
+                            >
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <!-- STATUT -->
+                        <div class="flex justify-between py-3">
+
+                            <span class="text-xs uppercase tracking-widest text-ft-white/40">
+                                Statut
+                            </span>
+
+
+                            <span class="font-heading text-sm tracking-widest text-yellow-400 text-right">
+                                EN ATTENTE DE VÉRIFICATION
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <p class="mt-8 text-xs text-ft-white/40 font-sans">
+                        Conservez votre code unique et votre numéro de ticket
+                        jusqu'à la validation définitive de la commande.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="finish-checkout-btn"
+                        class="mt-10 border border-ft-gray text-white py-3 px-8 font-heading uppercase tracking-widest hover:border-white transition-colors"
+                    >
+                        Fermer
+                    </button>
+
                 </div>
 
-                <button onclick="location.reload()" class="mt-12 bg-transparent border border-ft-gray text-white py-3 px-8 font-heading uppercase tracking-widest hover:border-white transition-colors">
-                    Retour à l'accueil
-                </button>
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 <!-- Section 6 - News -->
@@ -889,61 +1636,316 @@
             <p class="font-sans text-ft-white/60 max-w-2xl mx-auto">Trouvez un point de vente partenaire près de chez vous ou contactez l'un de nos "Wewas" distributeurs accrédités à Kinshasa.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Carte Distributeur 1 -->
-            <div class="bg-ft-black border border-ft-gray p-6 flex flex-col hover:border-ft-red transition-colors group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="w-12 h-12 bg-ft-lightgray flex items-center justify-center">
-                        <svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </div>
-                    <span class="text-[15px] font-heading uppercase tracking-widest  px-2 py-1">Point Relais</span>
-                </div>
-                <h3 class="font-heading text-xl tracking-wider mb-1">Garage Pro-Moto Limete</h3>
-                <p class="font-sans text-sm text-ft-white/50 mb-4 flex-1">
-                    Quartier Industriel, Avenue de la Métallurgie n°12.<br>
-                    <span class="text-ft-white/30 text-xs italic">Repère : Croisement 14ème rue</span>
-                </p>
-                <div class="border-t border-ft-gray pt-4 flex justify-between items-center">
-                    <span class="font-mono text-sm group-hover:text-ft-red transition-colors">+243 81 234 5678</span>
-                </div>
-            </div>
+<!-- ================================
+     MODULE CARTE DISTRIBUTEURS
+     Remplace uniquement l'ancienne grille
+================================= -->
+<div class="ft-distributor-map-module">
 
-            <!-- Carte Distributeur 2 (Wewa) -->
-            <div class="bg-ft-black border border-ft-gray p-6 flex flex-col hover:border-ft-red transition-colors group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="w-12 h-12 bg-ft-lightgray flex items-center justify-center">
-                        <svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                    </div>
-                    <span class="text-[15px] font-heading text-ft-white uppercase tracking-widest px-2 py-1">Livreur Wewa</span>
-                </div>
-                <h3 class="font-heading text-xl tracking-wider mb-1">Papa LeBlanc (Kalamu)</h3>
-                <p class="font-sans text-sm text-ft-white/50 mb-4 flex-1">
-                    Zone couverte : Kalamu, Kasa-Vubu, Bandalungwa.<br>
-                    <span class="text-ft-white/30 text-xs italic">Stationnement : Rond-point Victoire</span>
-                </p>
-                <div class="border-t border-ft-gray pt-4 flex justify-between items-center">
-                    <span class="font-mono text-sm group-hover:text-ft-red transition-colors">+243 89 987 6543</span>
-                </div>
-            </div>
-            
-            <!-- Carte Distributeur 3 -->
-            <div class="bg-ft-black border border-ft-gray p-6 flex flex-col hover:border-ft-red transition-colors group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="w-12 h-12 bg-ft-lightgray flex items-center justify-center">
-                        <svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                    </div>
-                    <span class="text-[15px] font-heading uppercase tracking-widest  px-2 py-1">Dépôt Central</span>
-                </div>
-                <h3 class="font-heading text-xl tracking-wider mb-1">FullTech Gombe</h3>
-                <p class="font-sans text-sm text-ft-white/50 mb-4 flex-1">
-                    Quartier Socimat, Boulevard du 30 Juin.<br>
-                    <span class="text-ft-white/30 text-xs italic">Repère : En face du supermarché</span>
-                </p>
-                <div class="border-t border-ft-gray pt-4 flex justify-between items-center">
-                    <span class="font-mono text-sm group-hover:text-ft-red transition-colors">+243 82 000 1122</span>
-                </div>
+    <!-- Bandeau supérieur de la carte -->
+    <div class="ft-distributor-map-header">
+
+        <div class="ft-distributor-map-heading">
+            <span class="ft-distributor-map-kicker">
+                Réseau local
+            </span>
+
+            <h3>
+                Zones de distribution
+            </h3>
+
+            <p>
+                Explorez les points de vente partenaires et les zones couvertes
+                par notre réseau de distributeurs à Kinshasa.
+            </p>
+        </div>
+
+        <div class="ft-distributor-map-status">
+            <span class="ft-live-dot"></span>
+            <div>
+                <strong id="ft-distributor-count">03</strong>
+                <span>points actifs</span>
             </div>
         </div>
+
+    </div>
+
+
+    <!-- Conteneur principal de la carte -->
+    <div class="ft-distributor-map-frame">
+
+        <!-- Barre flottante supérieure -->
+        <div class="ft-distributor-map-topbar">
+
+            <div class="ft-distributor-map-location">
+                <span class="ft-map-location-dot"></span>
+                <span>Kinshasa · RDC</span>
+            </div>
+
+            <button
+                type="button"
+                id="ft-map-reset"
+                class="ft-distributor-map-reset"
+                aria-label="Recentrer la carte sur Kinshasa"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                >
+                    <path d="M12 2v4"></path>
+                    <path d="M12 18v4"></path>
+                    <path d="M4.93 4.93l2.83 2.83"></path>
+                    <path d="M16.24 16.24l2.83 2.83"></path>
+                    <path d="M2 12h4"></path>
+                    <path d="M18 12h4"></path>
+                    <path d="M4.93 19.07l2.83-2.83"></path>
+                    <path d="M16.24 7.76l2.83-2.83"></path>
+                </svg>
+
+                <span>Recentrer</span>
+            </button>
+
+        </div>
+
+
+        <!-- Carte Google -->
+        <div
+            id="ft-distributors-map"
+            class="ft-distributors-map"
+            aria-label="Carte interactive des distributeurs locaux à Kinshasa"
+        ></div>
+
+
+        <!-- Légende flottante -->
+        <div class="ft-distributor-map-legend">
+
+            <div class="ft-legend-line">
+                <span class="ft-legend-marker"></span>
+                <span>Point de vente</span>
+            </div>
+
+            <div class="ft-legend-line">
+                <span class="ft-legend-live"></span>
+                <span>Réseau actif</span>
+            </div>
+
+        </div>
+
+
+        <!-- Popup premium -->
+        <aside
+            id="ft-distributor-popup"
+            class="ft-distributor-popup"
+            aria-hidden="true"
+        >
+
+            <button
+                type="button"
+                id="ft-distributor-popup-close"
+                class="ft-distributor-popup-close"
+                aria-label="Fermer les informations du distributeur"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="square"
+                >
+                    <path d="M6 6l12 12"></path>
+                    <path d="M18 6L6 18"></path>
+                </svg>
+            </button>
+
+
+            <div class="ft-distributor-popup-top">
+
+                <div class="ft-distributor-popup-icon">
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="23"
+                        height="23"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="square"
+                        stroke-linejoin="miter"
+                    >
+                        <path d="M12 21s7-6.08 7-12A7 7 0 0 0 5 9c0 5.92 7 12 7 12Z"></path>
+                        <circle cx="12" cy="9" r="2.5"></circle>
+                    </svg>
+
+                </div>
+
+                <div class="ft-distributor-popup-meta">
+
+                    <div class="ft-distributor-popup-badges">
+                        <span id="ft-popup-type" class="ft-popup-type">
+                            POINT RELAIS
+                        </span>
+
+                        <span class="ft-popup-active">
+                            <span></span>
+                            ACTIF
+                        </span>
+                    </div>
+
+                    <span id="ft-popup-commune" class="ft-popup-commune">
+                        LIMETE
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="ft-distributor-popup-main">
+
+                <h4 id="ft-popup-name">
+                    Garage Pro-Moto Limete
+                </h4>
+
+                <div class="ft-popup-divider"></div>
+
+                <div class="ft-popup-info-grid">
+
+                    <div class="ft-popup-info-item">
+
+                        <span class="ft-popup-info-label">
+                            Adresse
+                        </span>
+
+                        <span
+                            id="ft-popup-address"
+                            class="ft-popup-info-value"
+                        >
+                            Quartier Industriel, Avenue de la Métallurgie n°12.
+                        </span>
+
+                    </div>
+
+
+                    <div class="ft-popup-info-item">
+
+                        <span class="ft-popup-info-label">
+                            Repère
+                        </span>
+
+                        <span
+                            id="ft-popup-landmark"
+                            class="ft-popup-info-value"
+                        >
+                            Croisement 14ème rue
+                        </span>
+
+                    </div>
+
+
+                    <div class="ft-popup-info-item">
+
+                        <span class="ft-popup-info-label">
+                            Contact
+                        </span>
+
+                        <a
+                            id="ft-popup-phone"
+                            href="tel:+243812345678"
+                            class="ft-popup-info-value ft-popup-phone"
+                        >
+                            +243 81 234 5678
+                        </a>
+
+                    </div>
+
+
+                    <div class="ft-popup-info-item">
+
+                        <span class="ft-popup-info-label">
+                            Zone couverte
+                        </span>
+
+                        <span
+                            id="ft-popup-coverage"
+                            class="ft-popup-info-value"
+                        >
+                            Limete
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="ft-distributor-popup-footer">
+
+                <div class="ft-popup-index">
+                    <span>POINT</span>
+                    <strong id="ft-popup-index">01</strong>
+                </div>
+
+                <a
+                    id="ft-popup-directions"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ft-popup-directions"
+                >
+                    <span>Itinéraire</span>
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="square"
+                        stroke-linejoin="miter"
+                    >
+                        <path d="M5 12h14"></path>
+                        <path d="m13 6 6 6-6 6"></path>
+                    </svg>
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Message inférieur -->
+        <div class="ft-distributor-map-bottom">
+
+            <div class="ft-distributor-map-bottom-line"></div>
+
+            <span>
+                Cliquez sur un point pour consulter les informations de la zone.
+            </span>
+
+            <div class="ft-distributor-map-coordinate">
+                KIN / LOCAL NETWORK
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
         <div class="ft-distributor-cta-wrap">
     <button type="button" id="open-distributor-form" class="ft-distributor-cta">
@@ -1365,11 +2367,11 @@
                         <!-- TikTok SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
+                    <a href="https://www.instagram.com/fulltechcongo?stkn=NTZqY3lzZzcxcmlw&utm_source=qr" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
                         <!-- Instagram SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
+                    <a href="https://www.facebook.com/share/19WQsyMqth/?mibextid=wwXIfr" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
                         <!-- Facebook SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                     </a>
@@ -1390,6 +2392,10 @@
     </div>
 </footer>
 
+<script
+    async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxSqUu7cPEJ0HbzIfTBvPm3oL5u413Rnc&loading=async&callback=initFtDistributorMap&v=weekly&libraries=marker">
+</script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
 <script src="script_2.js"></script>

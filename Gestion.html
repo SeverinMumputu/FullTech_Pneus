@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FullTech Congo — Gestion financière</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ft: {
+              black: '#0A0A0A',
+              ink2: '#1C1C1C',
+              paper: '#F2F2F2',
+              red: '#E31E24',
+              redDark: '#B0141A',
+              steel: '#8B8F94',
+              line: '#E2E2E2'
+            }
+          },
+          fontFamily: {
+            inter: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="Gestion.css" />
+</head>
+<body class="min-h-screen bg-ft-paper font-inter text-ft-black">
+  <div id="app" class="min-h-screen"></div>
+  <div id="modal-root"></div>
+  <script src="Gestion.js"></script>
+</body>
+</html>

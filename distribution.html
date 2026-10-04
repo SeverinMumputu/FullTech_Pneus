@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Distributeurs - FullTech Congo</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ft-black': '#000000',
+                        'ft-dark': '#070707',
+                        'ft-gray': '#2d2d2d',
+                        'ft-lightgray': '#1a1a1a',
+                        'ft-red': '#e60000',
+                        'ft-white': '#f4f4f5'
+                    },
+                    fontFamily: {
+                        'heading': ['Oswald', 'sans-serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Personnalisé pour parfaire le look anti-template */
+        body {
+            background-color: #070707;
+            color: #f4f4f5;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Texture de bruit subtile sur les fonds sombres */
+        .bg-noise {
+            position: relative;
+        }
+        .bg-noise::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.03%22/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #070707; }
+        ::-webkit-scrollbar-thumb { background: #2d2d2d; }
+        ::-webkit-scrollbar-thumb:hover { background: #e60000; }
+
+        /* Animation des marqueurs sur la carte */
+        .map-marker-pulse {
+            width: 20px;
+            height: 20px;
+            background-color: #e60000;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(230, 0, 0, 0.5);
+        }
+        .map-marker-pulse::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            border: 2px solid #e60000;
+            animation: pulse 1.5s linear infinite;
+            opacity: 0;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .map-marker-pulse:hover {
+            background-color: #ff1a1a;
+        }
+        .map-marker-pulse:hover::after {
+            border-color: #ff1a1a;
+            animation-duration: 1s;
+        }
+
+        /* Animations du Popup Premium */
+        .popup-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(4px);
+            transform: translateY(20px) scale(0.95);
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+        
+        /* Cacher les contrôles Google par défaut pour un look épuré */
+        .gmnoprint, .gm-fullscreen-control, .gm-style-cc {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-noise">
+
+    <!-- Navbar simulée pour le contexte -->
+    <header class="w-full border-b border-ft-gray bg-ft-dark p-6">
+        <h1 class="font-heading text-2xl text-ft-white tracking-widest uppercase">FullTech <span class="text-ft-red">Congo</span></h1>
+    </header>
+
+    <!-- Section 7 - Distributeurs -->
+    <section id="distributors" class="py-24 bg-ft-dark border-t border-ft-gray relative">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-heading text-4xl uppercase tracking-widest mb-4">Nos Distributeurs Locaux</h2>
+                <p class="font-sans text-ft-white/60 max-w-2xl mx-auto">Trouvez un point de vente partenaire près de chez vous ou contactez l'un de nos "Wewas" distributeurs accrédités à Kinshasa.</p>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- DÉBUT DE LA NOUVELLE CARTE INTERACTIVE -->
+            <!-- ========================================== -->
+            
+            <div class="relative w-full h-[600px] border border-ft-gray bg-ft-black overflow-hidden group">
+                <!-- Conteneur Google Map -->
+                <div id="kinshasa-map" class="w-full h-full"></div>
+                
+                <!-- Overlay de Filtre (Optionnel, pour donner un effet cinématique au survol) -->
+                <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_100px_rgba(7,7,7,0.8)] z-0"></div>
+
+                <!-- Popup Premium -->
+                <div id="premium-popup" class="popup-overlay absolute top-0 left-0 w-full h-full flex items-center justify-center bg-ft-dark/60 z-10 p-4">
+                    <div class="relative w-full max-w-md bg-ft-black border border-ft-red shadow-[0_10px_40px_rgba(230,0,0,0.15)] p-6 flex flex-col">
+                        <!-- Bouton Fermer -->
+                        <button id="close-popup" class="absolute top-4 right-4 text-ft-white/50 hover:text-ft-red transition-colors focus:outline-none">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Contenu Dynamique Injecté par JS -->
+                        <div id="popup-content" class="w-full">
+                            <!-- Le contenu de la carte y sera inséré -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Indicateur d'interaction -->
+                <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-ft-dark/80 backdrop-blur border border-ft-gray px-4 py-2 text-xs font-mono text-ft-white/60 tracking-widest pointer-events-none uppercase">
+                    Cliquez sur un point rouge
+                </div>
+            </div>
+            
+            <!-- ========================================== -->
+            <!-- FIN DE LA NOUVELLE CARTE INTERACTIVE -->
+            <!-- ========================================== -->
+
+            <!-- SECTION "DEVENIR DISTRIBUTEUR" - CONSERVÉE INTACTE -->
+            <div class="mt-24 text-center">
+                <p class="font-mono text-ft-white/30 text-sm mb-4">-- LA SUITE DE LA SECTION EST INTACTE --</p>
+                <div class="bg-ft-black border border-ft-gray p-12 relative overflow-hidden">
+                    <h3 class="font-heading text-3xl uppercase tracking-widest mb-2">Devenir Distributeur</h3>
+                    <p class="font-sans text-ft-white/50 mb-8 max-w-xl mx-auto">Rejoignez le réseau FullTech et bénéficiez de nos avantages exclusifs pour les partenaires locaux.</p>
+                    <button class="bg-ft-red text-white font-heading uppercase tracking-widest px-8 py-4 hover:bg-white hover:text-ft-red transition-colors">
+                        Soumettre ma candidature
+                    </button>
+                    <!-- Le formulaire stepper se trouve ici dans votre code original -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Données des distributeurs (remplaçant les anciennes cartes statiques)
+        const distributorsData = [
+            {
+                id: 1,
+                name: "Garage Pro-Moto Limete",
+                type: "Point Relais",
+                address: "Quartier Industriel, Avenue de la Métallurgie n°12.",
+                hint: "Repère : Croisement 14ème rue",
+                phone: "+243 81 234 5678",
+                lat: -4.3392,
+                lng: 15.3413,
+                svgIcon: `<svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`
+            },
+            {
+                id: 2,
+                name: "Papa LeBlanc (Kalamu)",
+                type: "Livreur Wewa",
+                address: "Zone couverte : Kalamu, Kasa-Vubu, Bandalungwa.",
+                hint: "Stationnement : Rond-point Victoire",
+                phone: "+243 89 987 6543",
+                lat: -4.3387,
+                lng: 15.3142,
+                svgIcon: `<svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>`
+            },
+            {
+                id: 3,
+                name: "FullTech Gombe",
+                type: "Dépôt Central",
+                address: "Quartier Socimat, Boulevard du 30 Juin.",
+                hint: "Repère : En face du supermarché",
+                phone: "+243 82 000 1122",
+                lat: -4.3090,
+                lng: 15.2764,
+                svgIcon: `<svg class="w-6 h-6 text-ft-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>`
+            }
+        ];
+
+        // Style Sombre sur mesure pour coller à la charte graphique #070707
+        const mapDarkStyle = [
+            { elementType: "geometry", stylers: [{ color: "#070707" }] },
+            { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#4f4f4f" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#070707" }] },
+            { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#2d2d2d" }] },
+            { featureType: "administrative.country", elementType: "labels.text.fill", stylers: [{ color: "#9e9e9e" }] },
+            { featureType: "administrative.land_parcel", stylers: [{ visibility: "off" }] },
+            { featureType: "administrative.neighborhood", stylers: [{ visibility: "off" }] },
+            { featureType: "poi", elementType: "geometry", stylers: [{ color: "#111111" }] },
+            { featureType: "poi", elementType: "labels.text", stylers: [{ visibility: "off" }] },
+            { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#1a1a1a" }] },
+            { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#2d2d2d" }] },
+            { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
+            { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#222222" }] },
+            { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#2d2d2d" }] },
+            { featureType: "road.highway.controlled_access", elementType: "geometry", stylers: [{ color: "#3d3d3d" }] },
+            { featureType: "transit", elementType: "geometry", stylers: [{ color: "#111111" }] },
+            { featureType: "water", elementType: "geometry", stylers: [{ color: "#000000" }] },
+            { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#3d3d3d" }] }
+        ];
+
+        let map;
+
+        function initMap() {
+            // Centre par défaut sur Kinshasa
+            const kinshasaCenter = { lat: -4.322447, lng: 15.307045 };
+
+            map = new google.maps.Map(document.getElementById("kinshasa-map"), {
+                zoom: 13,
+                center: kinshasaCenter,
+                styles: mapDarkStyle,
+                disableDefaultUI: true, // Look épuré
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_CENTER,
+                },
+                backgroundColor: '#070707'
+            });
+
+            const popup = document.getElementById('premium-popup');
+            const popupContent = document.getElementById('popup-content');
+            const closeBtn = document.getElementById('close-popup');
+
+            // Fermeture du popup
+            closeBtn.addEventListener('click', () => {
+                popup.classList.remove('active');
+            });
+
+            // Fonction pour générer le HTML de la carte d'information (design conservé)
+            function generateCardHTML(data) {
+                return `
+                    <div class="flex justify-between items-start mb-6 pr-8">
+                        <div class="w-14 h-14 bg-ft-lightgray flex items-center justify-center border border-ft-gray">
+                            ${data.svgIcon}
+                        </div>
+                        <span class="text-[15px] font-heading text-ft-white uppercase tracking-widest px-3 py-1 bg-ft-red/10 text-ft-red border border-ft-red/20">${data.type}</span>
+                    </div>
+                    <h3 class="font-heading text-2xl tracking-wider mb-2 text-ft-white">${data.name}</h3>
+                    <p class="font-sans text-sm text-ft-white/70 mb-6 flex-1 leading-relaxed">
+                        ${data.address}<br>
+                        <span class="text-ft-white/40 text-xs italic mt-1 inline-block">${data.hint}</span>
+                    </p>
+                    <div class="border-t border-ft-gray pt-5 flex justify-between items-center">
+                        <span class="font-mono text-sm text-ft-red font-bold tracking-widest">${data.phone}</span>
+                        <a href="tel:${data.phone.replace(/\s+/g, '')}" class="text-xs font-heading uppercase tracking-widest text-ft-white/50 hover:text-ft-white transition-colors flex items-center gap-2">
+                            Appeler
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                `;
+            }
+
+            // Ajout des marqueurs personnalisés (OverlayView pour HTML/CSS pur)
+            class CustomMarker extends google.maps.OverlayView {
+                constructor(position, data, map) {
+                    super();
+                    this.position = position;
+                    this.data = data;
+                    this.setMap(map);
+                }
+
+                onAdd() {
+                    this.div = document.createElement('div');
+                    this.div.className = 'absolute transform -translate-x-1/2 -translate-y-1/2';
+                    
+                    const dot = document.createElement('div');
+                    dot.className = 'map-marker-pulse';
+                    this.div.appendChild(dot);
+
+                    const panes = this.getPanes();
+                    panes.overlayMouseTarget.appendChild(this.div);
+
+                    // Evénement au clic
+                    this.div.addEventListener('click', () => {
+                        // Centrer la carte sur le marqueur
+                        map.panTo(this.position);
+                        
+                        // Injecter les infos et ouvrir le popup
+                        popupContent.innerHTML = generateCardHTML(this.data);
+                        popup.classList.add('active');
+                    });
+                }
+
+                draw() {
+                    const overlayProjection = this.getProjection();
+                    const position = overlayProjection.fromLatLngToDivPixel(this.position);
+                    this.div.style.left = position.x + 'px';
+                    this.div.style.top = position.y + 'px';
+                }
+
+                onRemove() {
+                    if (this.div) {
+                        this.div.parentNode.removeChild(this.div);
+                        this.div = null;
+                    }
+                }
+            }
+
+            // Instanciation des marqueurs
+            distributorsData.forEach(dist => {
+                new CustomMarker(
+                    new google.maps.LatLng(dist.lat, dist.lng),
+                    dist,
+                    map
+                );
+            });
+            
+            // Fermer le popup quand on clique sur la carte (en dehors des marqueurs)
+            google.maps.event.addListener(map, 'click', function() {
+                popup.classList.remove('active');
+            });
+        }
+    </script>
+    
+    <!-- /!\ REMPLACEZ 'VOTRE_CLE_API_GOOGLE_MAPS' PAR VOTRE VRAIE CLÉ API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=VOTRE_CLE_API_GOOGLE_MAPS&callback=initMap"></script>
+
+</body>
+</html>
