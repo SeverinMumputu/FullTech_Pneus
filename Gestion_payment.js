@@ -6,52 +6,27 @@ const API_BASE =
   'http://localhost:3000';
 
 /* ============================================================
-   EMAILJS
+   GMAIL
 ============================================================ */
 
 /*
- * REMPLACER UNIQUEMENT CES 3 VALEURS
+ * Index du compte Gmail utilisé par la plateforme.
+ *
+ * 0 = premier compte Google connecté dans le navigateur.
+ *
+ * Le compte Gmail de l'entreprise doit être connecté
+ * sur cet emplacement pour que le champ "De" utilise
+ * l'adresse professionnelle correspondante.
  */
-
-const EMAILJS_PUBLIC_KEY =
-  '8jJYNK-RV0GKhibc0';
-
-const EMAILJS_SERVICE_ID =
-  'service_w0ror6m';
-
-const EMAILJS_TEMPLATE_ID =
-  'template_y1pblui';
+const GMAIL_ACCOUNT_INDEX =
+  0;
 
 
-const EMAILJS_INVOICE_ATTACHMENT_PARAM =
-  'invoice_image';
-
-
-if (
-  window.emailjs &&
-  EMAILJS_PUBLIC_KEY !==
-    'YOUR_EMAILJS_PUBLIC_KEY'
-) {
-
-  emailjs.init({
-
-    publicKey:
-      EMAILJS_PUBLIC_KEY,
-
-    limitRate: {
-
-      id:
-        'fulltech-management',
-
-      throttle:
-        1000
-
-    }
-
-  });
-
-}
-
+/*
+ * URL de composition Gmail.
+ */
+const GMAIL_COMPOSE_BASE =
+  `https://mail.google.com/mail/u/${GMAIL_ACCOUNT_INDEX}/?view=cm&fs=1`;
 
 /* ============================================================
    ÉTAT
@@ -1172,37 +1147,201 @@ async function managerValidate() {
       );
 
 
-    selectedOrder =
-      data.order;
+selectedOrder =
+  data.order;
 
 
-    if (
-      data.matched
-    ) {
+if (
+  data.matched
+) {
 
-      managerResult.textContent =
-        'Transaction validée : le montant reçu correspond au montant attendu.';
+  managerResult.textContent =
+    'Transaction validée. Génération automatique de la facture…';
 
-      managerResult.className =
-        'mt-3 text-xs text-emerald-400';
+  managerResult.className =
+    'mt-3 text-xs text-emerald-400';
 
-    } else {
+/* ============================================================
+   TÉLÉCHARGEMENT AUTOMATIQUE DE LA FACTURE PNG
+============================================================ */
 
-      managerResult.textContent =
-        'Écart détecté : le montant reçu ne correspond pas au montant attendu.';
+function sanitizeInvoiceFileName(
+  value
+) {
 
-      managerResult.className =
-        'mt-3 text-xs text-orange-400';
+  return String(
+    value || 'CLIENT'
+  )
+    .normalize('NFD')
+    .replace(
+      /[\u0300-\u036f]/g,
+      ''
+    )
+    .replace(
+      /[^a-zA-Z0-9]+/g,
+      '_'
+    )
+    .replace(
+      /^_+|_+$/g,
+      ''
+    )
+    .toUpperCase() ||
+    'CLIENT';
 
-    }
+}
 
 
-    renderOrderDrawer();
+function getInvoiceFileName(
+  order
+) {
+
+  const clientName =
+    sanitizeInvoiceFileName(
+      order?.client?.name
+    );
 
 
-    await loadOrders();
+  const invoiceNumber =
+    order?.invoice?.number ||
+    `FAC-${String(
+      order?.orderId || ''
+    ).replace(
+      /^CMD-/,
+      ''
+    )}`;
 
-    await loadStats();
+
+  return (
+    `FULLTECH-CONGO-${invoiceNumber}@${clientName}.png`
+  );
+
+}
+
+
+function downloadInvoicePNG(
+  order,
+  invoiceImage
+) {
+
+  if (
+    !order ||
+    !invoiceImage
+  ) {
+
+    return;
+
+  }
+
+
+  const fileName =
+    getInvoiceFileName(
+      order
+    );
+
+
+  const downloadLink =
+    document.createElement(
+      'a'
+    );
+
+
+  downloadLink.href =
+    invoiceImage;
+
+
+  downloadLink.download =
+    fileName;
+
+
+  downloadLink.style.display =
+    'none';
+
+
+  document.body.appendChild(
+    downloadLink
+  );
+
+
+  downloadLink.click();
+
+
+  document.body.removeChild(
+    downloadLink
+  );
+
+
+  console.log(
+    `[FULLTECH MANAGEMENT] Facture téléchargée : ${fileName}`
+  );
+
+
+  return fileName;
+
+}
+
+  /*
+   * ============================================================
+   * ÉTAPE II — GÉNÉRATION AUTOMATIQUE DE LA FACTURE
+   * ============================================================
+   */
+
+  const invoiceOrder =
+    await ensureInvoice(
+      selectedOrder
+    );
+
+
+  /*
+   * ============================================================
+   * ÉTAPE II + III — GÉNÉRATION PNG
+   * ============================================================
+   */
+
+  const invoiceImage =
+    drawInvoiceCanvas(
+      invoiceOrder
+    );
+
+
+  /*
+   * Téléchargement automatique.
+   */
+
+  const invoiceFileName =
+    downloadInvoicePNG(
+      invoiceOrder,
+      invoiceImage
+    );
+
+
+  selectedOrder =
+    invoiceOrder;
+
+
+  renderOrderDrawer();
+
+
+  managerResult.textContent =
+    `Transaction validée. Facture générée et téléchargée : ${invoiceFileName}`;
+
+  managerResult.className =
+    'mt-3 text-xs text-emerald-400';
+
+
+} else {
+
+  managerResult.textContent =
+    'Écart détecté : le montant reçu ne correspond pas au montant attendu.';
+
+  managerResult.className =
+    'mt-3 text-xs text-orange-400';
+
+}
+
+
+await loadOrders();
+
+await loadStats();
 
 
   } catch (
@@ -1882,6 +2021,110 @@ function drawInvoiceCanvas(
 
 }
 
+/* ============================================================
+   TÉLÉCHARGEMENT AUTOMATIQUE DE LA FACTURE PNG
+============================================================ */
+
+function sanitizeInvoiceFileName(
+  value
+) {
+
+  return String(
+    value || 'CLIENT'
+  )
+    .normalize('NFD')
+    .replace(
+      /[\u0300-\u036f]/g,
+      ''
+    )
+    .replace(
+      /[^a-zA-Z0-9]+/g,
+      '_'
+    )
+    .replace(
+      /^_+|_+$/g,
+      ''
+    )
+    .toUpperCase() ||
+    'CLIENT';
+
+}
+
+
+function downloadInvoicePNG(
+  order,
+  invoiceImage
+) {
+
+  if (
+    !order ||
+    !invoiceImage
+  ) {
+
+    return;
+
+  }
+
+
+  const clientName =
+    sanitizeInvoiceFileName(
+      order.client?.name
+    );
+
+
+  const invoiceNumber =
+    order.invoice?.number ||
+    `FAC-${String(
+      order.orderId || ''
+    ).replace(
+      /^CMD-/,
+      ''
+    )}`;
+
+
+  const fileName =
+    `FULLTECH-CONGO-${invoiceNumber}@${clientName}.png`;
+
+
+  const downloadLink =
+    document.createElement(
+      'a'
+    );
+
+
+  downloadLink.href =
+    invoiceImage;
+
+
+  downloadLink.download =
+    fileName;
+
+
+  downloadLink.style.display =
+    'none';
+
+
+  document.body.appendChild(
+    downloadLink
+  );
+
+
+  downloadLink.click();
+
+
+  document.body.removeChild(
+    downloadLink
+  );
+
+
+  console.log(
+    `[FULLTECH MANAGEMENT] Facture téléchargée : ${fileName}`
+  );
+
+
+  return fileName;
+
+}
 
 /* ============================================================
    GÉNÉRATION FACTURE
@@ -1955,12 +2198,11 @@ async function generateInvoice() {
 
 }
 
-
 /* ============================================================
-   EMAILJS
+   GMAIL — PRÉPARATION DE L'ENVOI
 ============================================================ */
 
-async function sendInvoiceEmail() {
+async function prepareGmailInvoice() {
 
   if (
     !selectedOrder
@@ -1984,29 +2226,8 @@ async function sendInvoiceEmail() {
     $('email-result').textContent =
       'Email client absent.';
 
-
     $('email-result').className =
       'mt-3 text-xs text-red-300';
-
-
-    return;
-
-  }
-
-
-  if (
-    !window.emailjs ||
-    EMAILJS_PUBLIC_KEY ===
-      'YOUR_EMAILJS_PUBLIC_KEY'
-  ) {
-
-    $('email-result').textContent =
-      'Configure d’abord les identifiants EmailJS dans app.js.';
-
-
-    $('email-result').className =
-      'mt-3 text-xs text-orange-300';
-
 
     return;
 
@@ -2016,12 +2237,15 @@ async function sendInvoiceEmail() {
   try {
 
     /*
-     * Génère la facture si nécessaire.
+     * ----------------------------------------------------------
+     * 1. S'assurer que la facture existe
+     * ----------------------------------------------------------
      */
 
     if (
       selectedOrder.invoice?.status !==
         'GENERATED' &&
+
       selectedOrder.invoice?.status !==
         'SENT'
     ) {
@@ -2035,8 +2259,9 @@ async function sendInvoiceEmail() {
 
 
     /*
-     * Transforme la facture canvas
-     * en image PNG Base64.
+     * ----------------------------------------------------------
+     * 2. Redessiner la facture dans le canvas
+     * ----------------------------------------------------------
      */
 
     const invoiceImage =
@@ -2046,87 +2271,149 @@ async function sendInvoiceEmail() {
 
 
     /*
-     * Envoi EmailJS.
+     * ----------------------------------------------------------
+     * 3. Nom du fichier PNG
+     * ----------------------------------------------------------
      */
 
-    await emailjs.send(
+    const invoiceFileName =
+      getInvoiceFileName(
+        selectedOrder
+      );
 
-      EMAILJS_SERVICE_ID,
 
-      EMAILJS_TEMPLATE_ID,
+    /*
+     * ----------------------------------------------------------
+     * 4. Informations Gmail
+     * ----------------------------------------------------------
+     */
 
-      {
+    const clientName =
+      selectedOrder.client?.name ||
+      'Client';
 
-        to_email:
-          email,
 
-        client_name:
-          selectedOrder.client?.name ||
-          '',
+    const orderId =
+      selectedOrder.orderId ||
+      '';
 
-        order_id:
-          selectedOrder.orderId,
 
-        invoice_number:
-          selectedOrder.invoice?.number ||
-          '',
+    const invoiceNumber =
+      selectedOrder.invoice?.number ||
+      '';
 
-        amount_usd:
-          formatUSD(
-            selectedOrder.amount_usd
-          ),
 
-        amount_cdf:
-          formatCDF(
-            selectedOrder.amount_cdf
-          ),
+    const subject =
+      `Votre facture FullTech Congo — ${orderId}`;
 
-        ticket:
-          selectedOrder.payment?.ticket ||
-          '',
 
-        [EMAILJS_INVOICE_ATTACHMENT_PARAM]:
-          invoiceImage
+    const body =
+      `Bonjour ${clientName},\n\n` +
 
-      }
+      `Veuillez trouver ci-joint votre facture FullTech Congo.\n\n` +
 
+      `Commande : ${orderId}\n` +
+
+      `Facture : ${invoiceNumber}\n` +
+
+      `Montant : ${formatUSD(
+        selectedOrder.amount_usd
+      )} · ${formatCDF(
+        selectedOrder.amount_cdf
+      )}\n\n` +
+
+      `Merci pour votre confiance.\n\n` +
+
+      `FullTech Congo`;
+
+
+    /*
+     * ----------------------------------------------------------
+     * 5. Vérification que le PNG existe côté navigateur
+     *
+     * Le téléchargement permet au gestionnaire de joindre
+     * manuellement la facture dans Gmail.
+     * ----------------------------------------------------------
+     */
+
+    downloadInvoicePNG(
+      selectedOrder,
+      invoiceImage
     );
 
 
     /*
-     * Informe l'API que la facture
-     * a été envoyée.
+     * ----------------------------------------------------------
+     * 6. Construction de l'URL Gmail
+     * ----------------------------------------------------------
      */
 
-    const updated =
-      await api(
-        `/api/orders/${encodeURIComponent(
-          selectedOrder.orderId
-        )}/invoice/sent`,
-        {
+    const gmailParams =
+      new URLSearchParams({
 
-          method:
-            'POST'
+        view:
+          'cm',
 
-        }
-      );
+        fs:
+          '1',
 
+        to:
+          email,
 
-    selectedOrder =
-      updated.order;
+        su:
+          subject,
 
+        body:
+          body
 
-    $('email-result').textContent =
-      `Facture envoyée à ${email}.`;
-
-
-    $('email-result').className =
-      'mt-3 text-xs text-emerald-400';
+      });
 
 
-    await loadOrders();
+    const gmailUrl =
+      `${GMAIL_COMPOSE_BASE}&${gmailParams.toString()}`;
 
-    await loadStats();
+
+    /*
+     * ----------------------------------------------------------
+     * 7. OUVERTURE GMAIL
+     *
+     * AUCUN POST.
+     * AUCUN service externe.
+     * AUCUN envoi automatique.
+     *
+     * Navigation directe pour éviter le blocage
+     * des fenêtres popup après un await.
+     * ----------------------------------------------------------
+     */
+
+    console.log(
+      '[FULLTECH MANAGEMENT] TRANSFERT GMAIL'
+    );
+
+    console.log(
+      'Destinataire :',
+      email
+    );
+
+    console.log(
+      'Objet :',
+      subject
+    );
+
+    console.log(
+      'Fichier :',
+      invoiceFileName
+    );
+
+    console.log(
+      'URL Gmail :',
+      gmailUrl
+    );
+
+
+    window.location.assign(
+      gmailUrl
+    );
 
 
   } catch (
@@ -2134,13 +2421,14 @@ async function sendInvoiceEmail() {
   ) {
 
     console.error(
+      '[FULLTECH MANAGEMENT] Préparation Gmail impossible :',
       error
     );
 
 
     $('email-result').textContent =
       error.message ||
-      'Échec de l’envoi EmailJS.';
+      'Impossible de préparer Gmail.';
 
 
     $('email-result').className =
@@ -2286,7 +2574,7 @@ $('skip-email-btn')
 $('send-email-btn')
   .addEventListener(
     'click',
-    sendInvoiceEmail
+    prepareGmailInvoice
   );
 
 

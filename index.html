@@ -105,7 +105,8 @@
                 <a href="#about" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">La Marque</a>
                 <a href="#catalog" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Achat</a>
                 <a href="#distributors" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Distributeurs</a>
-                <a href="#partners" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Partenaires</a>
+                <a href="#politique_achat" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
+                <a href="#reclamations" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>
             </div>
         </div>
     </div>
@@ -128,6 +129,8 @@
         <a href="#catalog" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Achat</a>
         <a href="#distributors" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Distributeurs</a>
         <a href="#partners" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Partenaires</a>
+        <a href="#politique_achat" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
+        <a href="#reclamations" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>
     </nav>
 </div>
 
@@ -155,6 +158,419 @@
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </button>
     </div>
+</div>
+
+<!-- ============================================================
+     INFORMATION COMMANDE — POPUP AVANT CHECKOUT
+============================================================ -->
+<div
+    id="order-notice-overlay"
+    class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] hidden items-center justify-center px-4"
+>
+
+    <div
+        id="order-notice-modal"
+        class="w-full max-w-xl bg-ft-dark border border-ft-gray shadow-2xl"
+    >
+
+        <!-- En-tête -->
+        <div
+            class="p-6 md:p-8 bg-ft-black border-b border-ft-gray"
+        >
+
+            <div class="flex items-start justify-between gap-6">
+
+                <div>
+
+                    <p
+                        class="text-[10px] tracking-[.28em] text-ft-red uppercase mb-2"
+                    >
+                        INFORMATIONS IMPORTANTES
+                    </p>
+
+                    <h2
+                        class="font-heading text-2xl md:text-3xl uppercase tracking-widest"
+                    >
+                        Avant de commander
+                    </h2>
+
+                </div>
+
+                <button
+                    id="close-order-notice-btn"
+                    type="button"
+                    class="text-ft-gray hover:text-white transition-colors"
+                    aria-label="Fermer"
+                >
+                    <svg
+                        class="w-7 h-7"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="square"
+                            stroke-linejoin="miter"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                    </svg>
+                </button>
+
+            </div>
+
+            <!-- Progression -->
+            <div
+                id="order-notice-progress"
+                class="flex items-center gap-2 mt-7"
+            >
+
+                <div
+                    data-notice-progress="0"
+                    class="order-notice-progress h-[2px] flex-1 bg-ft-red transition-all duration-300"
+                ></div>
+
+                <div
+                    data-notice-progress="1"
+                    class="order-notice-progress h-[2px] flex-1 bg-ft-gray transition-all duration-300"
+                ></div>
+
+                <div
+                    data-notice-progress="2"
+                    class="order-notice-progress h-[2px] flex-1 bg-ft-gray transition-all duration-300"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Zone slider -->
+        <div class="overflow-hidden">
+
+            <div
+                id="order-notice-track"
+                class="flex transition-transform duration-500 ease-in-out"
+            >
+
+                <!-- =================================================
+                     ÉTAPE 1
+                ================================================== -->
+                <section
+                    class="order-notice-slide w-full flex-shrink-0 p-6 md:p-8"
+                >
+
+                    <div
+                        class="w-14 h-14 flex items-center justify-center border border-ft-red text-ft-red font-heading text-xl mb-6"
+                    >
+                        01
+                    </div>
+
+                    <p
+                        class="text-[10px] uppercase tracking-[.25em] text-ft-white/40 mb-2"
+                    >
+                        ÉTAPE 1
+                    </p>
+
+                    <h3
+                        class="font-heading text-2xl uppercase tracking-wider mb-4"
+                    >
+                        Code unique
+                    </h3>
+
+                    <p
+                        class="font-sans text-sm text-ft-white/65 leading-relaxed"
+                    >
+                        Le <strong class="text-white">code unique</strong> est
+                        l'identifiant unique de votre commande.
+                        Conservez-le soigneusement après sa génération.
+                    </p>
+
+                    <div
+                        class="mt-6 border-l-2 border-ft-red bg-ft-black p-4"
+                    >
+                        <p
+                            class="text-xs text-ft-white/55 leading-relaxed"
+                        >
+                            Cette information pourra être demandée pour
+                            retrouver et vérifier votre commande.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+
+                        <button
+                            type="button"
+                            data-order-notice-next
+                            class="bg-ft-red text-white px-7 py-3 font-heading uppercase tracking-widest hover:bg-ft-redhover transition-colors flex items-center gap-2 group"
+                        >
+                            Continuer
+
+                            <svg
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="square"
+                                    stroke-linejoin="miter"
+                                    stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                ></path>
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ÉTAPE 2
+                ================================================== -->
+                <section
+                    class="order-notice-slide w-full flex-shrink-0 p-6 md:p-8"
+                >
+
+                    <div
+                        class="w-14 h-14 flex items-center justify-center border border-ft-red text-ft-red font-heading text-xl mb-6"
+                    >
+                        02
+                    </div>
+
+                    <p
+                        class="text-[10px] uppercase tracking-[.25em] text-ft-white/40 mb-2"
+                    >
+                        ÉTAPE 2
+                    </p>
+
+                    <h3
+                        class="font-heading text-2xl uppercase tracking-wider mb-4"
+                    >
+                        Numéro de ticket
+                    </h3>
+
+                    <p
+                        class="font-sans text-sm text-ft-white/65 leading-relaxed"
+                    >
+                        Le <strong class="text-white">numéro de ticket</strong>
+                        correspond au numéro d'achat relié à votre commande.
+                        Conservez-le également avec votre code unique.
+                    </p>
+
+                    <div
+                        class="mt-6 border-l-2 border-ft-red bg-ft-black p-4"
+                    >
+                        <p
+                            class="text-xs text-ft-white/55 leading-relaxed"
+                        >
+                            Le ticket peut être utilisé lors du suivi et de
+                            la vérification de votre commande.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex justify-between gap-3">
+
+                        <button
+                            type="button"
+                            data-order-notice-prev
+                            class="border border-ft-gray text-white px-6 py-3 font-heading uppercase tracking-widest hover:border-white transition-colors"
+                        >
+                            Retour
+                        </button>
+
+                        <button
+                            type="button"
+                            data-order-notice-next
+                            class="bg-ft-red text-white px-7 py-3 font-heading uppercase tracking-widest hover:bg-ft-redhover transition-colors flex items-center gap-2 group"
+                        >
+                            Continuer
+
+                            <svg
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="square"
+                                    stroke-linejoin="miter"
+                                    stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                ></path>
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ÉTAPE 3
+                ================================================== -->
+                <section
+                    class="order-notice-slide w-full flex-shrink-0 p-6 md:p-8"
+                >
+
+                    <div
+                        class="w-14 h-14 flex items-center justify-center border border-ft-red text-ft-red font-heading text-xl mb-6"
+                    >
+                        03
+                    </div>
+
+                    <p
+                        class="text-[10px] uppercase tracking-[.25em] text-ft-white/40 mb-2"
+                    >
+                        ÉTAPE 3
+                    </p>
+
+                    <h3
+                        class="font-heading text-2xl uppercase tracking-wider mb-4"
+                    >
+                        Adresse mail opérationnelle
+                    </h3>
+
+                    <p
+                        class="font-sans text-sm text-ft-white/65 leading-relaxed"
+                    >
+                        Pour recevoir votre facture FullTech Congo,
+                        vous devez fournir une
+                        <strong class="text-white">
+                            adresse mail que vous utilisez réellement
+                        </strong>.
+                    </p>
+
+                    <div
+                        class="mt-6 border-l-2 border-ft-red bg-ft-black p-4"
+                    >
+                        <p
+                            class="text-xs text-ft-white/55 leading-relaxed"
+                        >
+                            Vérifiez soigneusement cette adresse avant de
+                            poursuivre votre commande.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex justify-between gap-3">
+
+                        <button
+                            type="button"
+                            data-order-notice-prev
+                            class="border border-ft-gray text-white px-6 py-3 font-heading uppercase tracking-widest hover:border-white transition-colors"
+                        >
+                            Retour
+                        </button>
+
+                        <button
+                            type="button"
+                            data-order-notice-next
+                            class="bg-ft-red text-white px-7 py-3 font-heading uppercase tracking-widest hover:bg-ft-redhover transition-colors flex items-center gap-2 group"
+                        >
+                            Continuer
+
+                            <svg
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="square"
+                                    stroke-linejoin="miter"
+                                    stroke-width="2"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                ></path>
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+<!-- =======================================================
+     CONSENTEMENT
+======================================================== -->
+<section
+    id="order-notice-consent"
+    class="hidden p-3 md:p-4 border-t border-ft-gray bg-ft-black"
+>
+
+    <div
+        class="md:grid md:grid-cols-[1fr_auto] md:gap-4 md:items-center"
+    >
+
+        <!-- Informations -->
+        <div>
+
+            <p
+                class="text-[8px] uppercase tracking-[.22em] text-ft-red mb-0.5"
+            >
+                DERNIÈRE ÉTAPE
+            </p>
+
+            <h3
+                class="font-heading text-base uppercase tracking-wider"
+            >
+                Acceptation des conditions
+            </h3>
+
+            <p
+                class="mt-1 text-xs text-ft-white/65 leading-snug"
+            >
+                Acceptez-vous les conditions d'achats de
+                FullTech Congo ?
+            </p>
+
+            <p
+                class="mt-1 text-[9px] text-ft-white/40 leading-tight max-w-2xl"
+            >
+                Il est important de conserver soigneusement votre
+                code unique et votre numéro de ticket. Ces informations
+                pourront être demandées pour le suivi et la vérification
+                de votre commande.
+            </p>
+
+        </div>
+
+
+        <!-- Actions -->
+        <div
+            class="mt-3 md:mt-0 grid grid-cols-2 md:grid-cols-1 gap-1.5 md:w-36"
+        >
+
+            <button
+                id="order-notice-no"
+                type="button"
+                class="border border-ft-gray text-white py-1.5 px-3 text-[10px] font-heading uppercase tracking-widest hover:border-ft-red hover:text-ft-red transition-colors"
+            >
+                Non
+            </button>
+
+            <button
+                id="order-notice-yes"
+                type="button"
+                class="bg-ft-red text-white py-1.5 px-3 text-[10px] font-heading uppercase tracking-widest hover:bg-ft-redhover transition-colors"
+            >
+                Oui, j'accepte
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+    </div>
+
 </div>
 
 <!-- ============================================================
@@ -1254,14 +1670,12 @@
                         type="button"
                         class="next-step-btn bg-ft-red text-white py-3 px-8 font-heading tracking-widest hover:bg-ft-redhover"
                     >
-                        J'ai payé
+                        D'accord
                     </button>
 
                 </div>
 
             </div>
-
-
 
             <!-- =====================================================
                  STEP 4 — CONFIRMATION PAIEMENT
@@ -1275,6 +1689,9 @@
                     Confirmation du Paiement
                 </h3>
 
+                 <h3 class="font-heading text-3xl tracking-widest mb-8 border-b border-ft-gray pb-4">
+                    Numéro M-pesa : 082 33 345 34 34
+                </h3>
 
                 <!-- ÉTAT INITIAL -->
                 <div id="payment-confirmation-start">
@@ -2317,6 +2734,349 @@
     </div>
 </section>
 
+<!-- Section 9 - Politique de commande & Réclamations -->
+
+<section id="order-information" class="py-20 bg-ft-black border-b border-ft-gray relative overflow-hidden">
+
+<div class="max-w-7xl mx-auto px-6 md:px-10">
+
+    <!-- En-tête principal -->
+    <div class="mb-14">
+
+
+        <h2 class="font-heading text-3xl md:text-5xl uppercase tracking-widest text-ft-white mb-4">
+            Commandes & Réclamations
+        </h2>
+
+        <div class="w-16 h-1 bg-ft-red"></div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- BLOC 1 : POLITIQUE DE COMMANDE -->
+    <!-- ========================================================= -->
+<section id="politique_achat">
+    <div id="order-policy"
+         class="mb-10 bg-ft-dark border border-ft-gray p-6 md:p-10 relative overflow-hidden">
+     
+
+        <div class="max-w-3xl">
+
+            <div class="flex items-start gap-4 mb-5">
+
+                <div>
+                    <h3 class="font-heading text-2xl md:text-3xl text-ft-white tracking-wider">
+                        Comment acheter un produit en ligne ?
+                    </h3>
+
+                    <p class="font-sans text-ft-white/60 text-sm mt-2 leading-relaxed">
+                        Une commande FulltechCongo repose sur une déclaration de paiement
+                        effectuée par le client, suivie d'une vérification par notre plateforme
+                        de gestion.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Étapes -->
+            <div class="space-y-6 mt-8">
+
+                <!-- Étape I -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">I</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white  tracking-wide">
+                            Validation du panier
+                        </h4>
+
+                        <p class="font-sans text-ft-white/60 text-sm leading-relaxed mt-1">
+                            Vérifiez les articles sélectionnés, leurs quantités ainsi que le
+                            montant total de votre commande avant de poursuivre.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Étape II -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">II</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide">
+                            Informations client
+                        </h4>
+
+                        <p class="font-sans text-ft-white/60 text-sm leading-relaxed mt-1">
+                            Renseignez vos coordonnées ainsi que votre adresse afin que
+                            FulltechCongo puisse identifier correctement votre commande et
+                            vous transmettre votre facture.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Étape III -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">III</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide">
+                            Code unique & numéro de ticket
+                        </h4>
+
+                        <p class="font-sans text-ft-white/60 text-sm leading-relaxed mt-1">
+                            Un <strong class="text-ft-white">code unique</strong> permet
+                            d'identifier votre commande. Le
+                            <strong class="text-ft-white">numéro de ticket</strong> est quant
+                            à lui relié à cette commande et participe à son identification
+                            lors de la vérification.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Étape IV -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">IV</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide">
+                            Confirmation du paiement
+                        </h4>
+
+                        <p class="font-sans text-ft-white/60 text-sm leading-relaxed mt-1">
+                            Après avoir effectué le dépôt au numéro de paiement indiqué par
+                            l'entreprise, confirmez votre paiement. Votre demande est alors
+                            transférée vers notre plateforme de gestion et de vérification.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Étape V -->
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">V</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide">
+                            Vérification & envoi de la facture
+                        </h4>
+
+                        <p class="font-sans text-ft-white/60 text-sm leading-relaxed mt-1">
+                            Grâce à une logique de correspondance, notre plateforme vérifie
+                            la réception de la transaction ainsi que la correspondance entre
+                            le code unique et le numéro de ticket. Après validation, la facture
+                            est automatiquement transférée à l'adresse e-mail renseignée
+                            lors de la commande.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Note -->
+            <div class="mt-10 p-4 border border-ft-gray bg-ft-black/50">
+                <p class="font-sans text-xs md:text-sm text-ft-white/50 leading-relaxed">
+                    <span class="text-ft-red font-semibold">Important :</span>
+                    conservez votre code unique et votre numéro de ticket jusqu'à la réception
+                    de votre facture. Ces informations permettent d'assurer le suivi et la
+                    vérification de votre commande.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <section id="reclamations">
+    <!-- ========================================================= -->
+    <!-- BLOC 2 : RÉCLAMATIONS -->
+    <!-- ========================================================= -->
+
+    <div id="claims"
+         class="bg-ft-dark border border-ft-gray p-6 md:p-10 relative overflow-hidden">
+
+
+        <div class="max-w-3xl">
+
+            <div class="flex items-start gap-4 mb-5">
+
+                <div>
+                    <h3 class="font-heading text-2xl md:text-3xl text-ft-white tracking-wider">
+                        Vous n'avez pas reçu votre facture ?
+                    </h3>
+
+                    <p class="font-sans text-ft-white/60 text-sm mt-2 leading-relaxed">
+                        Si vous avez effectué votre paiement mais que votre facture ne vous
+                        est pas encore parvenue, vous pouvez effectuer une réclamation auprès
+                        de FulltechCongo.
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- Introduction -->
+            <div class="mt-8 mb-6">
+                <p class="font-sans text-sm md:text-base text-ft-white/70 leading-relaxed">
+                    Pour permettre à notre équipe de retrouver rapidement votre transaction,
+                    veuillez envoyer les informations suivantes à notre adresse e-mail :
+                </p>
+            </div>
+
+
+            <!-- Informations à envoyer -->
+            <div class="space-y-5">
+
+                <!-- Information I -->
+                <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
+                    <div class="flex-shrink-0 w-9 h-9 border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">I</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide text-sm md:text-base">
+                            Capture d'écran de la transaction
+                        </h4>
+
+                        <p class="font-sans text-ft-white/55 text-sm mt-1 leading-relaxed">
+                            Joignez le message de confirmation de votre transaction Vodacom
+                            afin de permettre à notre équipe d'identifier le paiement.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Information II -->
+                <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
+                    <div class="flex-shrink-0 w-9 h-9 border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">II</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide text-sm md:text-base">
+                            Code unique
+                        </h4>
+
+                        <p class="font-sans text-ft-white/55 text-sm mt-1 leading-relaxed">
+                            Indiquez le code unique qui vous a été attribué lors de votre
+                            commande.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Information III -->
+                <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
+                    <div class="flex-shrink-0 w-9 h-9 border border-ft-red
+                                flex items-center justify-center">
+                        <span class="font-heading text-ft-red text-sm">III</span>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading text-ft-white tracking-wide text-sm md:text-base">
+                            Numéro de ticket
+                        </h4>
+
+                        <p class="font-sans text-ft-white/55 text-sm mt-1 leading-relaxed">
+                            Indiquez également le numéro de ticket associé à votre commande.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Adresse e-mail -->
+            <div class="mt-8 p-5 border border-ft-red/40 bg-ft-black/60">
+
+                <p class="font-sans text-xs tracking-widest text-ft-white/40 mb-2">
+                    Adresse de réclamation
+                </p>
+
+                <a href="mailto:fulltechcongo@gmail.com.cd"
+                   class="inline-flex items-center gap-3 font-heading text-ft-red
+                          hover:text-ft-white transition-colors duration-300
+                          text-base md:text-lg break-all">
+
+                    <span class="text-lg">✉</span>
+                    <span>fulltechcongo@gmail.com.cd</span>
+
+                </a>
+
+                <p class="font-sans text-ft-white/40 text-xs mt-3">
+                    Cliquez sur l'adresse e-mail pour ouvrir votre application de messagerie
+                    et nous transmettre votre réclamation.
+                </p>
+
+            </div>
+
+
+            <!-- Délais -->
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div class="p-5 border border-ft-gray bg-ft-black/40">
+                    <div class="font-heading text-ft-red text-2xl mb-2">
+                        45 min
+                    </div>
+
+                    <p class="font-sans text-sm text-ft-white/60 leading-relaxed">
+                        Un premier message de l'entreprise, avec davantage de précisions sur
+                        l'état potentiel de votre commande, devrait vous parvenir dans ce
+                        délai.
+                    </p>
+                </div>
+
+
+                <div class="p-5 border border-ft-gray bg-ft-black/40">
+                    <div class="font-heading text-ft-red text-2xl mb-2">
+                        48 h
+                    </div>
+
+                    <p class="font-sans text-sm text-ft-white/60 leading-relaxed">
+                        À défaut d'une réponse dans les 45 minutes, un message de suivi vous
+                        sera transmis dans un délai maximal de 48 heures.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Rappel final -->
+            <div class="mt-8 flex gap-3 items-start">
+                <span class="text-ft-red text-lg">!</span>
+
+                <p class="font-sans text-xs md:text-sm text-ft-white/45 leading-relaxed">
+                    Pour accélérer le traitement de votre réclamation, veillez à transmettre
+                    les trois éléments demandés : la capture de la transaction, le code unique
+                    et le numéro de ticket.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</section>
+
+</section>
 
 
 <!-- Section 9 - Footer -->
@@ -2345,8 +3105,8 @@
                 <ul class="flex flex-col gap-3 font-sans text-sm text-ft-white/60">
                     <li><a href="#catalog" class="hover:text-ft-red transition-colors">Catalogue complet</a></li>
                     <li><a href="#distributors" class="hover:text-ft-red transition-colors">Devenir Distributeur</a></li>
-                    <li><a href="#" class="hover:text-ft-red transition-colors">Guides d'entretien</a></li>
-                    <li><a href="#" class="hover:text-ft-red transition-colors">Politique de garantie</a></li>
+                    <li><a href="#reclamations" class="hover:text-ft-red transition-colors">Réclamations</a></li>
+                    <li><a href="#politique_achat" class="hover:text-ft-red transition-colors">Politique de commande</a></li>
                 </ul>
             </div>
 
@@ -2385,8 +3145,8 @@
 
         <div class="border-t border-ft-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p class="font-sans text-xs text-ft-white/30">&copy; 2026 FullTech Congo. Tous droits réservés.</p>
-            <p class="font-sans text-xs text-ft-white/30 flex items-center gap-1">
-                Designed for Performance
+            <p class="font-sans text-ft-white text-ft-white/30 uppercase flex items-center gap-1">
+                Designed by Mercato
             </p>
         </div>
     </div>

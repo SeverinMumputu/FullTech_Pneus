@@ -88,6 +88,340 @@
     const closeModalBtn = document.getElementById('close-modal-btn');
     let currentSelectedProduct = null;
 
+/* ============================================================
+   INFORMATION COMMANDE — POPUP AVANT CHECKOUT
+============================================================ */
+
+const orderNoticeOverlay =
+    document.getElementById(
+        'order-notice-overlay'
+    );
+
+const orderNoticeTrack =
+    document.getElementById(
+        'order-notice-track'
+    );
+
+const orderNoticeConsent =
+    document.getElementById(
+        'order-notice-consent'
+    );
+
+const orderNoticeCloseBtn =
+    document.getElementById(
+        'close-order-notice-btn'
+    );
+
+const orderNoticeNoBtn =
+    document.getElementById(
+        'order-notice-no'
+    );
+
+const orderNoticeYesBtn =
+    document.getElementById(
+        'order-notice-yes'
+    );
+
+const orderNoticeSlides =
+    Array.from(
+        document.querySelectorAll(
+            '.order-notice-slide'
+        )
+    );
+
+const orderNoticeProgress =
+    Array.from(
+        document.querySelectorAll(
+            '.order-notice-progress'
+        )
+    );
+
+const orderNoticeNextButtons =
+    Array.from(
+        document.querySelectorAll(
+            '[data-order-notice-next]'
+        )
+    );
+
+const orderNoticePrevButtons =
+    Array.from(
+        document.querySelectorAll(
+            '[data-order-notice-prev]'
+        )
+    );
+
+
+let orderNoticeStep =
+    0;
+
+
+/* ============================================================
+   MISE À JOUR DU POPUP
+============================================================ */
+
+function updateOrderNotice() {
+
+    if (
+        !orderNoticeTrack
+    ) {
+        return;
+    }
+
+
+    orderNoticeTrack.style.transform =
+        `translateX(-${orderNoticeStep * 100}%)`;
+
+
+    orderNoticeProgress.forEach(
+        (
+            element,
+            index
+        ) => {
+
+            element.classList.toggle(
+                'bg-ft-red',
+                index <= orderNoticeStep
+            );
+
+            element.classList.toggle(
+                'bg-ft-gray',
+                index > orderNoticeStep
+            );
+
+        }
+    );
+
+
+    /*
+     * Le consentement n'apparaît
+     * qu'après la troisième étape.
+     */
+
+    if (
+        orderNoticeConsent
+    ) {
+
+        orderNoticeConsent.classList.toggle(
+            'hidden',
+            orderNoticeStep !==
+                orderNoticeSlides.length
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   OUVERTURE
+============================================================ */
+
+function openOrderNotice() {
+
+    if (
+        !orderNoticeOverlay
+    ) {
+        return;
+    }
+
+
+    orderNoticeStep =
+        0;
+
+
+    updateOrderNotice();
+
+
+    orderNoticeOverlay.classList.remove(
+        'hidden'
+    );
+
+
+    orderNoticeOverlay.classList.add(
+        'flex'
+    );
+
+
+    document.body.style.overflow =
+        'hidden';
+
+}
+
+
+/* ============================================================
+   FERMETURE
+============================================================ */
+
+function closeOrderNotice() {
+
+    if (
+        !orderNoticeOverlay
+    ) {
+        return;
+    }
+
+
+    orderNoticeOverlay.classList.add(
+        'hidden'
+    );
+
+
+    orderNoticeOverlay.classList.remove(
+        'flex'
+    );
+
+
+    document.body.style.overflow =
+        'auto';
+
+}
+
+
+/* ============================================================
+   ÉTAPE SUIVANTE
+============================================================ */
+
+orderNoticeNextButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            'click',
+            () => {
+
+                if (
+                    orderNoticeStep <
+                    orderNoticeSlides.length
+                ) {
+
+                    orderNoticeStep +=
+                        1;
+
+                    updateOrderNotice();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ============================================================
+   ÉTAPE PRÉCÉDENTE
+============================================================ */
+
+orderNoticePrevButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            'click',
+            () => {
+
+                if (
+                    orderNoticeStep >
+                    0
+                ) {
+
+                    orderNoticeStep -=
+                        1;
+
+                    updateOrderNotice();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* ============================================================
+   FERMETURE PAR X
+============================================================ */
+
+orderNoticeCloseBtn?.addEventListener(
+    'click',
+    closeOrderNotice
+);
+
+
+/* ============================================================
+   REFUS
+============================================================ */
+
+orderNoticeNoBtn?.addEventListener(
+    'click',
+    () => {
+
+        /*
+         * Le client refuse :
+         * fermeture du popup + fermeture du panier.
+         */
+
+        closeOrderNotice();
+
+        toggleCart(
+            false
+        );
+
+    }
+);
+
+
+/* ============================================================
+   ACCEPTATION
+============================================================ */
+
+orderNoticeYesBtn?.addEventListener(
+    'click',
+    () => {
+
+        /*
+         * Fermeture du popup.
+         */
+
+        closeOrderNotice();
+
+
+        /*
+         * Le checkout existant reprend
+         * son fonctionnement normal.
+         */
+
+        toggleCart(
+            false
+        );
+
+
+        openCheckout();
+
+    }
+);
+
+
+/* ============================================================
+   CLIC SUR L'OVERLAY
+============================================================ */
+
+orderNoticeOverlay?.addEventListener(
+    'click',
+    event => {
+
+        if (
+            event.target ===
+            orderNoticeOverlay
+        ) {
+
+            closeOrderNotice();
+
+        }
+
+    }
+);
+
+
     // Checkout
     const checkoutBtn = document.getElementById('checkout-btn');
     const checkoutModal = document.getElementById('checkout-modal');
@@ -956,10 +1290,22 @@ const renderProductCard = (product) => {
 
     // --- Checkout Logic ---
 
-checkoutBtn.addEventListener('click', () => {
-    toggleCart(false);
-    openCheckout();
-});
+checkoutBtn.addEventListener(
+    'click',
+    () => {
+
+        if (
+            cart.length === 0
+        ) {
+            return;
+        }
+
+        openOrderNotice();
+
+    }
+);
+
+
 
 closeCheckoutBtn.addEventListener('click', () => {
     closeCheckout();
