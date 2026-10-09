@@ -5,12 +5,12 @@
     // Base de données des produits
   const productsDB = [
     {
-        id: 'p1', ref: 'FT-R-1207017', name: 'RoadMax Pro', category: 'arriere, route', 
-        width: 120, ratio: 70, rim: 17, type: 'Tubeless', position: 'Arrière',
+        id: 'p1', ref: 'FT-R-1207017', name: 'Chambre à air Turbo', category: 'durable', 
+        width: 300, ratio: 17, rim: 17, type: 'Tubeless', position: 'Arrière',
         index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 65,
         desc: 'Conçu pour la durabilité sur asphalte. Bande de roulement optimisée pour l\'évacuation d\'eau, garantissant une sécurité maximale même pendant la saison des pluies.',
-        img_bg: 'photo_1.jpeg',
-        img_iso: 'photo_1.jpeg',
+        img_bg: 'chambre_air_1.jpeg',
+        img_iso: 'chambre_air_2.jpeg',
 
         idealFor: [
             { type: 'all-season', text: 'Toutes saisons' },
@@ -20,47 +20,17 @@
     },
 
     {
-        id: 'p2', ref: 'FT-A-909021', name: 'DirtCross X', category: 'avant, tout-terrain', 
-        width: 90, ratio: 90, rim: 21, type: 'Tube Type', position: 'Avant',
+        id: 'p2', ref: 'FT-A-909021', name: 'Pneu Cross', category: 'avant, tout-terrain', 
+        width: 300, ratio: 17, rim: 17, type: 'Tube Type', position: 'Avant',
         index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 55,
         desc: 'Crampons espacés pour un débourrage parfait de la boue. Carcasse ultra-rigide pour résister aux chocs sur les pistes non aménagées du pays.',
-        img_bg: 'photo_2.jpeg',
-        img_iso: 'photo_5.jpeg',
+        img_bg: 'pneu_cross.jpeg',
+        img_iso: 'pneu_cross_2.jpeg',
 
         idealFor: [
             { type: 'terrain', text: 'Tout-terrain' },
             { type: 'mud', text: 'Boue & pistes' },
             { type: 'durability', text: 'Résistant aux chocs' }
-        ]
-    },
-
-    {
-        id: 'p3', ref: 'FT-W-1109017', name: 'Wewa Force HD', category: 'arriere, motos-taxis, renforcés', 
-        width: 110, ratio: 90, rim: 17, type: 'Tubeless', position: 'Arrière',
-        index: '62P', usage: 'Intensif/Charge lourde', warranty: '6 mois', price_usd: 70,
-        desc: 'Le pneu de référence pour les motos-taxis. Flancs renforcés (6 plis) pour supporter de lourdes charges et résister aux nids-de-poule sans déformation.',
-        img_bg: 'photo_3.jpeg',
-        img_iso: 'photo_3.jpeg',
-
-        idealFor: [
-            { type: 'heavy', text: 'Charge lourde' },
-            { type: 'durability', text: 'Usage intensif' },
-            { type: 'reinforced', text: 'Flancs renforcés' }
-        ]
-    },
-
-    {
-        id: 'p4', ref: 'FT-C-27517', name: 'City Classic', category: 'avant, urbains', 
-        width: 2.75, ratio: null, rim: 17, type: 'Tube Type', position: 'Avant',
-        index: '41P', usage: 'Ville/Trajet court', warranty: '3 mois', price_usd: 35,
-        desc: 'Profil classique, maniable et économique. Gomme dure assurant une très longue durée de vie pour les trajets quotidiens.',
-        img_bg: 'photo_4.jpeg',
-        img_iso: 'photo_4.jpeg',
-
-        idealFor: [
-            { type: 'urban', text: 'Usage urbain' },
-            { type: 'durability', text: 'Longue durée' },
-            { type: 'stability', text: 'Stabilité & confort' }
         ]
     }
 ];
@@ -88,9 +58,16 @@
     const closeModalBtn = document.getElementById('close-modal-btn');
     let currentSelectedProduct = null;
 
+    const messageAchat = document.getElementById('modal-add-btn');
+    messageAchat.addEventListener(
+            'click',
+            () => { 
+                alert("Achat en ligne bientôt disponible.");
+            });
+
 /* ============================================================
    INFORMATION COMMANDE — POPUP AVANT CHECKOUT
-============================================================ */
+============================================================ 
 
 const orderNoticeOverlay =
     document.getElementById(
@@ -153,11 +130,11 @@ const orderNoticePrevButtons =
 
 let orderNoticeStep =
     0;
-
+*/
 
 /* ============================================================
    MISE À JOUR DU POPUP
-============================================================ */
+============================================================ 
 
 function updateOrderNotice() {
 
@@ -191,11 +168,11 @@ function updateOrderNotice() {
         }
     );
 
-
+*/
     /*
      * Le consentement n'apparaît
      * qu'après la troisième étape.
-     */
+     
 
     if (
         orderNoticeConsent
@@ -210,11 +187,11 @@ function updateOrderNotice() {
     }
 
 }
-
+*/
 
 /* ============================================================
    OUVERTURE
-============================================================ */
+============================================================ 
 
 function openOrderNotice() {
 
@@ -246,11 +223,11 @@ function openOrderNotice() {
         'hidden';
 
 }
-
+*/
 
 /* ============================================================
    FERMETURE
-============================================================ */
+============================================================ 
 
 function closeOrderNotice() {
 
@@ -275,11 +252,11 @@ function closeOrderNotice() {
         'auto';
 
 }
-
+*/
 
 /* ============================================================
    ÉTAPE SUIVANTE
-============================================================ */
+============================================================ 
 
 orderNoticeNextButtons.forEach(
     button => {
@@ -305,11 +282,11 @@ orderNoticeNextButtons.forEach(
 
     }
 );
-
+*/
 
 /* ============================================================
    ÉTAPE PRÉCÉDENTE
-============================================================ */
+============================================================ 
 
 orderNoticePrevButtons.forEach(
     button => {
@@ -335,30 +312,27 @@ orderNoticePrevButtons.forEach(
 
     }
 );
-
+*/
 
 /* ============================================================
    FERMETURE PAR X
-============================================================ */
+============================================================ 
 
 orderNoticeCloseBtn?.addEventListener(
     'click',
     closeOrderNotice
 );
 
-
+*/
 /* ============================================================
    REFUS
-============================================================ */
+============================================================ 
 
 orderNoticeNoBtn?.addEventListener(
     'click',
     () => {
 
-        /*
-         * Le client refuse :
-         * fermeture du popup + fermeture du panier.
-         */
+       
 
         closeOrderNotice();
 
@@ -368,27 +342,19 @@ orderNoticeNoBtn?.addEventListener(
 
     }
 );
-
+*/
 
 /* ============================================================
    ACCEPTATION
-============================================================ */
+============================================================ 
 
 orderNoticeYesBtn?.addEventListener(
     'click',
     () => {
 
-        /*
-         * Fermeture du popup.
-         */
+    
 
         closeOrderNotice();
-
-
-        /*
-         * Le checkout existant reprend
-         * son fonctionnement normal.
-         */
 
         toggleCart(
             false
@@ -403,7 +369,7 @@ orderNoticeYesBtn?.addEventListener(
 
 /* ============================================================
    CLIC SUR L'OVERLAY
-============================================================ */
+============================================================ 
 
 orderNoticeOverlay?.addEventListener(
     'click',
@@ -420,13 +386,14 @@ orderNoticeOverlay?.addEventListener(
 
     }
 );
-
+*/
 
     // Checkout
     const checkoutBtn = document.getElementById('checkout-btn');
     const checkoutModal = document.getElementById('checkout-modal');
     const closeCheckoutBtn = document.getElementById('close-checkout-btn');
 
+    /*
     // Mes commandes
 const ordersBtn = document.getElementById('orders-btn');
 const ordersOverlay = document.getElementById('orders-overlay');
@@ -435,7 +402,7 @@ const closeOrdersBtn = document.getElementById('close-orders-btn');
 const myOrdersList = document.getElementById('my-orders-list');
 const ordersCount = document.getElementById('orders-count');
  
-
+*/
     // --- UI Interactions ---
 
 const heroCarousel = document.getElementById('hero-carousel');
@@ -624,12 +591,13 @@ window.addEventListener('scroll', () => {
 
 });
 
+/*
     // Search Toggle
     searchBtn.addEventListener('click', () => {
         searchOverlay.classList.toggle('active');
         if(searchOverlay.classList.contains('active')) searchOverlay.querySelector('input').focus();
     });
-
+*/
     // Mobile Menu Toggle
     mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('active');
@@ -643,8 +611,9 @@ window.addEventListener('scroll', () => {
         link.addEventListener('click', () => mobileMenu.classList.remove('active'));
     });
 
+  
     // Cart Toggle
-    const toggleCart = (show) => {
+  /*  const toggleCart = (show) => {
         if (show) {
             cartOverlay.classList.add('active');
             cartPanel.classList.add('active');
@@ -656,6 +625,7 @@ window.addEventListener('scroll', () => {
     cartBtn.addEventListener('click', () => toggleCart(true));
     closeCartBtn.addEventListener('click', () => toggleCart(false));
     cartOverlay.addEventListener('click', () => toggleCart(false));
+*/
 
     // --- Catalog Logic ---
     
@@ -973,6 +943,7 @@ const getIdealForIcon = (type) => {
     return icons[type] || icons.durability;
 };
 
+
 const renderProductCard = (product) => {
     const dimStr = product.ratio
         ? `${product.width}/${product.ratio}-${product.rim}`
@@ -1289,7 +1260,7 @@ const renderProductCard = (product) => {
     };
 
     // --- Checkout Logic ---
-
+/*
 checkoutBtn.addEventListener(
     'click',
     () => {
@@ -1303,9 +1274,9 @@ checkoutBtn.addEventListener(
         openOrderNotice();
 
     }
-);
+);*/
 
-
+/*
 
 closeCheckoutBtn.addEventListener('click', () => {
     closeCheckout();
@@ -1319,22 +1290,14 @@ let deliveryFee = 0;
 let checkoutOrder = null;
 let checkoutPaymentConfirmed = false;
 
-/*
- * Gestion en mémoire uniquement.
- *
- * Aucune donnée de commande n'est conservée
- * dans le navigateur avec LocalStorage.
- *
- * La persistance définitive appartient à
- * la plateforme de gestion.
- */
+
 let orderSequence = 0;
 let pendingOrders = [];
 
 
 /* ============================================================
    HELPERS CHECKOUT
-============================================================ */
+============================================================ 
 
 const getCheckoutSubtotal = () => {
     return cart.reduce(
@@ -1355,15 +1318,7 @@ const generateOrderId = () => {
 };
 
 
-/*
- * Empreinte courte du contenu de la commande.
- *
- * Elle permet de créer un code plus difficile à deviner
- * tout en restant suffisamment court pour être saisi
- * manuellement.
- *
- * La donnée métier complète reste dans checkoutOrder.
- */
+
 const generateOrderFingerprint = (input) => {
 
     let hash = 2166136261;
@@ -1406,6 +1361,7 @@ const generateOrderFingerprint = (input) => {
  * Exemple :
  * CMD-2026-00012-7F8A21B
  */
+/*
 const generateUniqueOrderCode = ({
     orderId,
     name,
@@ -1432,7 +1388,7 @@ const generateUniqueOrderCode = ({
 
 /* ============================================================
    RÉCAPITULATIF PANIER
-============================================================ */
+============================================================ 
 
 const renderCheckoutCart = () => {
 
@@ -1495,17 +1451,14 @@ const renderCheckoutCart = () => {
 
 /* ============================================================
    TOTAUX CHECKOUT
-============================================================ */
+============================================================ 
 
 const updateCheckoutTotal = () => {
 
     const subtotalUSD =
         getCheckoutSubtotal();
 
-    /*
-     * La nouvelle architecture ne prévoit plus
-     * de frais de livraison dans le stepper.
-     */
+  
     const totalUSD =
         subtotalUSD;
 
@@ -1547,7 +1500,7 @@ const updateCheckoutTotal = () => {
 
 /* ============================================================
    LECTURE DES INFOS CLIENT
-============================================================ */
+============================================================ 
 
 const getClientCheckoutData = () => {
 
@@ -1588,7 +1541,7 @@ const getClientCheckoutData = () => {
 
 /* ============================================================
    TICKETS DE COMMANDE
-============================================================ */
+============================================================ 
 
 /*
  * Génération déterministe des tickets liés à la commande.
@@ -1604,6 +1557,7 @@ const getClientCheckoutData = () => {
  * La plateforme de gestion pourra recalculer
  * exactement cette même preuve.
  */
+/*
 const generateOrderTicketOptions = ({
     orderId,
     uniqueCode,
@@ -1616,39 +1570,22 @@ const generateOrderTicketOptions = ({
             .replace(/[^A-Z0-9]/gi, '')
             .toUpperCase();
 
-
-    /*
-     * Source indépendante de liaison du ticket
-     * avec la commande.
-     */
     const ticketBindingSource =
         `${orderId}|${uniqueCode}|${createdAt}|${Number(amount).toFixed(2)}`;
 
 
-    /*
-     * Preuve déterministe du ticket.
-     *
-     * La même commande produira toujours
-     * la même preuve.
-     */
+    
     const ticketProof =
         generateOrderFingerprint(
             ticketBindingSource
         );
 
 
-    /*
-     * Base commune aux 5 tickets.
-     */
     const base =
         `TCK-${cleanOrderId}-${ticketProof}`;
 
 
-    /*
-     * Les 5 tickets restent disponibles pour
-     * l'étape 3, mais aucun n'est généré
-     * avec une valeur aléatoire.
-     */
+
     return Array.from(
         { length: 5 },
         (_, index) =>
@@ -1659,7 +1596,7 @@ const generateOrderTicketOptions = ({
 
 /* ============================================================
    GÉNÉRATION DU DOSSIER DE COMMANDE
-============================================================ */
+============================================================ 
 
 const generateCheckoutOrder = (
     reservedOrderId = null
@@ -1766,7 +1703,7 @@ checkoutOrder = {
 
 /* ============================================================
    REMPLISSAGE DES OPTIONS DE TICKET — ÉTAPE 3
-============================================================ */
+============================================================ 
 
 const ticketStep3 =
     document.getElementById(
@@ -1790,9 +1727,7 @@ if (ticketStep3) {
         ticketOptionsHTML;
 }
 
-    /*
-     * Affichage étape 3
-     */
+    
     document.getElementById(
         'generated-order-code'
     ).textContent =
@@ -1835,7 +1770,7 @@ if (ticketStep3) {
 
 /* ============================================================
    PAYLOAD DESTINÉ À LA PLATEFORME DE GESTION
-============================================================ */
+============================================================ 
 
 /*
  * Construit exclusivement l'objet JSON
@@ -1844,6 +1779,7 @@ if (ticketStep3) {
  * Les données internes au frontend comme
  * ticketOptions ne sont pas transmises.
  */
+/*
 const buildManagementOrderPayload = (order) => {
 
     return {
@@ -1909,13 +1845,11 @@ const buildManagementOrderPayload = (order) => {
 
 /* ============================================================
    STEPPER
-============================================================ */
+============================================================ 
 
 const updateStepperUI = () => {
 
-    /*
-     * Sidebar
-     */
+    
     document.querySelectorAll(
         '.step-item'
     ).forEach(el => {
@@ -1949,10 +1883,6 @@ const updateStepperUI = () => {
 
     });
 
-
-    /*
-     * Contenus
-     */
     document.querySelectorAll(
         '.step-content'
     ).forEach(el => {
@@ -1990,7 +1920,7 @@ const updateStepperUI = () => {
 
 /* ============================================================
    OUVERTURE DU CHECKOUT
-============================================================ */
+============================================================ 
 
 const openCheckout = () => {
 
@@ -2018,9 +1948,6 @@ const openCheckout = () => {
         false;
 
 
-    /*
-     * Réinitialisation de l'étape 4
-     */
     const paymentStart =
         document.getElementById(
             'payment-confirmation-start'
@@ -2100,7 +2027,7 @@ if (confirmationCode) {
 
 /* ============================================================
    FERMETURE DU CHECKOUT
-============================================================ */
+============================================================ 
 
 const closeCheckout = () => {
 
@@ -2120,7 +2047,7 @@ const closeCheckout = () => {
 
 /* ============================================================
    NAVIGATION — NEXT
-============================================================ */
+============================================================ 
 
 document.querySelectorAll(
     '.next-step-btn'
@@ -2129,10 +2056,10 @@ document.querySelectorAll(
     btn.addEventListener(
         'click',
         async () => {
-
+*/
             /*
              * STEP 1
-             */
+             
             if (currentStep === 1) {
 
                 if (cart.length === 0) {
@@ -2149,7 +2076,7 @@ document.querySelectorAll(
 
             /*
              * STEP 2
-             */
+             
             if (currentStep === 2) {
 
                 const clientForm =
@@ -2161,20 +2088,14 @@ document.querySelectorAll(
                 if (!clientForm.reportValidity()) {
                     return;
                 }
-/*
- * Réservation de l'identifiant de commande
- * directement auprès du backend.
- */
+
 try {
 
     const reservedOrderId =
         await reserveManagementOrderId();
 
 
-    /*
-     * Création du dossier de commande
-     * avec l'identifiant réservé.
-     */
+    
     generateCheckoutOrder(
         reservedOrderId
     );
@@ -2204,7 +2125,7 @@ return;
 
 /*
  * STEP 3
- */
+ 
 if (currentStep === 3) {
 
     if (!checkoutOrder) {
@@ -2234,7 +2155,7 @@ if (currentStep === 3) {
     /*
      * Conservation du ticket sélectionné
      * pour l'étape 4.
-     */
+     
     checkoutOrder.payment.ticket =
         selectedTicket;
 
@@ -2242,7 +2163,7 @@ if (currentStep === 3) {
      * L'étape 4 demande maintenant
      * au client de saisir le ticket
      * qu'il vient de copier.
-     */
+     
     const ticketStep4 =
         document.getElementById(
             'co-ticket-step4'
@@ -2277,7 +2198,7 @@ if (currentStep === 3) {
 
 /* ============================================================
    NAVIGATION — PREVIOUS
-============================================================ */
+============================================================ 
 
 document.querySelectorAll(
     '.prev-step-btn'
@@ -2304,7 +2225,7 @@ document.querySelectorAll(
 
 /* ============================================================
    BOUTON "J'AI DÉJÀ PAYÉ"
-============================================================ */
+============================================================ 
 
 const alreadyPaidBtn =
     document.getElementById(
@@ -2361,7 +2282,7 @@ if (alreadyPaidBtn) {
 
 /* ============================================================
    COPIE DU CODE UNIQUE
-============================================================ */
+============================================================ 
 
 const copyOrderCodeBtn =
     document.getElementById(
@@ -2422,7 +2343,7 @@ if (copyOrderCodeBtn) {
 
 /* ============================================================
    COPIE DU NUMÉRO DE TICKET
-============================================================ */
+============================================================ 
 
 const copyTicketBtn = document.getElementById(
     'copy-ticket-btn'
@@ -2485,7 +2406,7 @@ if (copyTicketBtn) {
 
 /* ============================================================
    TRANSFERT VERS LA PLATEFORME DE GESTION
-============================================================ */
+============================================================ 
 
 const FT_MANAGEMENT_PLATFORM_ENDPOINT =
     'http://localhost:3000/api/orders';
@@ -2495,7 +2416,7 @@ const FT_MANAGEMENT_ORDER_ID_ENDPOINT =
 
 /* ============================================================
    RÉSERVATION DE L'ID DE COMMANDE
-============================================================ */
+============================================================ 
 
 const reserveManagementOrderId = async () => {
 
@@ -2700,7 +2621,7 @@ const transferOrderToManagementPlatform = async (
 
 /* ============================================================
    ENREGISTREMENT TEMPORAIRE EN MÉMOIRE
-============================================================ */
+============================================================ 
 
 const registerPendingOrder = async (
     order
@@ -2711,7 +2632,7 @@ const registerPendingOrder = async (
         /*
          * Conservation uniquement pendant
          * la session actuelle.
-         */
+         
         pendingOrders.push(
             order
         );
@@ -2720,7 +2641,7 @@ const registerPendingOrder = async (
         /*
          * Préparation / transfert éventuel
          * vers la plateforme de gestion.
-         */
+         
         const transferResult =
             await transferOrderToManagementPlatform(
                 order
@@ -2763,7 +2684,7 @@ const registerPendingOrder = async (
 
 /* ============================================================
    MES COMMANDES
-============================================================ */
+============================================================ 
 
 const escapeHTML = (value = '') => {
 
@@ -2789,7 +2710,7 @@ const getStoredOrders = () => {
 
 /* ============================================================
    SUPPRESSION INDIVIDUELLE D'UNE COMMANDE
-============================================================ */
+============================================================ 
 
 const deleteOrder = (
     orderId
@@ -3131,7 +3052,7 @@ const renderMyOrders = () => {
 
         /* ============================================================
    ACTIONS DE SUPPRESSION
-============================================================ */
+============================================================ 
 
 myOrdersList
     .querySelectorAll('.delete-order-btn')
@@ -3259,7 +3180,7 @@ if (ordersOverlay) {
 
 /* ============================================================
    CONFIRMATION DU PAIEMENT
-============================================================ */
+============================================================ 
 
 const paymentConfirmationForm =
     document.getElementById(
@@ -3317,11 +3238,7 @@ const selectedTicket =
     checkoutOrder.payment.ticket;
 
 
-/*
- * Le ticket saisi à l'étape 4 doit
- * correspondre exactement à celui
- * sélectionné à l'étape 3.
- */
+
 if (
     !selectedTicket ||
     enteredTicket !== selectedTicket
@@ -3339,9 +3256,6 @@ if (
 }
 
 
-            /*
-             * Mise à jour des données de paiement
-             */
           checkoutOrder.payment.channel =
             paymentChannel;
 
@@ -3354,10 +3268,6 @@ if (
             checkoutOrder.payment.status =
                 'PENDING_VERIFICATION';
 
-
-            /*
-             * Enregistrement
-             */
             const result =
                 await registerPendingOrder(
                     checkoutOrder
@@ -3380,7 +3290,7 @@ if (
 
             /*
              * Affichage succès
-             */
+             
   document.getElementById(
     'success-order-id'
 ).textContent =
@@ -3423,7 +3333,7 @@ document.getElementById(
             /*
              * Le panier est vidé seulement après
              * l'enregistrement réussi de la demande.
-             */
+             
             cart = [];
 
             updateCartUI();
@@ -3437,7 +3347,7 @@ document.getElementById(
 
 /* ============================================================
    RETOUR DEPUIS LE FORMULAIRE DE PAIEMENT
-============================================================ */
+============================================================ 
 
 const cancelPaymentConfirmationBtn =
     document.getElementById(
@@ -3464,7 +3374,7 @@ if (cancelPaymentConfirmationBtn) {
 
 /* ============================================================
    FERMETURE APRÈS ENREGISTREMENT
-============================================================ */
+============================================================ 
 
 const finishCheckoutBtn =
     document.getElementById(
@@ -3488,7 +3398,7 @@ if (finishCheckoutBtn) {
     );
 
 }
-   
+   */
     // Quick Search logic (just scrolls to catalog for demo)
     document.getElementById('btn-quick-search').addEventListener('click', () => {
         document.getElementById('catalog').scrollIntoView({behavior: 'smooth'});

@@ -57,7 +57,8 @@
 
             <!-- Actions droite -->
             <div class="flex items-center gap-6">
-                <button id="search-btn" class="text-ft-black hover:text-ft-red transition-colors">
+
+               <!-- <button id="search-btn" class="text-ft-black hover:text-ft-red transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </button>
                 <button id="cart-btn" class="text-ft-black hover:text-ft-red transition-colors relative">
@@ -92,7 +93,7 @@
     >
         0
     </span>
-</button>
+</button>-->
                 <button id="mobile-menu-btn" class="md:hidden text-ft-black hover:text-ft-red transition-colors">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
@@ -103,15 +104,16 @@
         <div class="hidden md:block border-t border-ft-gray bg-ft-dark/95">
             <div class="container mx-auto px-8 h-12 flex justify-center items-center gap-12">
                 <a href="#about" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">La Marque</a>
-                <a href="#catalog" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Achat</a>
+                <a href="#catalog" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Catalogue</a>
                 <a href="#distributors" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Distributeurs</a>
-                <a href="#politique_achat" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
-                <a href="#reclamations" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>
+                <a href="#partners" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Partenaires</a>
+                <!-- <a href="#politique_achat" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
+                <a href="#reclamations" class="font-heading text-sm uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>-->
             </div>
         </div>
     </div>
 
-    <!-- Search Overlay Reveal -->
+    <!-- Search Overlay Reveal 
     <div id="search-overlay" class="absolute top-full left-0 w-full bg-ft-black border-b border-ft-red reveal-panel z-10 flex items-center justify-center py-8 px-4 shadow-2xl">
         <div class="w-full max-w-3xl flex items-center border-b border-ft-white/30 focus-within:border-ft-red transition-colors">
             <input type="text" placeholder="RECHERCHER UNE DIMENSION, UN MODÈLE..." class="w-full bg-transparent border-none text-2xl font-heading tracking-wider py-4 px-2 focus:ring-0 placeholder-ft-gray">
@@ -119,22 +121,22 @@
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
-    </div>
+    </div>-->
 </header>
 
 <!-- Menu Mobile Plein Ecran -->
 <div id="mobile-menu" class="fixed inset-0 bg-ft-black z-40 fade-in flex flex-col pt-32 px-8">
     <nav class="flex flex-col gap-8 text-center">
         <a href="#about" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">La Marque</a>
-        <a href="#catalog" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Achat</a>
+        <a href="#catalog" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Catalogue</a>
         <a href="#distributors" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Distributeurs</a>
         <a href="#partners" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Partenaires</a>
-        <a href="#politique_achat" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
-        <a href="#reclamations" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>
+       <!-- <a href="#politique_achat" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Politique d'achat</a>
+        <a href="#reclamations" class="mobile-link font-heading text-3xl uppercase tracking-widest hover:text-ft-red transition-colors">Réclamations</a>-->
     </nav>
 </div>
 
-<!-- Panier Latéral (Slide from right) -->
+<!-- Panier Latéral (Slide from right) 
 <div id="cart-overlay" class="fixed inset-0 bg-black/80 z-50 fade-in backdrop-blur-sm"></div>
 <div id="cart-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-ft-dark z-50 slide-right flex flex-col border-l border-ft-gray shadow-2xl">
     <div class="p-6 border-b border-ft-gray flex justify-between items-center bg-ft-black">
@@ -144,7 +146,7 @@
         </button>
     </div>
     <div id="cart-items" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
-        <!-- Les items du panier seront injectés ici par JS -->
+        <!-- Les items du panier seront injectés ici par JS 
         <p class="text-ft-gray text-center font-sans mt-10">Votre panier est vide.</p>
     </div>
     <div class="p-6 bg-ft-black border-t border-ft-gray">
@@ -158,7 +160,7 @@
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
         </button>
     </div>
-</div>
+</div>-->
 
 <!-- ============================================================
      INFORMATION COMMANDE — POPUP AVANT CHECKOUT
@@ -672,8 +674,8 @@
                     Acheter nos pneus
                 </a>
 
-                <a href="#catalog" class="border border-white text-white font-heading tracking-widest py-4 px-8 text-center hover:bg-white hover:text-ft-black transition-colors">
-                    Découvrir la gamme
+                <a href="#distributors" class="border border-white text-white font-heading tracking-widest py-4 px-8 text-center hover:bg-white hover:text-ft-black transition-colors">
+                    Devenir distributeur
                 </a>
             </div>
         </div>
@@ -686,195 +688,6 @@
 
 </section>
 
-
-<!-- Section 3 - About -->
-<section id="about" class="py-32 bg-ft-dark relative border-b border-ft-lightgray">
-    <div class="bg-noise"></div>
-    <div class="container mx-auto px-4 md:px-12 relative z-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            <div class="lg:col-span-5 relative">
-                <!-- Image conceptuelle -->
-                <div class="aspect-[3/4] bg-ft-gray relative overflow-hidden group">
-                    <img src="FullTech.jpeg" alt="FullTech Heritage" class="w-full h-full object-cover  mix-blend-screen">
-                    <div class="absolute inset-0 border border-ft-lightgray m-4"></div>
-                    <div class="absolute -bottom-6 -right-6 w-32 h-32 border-b-2 border-r-2 border-ft-red"></div>
-                </div>
-            </div>
-            <div class="lg:col-span-7 font-sans">
-                <h2 class="font-heading text-4xl md:text-5xl uppercase tracking-widest mb-12 text-white flex items-center gap-4">
-                    <span class="w-12 h-px bg-ft-red inline-block"></span>
-                    L'Empreinte FullTech
-                </h2>
-                
-                <div class="text-xl md:text-2xl text-ft-white/90 leading-relaxed font-light italic mb-8 border-l-4 border-ft-lightgray pl-6">
-                    "Notre mission n'est pas seulement de vendre des pneus. C'est de garantir que chaque trajet, sur les routes de Kinshasa ou les pistes du pays, se fasse avec la fiabilité exigée par les professionnels."
-                </div>
-                
-                <p class="text-ft-white/60 mb-6 leading-loose">
-                    Conçus selon des standards industriels rigoureux, les pneumatiques FullTech Congo empruntent l'héritage des grandes marques mondiales pour l'adapter aux réalités spécifiques de nos terrains. Que vous soyez un pilote exigeant ou un professionnel du transport (Wewa), notre ingénierie se concentre sur trois piliers : la structure de la carcasse, la chimie de la gomme, et le dessin de la bande de roulement.
-                </p>
-                
-                <div class="mt-12">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y0ZjRmNSIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMTAgNDBjNS0xMCAxNS0yMCAzMC0xNXMyMCAyMCAzNSAxMWMxNS0xMCAyNS0yMCA0MC0xNXMyMCAxNSAzMCAxMWMxMC01IDE1LTEwIDI1LThzMTAgNSAxNSA1Ii8+PC9zdmc+" alt="Signature" class="h-12 opacity-50 mb-2">
-                    <p class="font-heading uppercase tracking-widest text-sm text-ft-red">Direction Technique, FullTech Congo</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section  - Carrousel d'images -->
-<section id="brand-gallery" class="py-24 md:py-32 bg-ft-dark relative border-b border-ft-lightgray ft-brand-carousel">
-    <div class="bg-noise"></div>
-
-    <div class="container mx-auto px-4 md:px-12 relative z-10">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
-            <div>
-                <p class="font-heading text-xs md:text-sm uppercase tracking-[0.3em] text-ft-red mb-4">
-                    FullTech Congo
-                </p>
-
-                <h2 class="font-heading text-3xl md:text-5xl uppercase tracking-widest text-white">
-                    L'image de la marque
-                </h2>
-            </div>
-
-            <p class="font-sans text-sm md:text-base text-ft-white/50 max-w-md leading-relaxed md:text-right">
-                Découvrez l'univers FullTech Congo à travers une sélection d'images de la marque.
-            </p>
-        </div>
-
-        <div
-            id="ft-brand-carousel"
-            class="ft-brand-carousel-track"
-            tabindex="0"
-            aria-roledescription="carrousel"
-            aria-label="Galerie d'images FullTech Congo"
-        >
-           
-            <article class="ft-brand-carousel-slide is-active" aria-hidden="false">
-                <img src="image_1.jpeg" alt="FullTech Congo — image de marque 1" loading="eager">
-                <div class="ft-brand-carousel-caption">
-                    <span>01 / Identité</span>
-                    <h3>L'empreinte<br>FullTech</h3>
-                    <p>Une identité pensée pour la route, la performance et les réalités du terrain.</p>
-                </div>
-            </article>
-
-            <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_2.jpeg" alt="FullTech Congo — image de marque 2" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>02 / Performance</span>
-                    <h3>Conçu pour<br>avancer</h3>
-                    <p>Une présence visuelle forte au service d'une marque pneumatique tournée vers l'action.</p>
-                </div>
-            </article>
-
-            <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_3.jpeg" alt="FullTech Congo — image de marque 3" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>03 / Terrain</span>
-                    <h3>Quel que soit<br>le terrain</h3>
-                    <p>La marque au cœur des usages urbains et des conditions de route du pays.</p>
-                </div>
-            </article>
-
-            <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_4.jpeg" alt="FullTech Congo — image de marque 4" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>04 / Héritage</span>
-                    <h3>Une vision<br>industrielle</h3>
-                    <p>Une esthétique sobre, technique et reconnaissable, fidèle à l'univers FullTech Congo.</p>
-                </div>
-            </article>
-
-            <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_5.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>05 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_6.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>06 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_7.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>07 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_8.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>08 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_9.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>09 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_10.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>10 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-             <article class="ft-brand-carousel-slide" aria-hidden="true">
-                <img src="image_11.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
-                <div class="ft-brand-carousel-caption">
-                    <span>11 / FullTech Congo</span>
-                    <h3>La route<br>nous appartient</h3>
-                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
-                </div>
-            </article>
-
-            <button type="button" class="ft-brand-carousel-arrow prev" aria-label="Image précédente">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
-                </svg>
-            </button>
-
-            <button type="button" class="ft-brand-carousel-arrow next" aria-label="Image suivante">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
-                </svg>
-            </button>
-        </div>
-
-        <div class="ft-brand-carousel-footer">
-            <div id="ft-brand-pagination" class="ft-brand-carousel-pagination" role="tablist" aria-label="Pagination de la galerie"></div>
-
-            <div class="ft-brand-carousel-counter">
-                <strong id="ft-brand-current">01</strong>
-                <span> / </span>
-                <span id="ft-brand-total">05</span>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Section 4 - Recherche Configurable -->
 <section id="search-zone" class="py-16 bg-ft-dark border-y border-ft-white relative overflow-hidden">
@@ -1018,7 +831,7 @@
                 </div>
                 
                 <button id="modal-add-btn" class="w-full bg-ft-red text-white font-heading tracking-widest py-4 hover:bg-ft-redhover transition-colors flex justify-center items-center gap-2 group mt-2">
-                    Ajouter au panier
+                    
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </button>
             </div>
@@ -1983,73 +1796,11 @@
 
 </div>
 
-<!-- Section 6 - News -->
-<section class="py-32 bg-ft-black relative">
-    <div class="container mx-auto px-4 md:px-8">
-        <div class="flex justify-between items-end mb-16 border-b border-ft-gray pb-6">
-            <h2 class="font-heading text-4xl uppercase tracking-widest">Actualités</h2>
-            <a href="#" class="font-heading text-sm text-ft-red uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
-                Tout lire <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </a>
-        </div>
-
-        <!-- CSS Grid Staggered -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[250px]">
-            
-            <!-- Article 1: Grand format -->
-            <article class="lg:col-span-2 lg:row-span-2 relative group overflow-hidden border border-ft-gray bg-ft-dark flex flex-col justify-end p-6">
-                <img src="kin_pro.png" class="absolute inset-0 w-full h-full object-cover  group-hover:scale-105 transition-all duration-700">
-                <div class="absolute inset-0 bg-gradient-to-t from-ft-black via-ft-black/50 to-transparent"></div>
-                <div class="relative z-10">
-                    <span class="text-xs font-heading text-ft-red uppercase tracking-widest mb-2 block">Communiqué Officiel</span>
-                    <h3 class="font-heading text-3xl tracking-wider mb-2 leading-tight">Lancement de la gamme "Kin-Pro" pour Motos-Taxis</h3>
-                    <p class="font-sans text-sm text-ft-white/60 mb-4 line-clamp-2">Une nouvelle structure renforcée conçue spécifiquement pour l'usage intensif urbain et les charges lourdes en République Démocratique du Congo.</p>
-                </div>
-            </article>
-
-            <!-- Article 2 -->
-            <article class="relative group overflow-hidden border border-ft-gray bg-ft-lightgray p-6 flex flex-col justify-between hover:border-ft-red transition-colors">
-                <div>
-                    <span class="text-xs font-heading text-ft-gray uppercase tracking-widest mb-2 block bg-white w-fit px-2 py-1">Partenariat</span>
-                    <h3 class="font-heading text-xl  tracking-wider leading-snug mt-4">Accord de distribution avec la marque TVS</h3>
-                </div>
-                <div class="mt-4 flex justify-between items-center text-ft-white">
-                    <span class="font-sans text-ft-white">24 Fév 2026</span>
-                </div>
-            </article>
-
-            <!-- Article 3 -->
-            <article class="relative group overflow-hidden border border-ft-gray bg-ft-dark p-6 flex flex-col justify-between hover:border-ft-red transition-colors">
-                 <div>
-                    <span class="text-xs font-heading text-ft-gray uppercase tracking-widest mb-2 block bg-white w-fit px-2 py-1">Produit</span>
-                    <h3 class="font-heading text-xl tracking-wider leading-snug mt-4">Nouveau profil Tout-Terrain X-Trek disponible</h3>
-                </div>
-                <div class="mt-4 flex justify-between items-center text-ft-white">
-                    <span class="font-sans text-ft-white">18 Fév 2026</span>
-                </div>
-            </article>
-
-            <!-- Article 4 -->
-            <article class="lg:col-span-2 relative group overflow-hidden border border-ft-gray bg-ft-dark flex items-center p-0">
-                 <div class="w-1/3 h-full border-r border-ft-gray  relative overflow-hidden">
-                    <img src="ouverture.png" class="absolute inset-0 w-full h-full object-cover">
-                 </div>
-                 <div class="w-2/3 p-6 flex flex-col justify-center h-full hover:bg-ft-lightgray transition-colors">
-                    <span class="text-xs font-heading text-ft-red uppercase tracking-widest mb-2 block">Distribution</span>
-                    <h3 class="font-heading text-2xl tracking-wider mb-2 leading-tight">Ouverture de 3 nouveaux dépôts à Lubumbashi</h3>
-                    <p class="font-sans text-sm text-ft-white/60">L'expansion nationale continue pour assurer une disponibilité immédiate.</p>
-                 </div>
-            </article>
-
-        </div>
-    </div>
-</section>
-
 <!-- Section 7 - Distributeurs -->
 <section id="distributors" class="py-24 bg-ft-dark border-t border-ft-gray relative">
     <div class="container mx-auto px-4 md:px-8">
         <div class="text-center mb-16">
-            <h2 class="font-heading text-4xl uppercase tracking-widest mb-4">Nos Distributeurs Locaux</h2>
+            <h2 class="font-heading text-4xl tracking-widest mb-4">Nos Distributeurs Locaux</h2>
             <p class="font-sans text-ft-white/60 max-w-2xl mx-auto">Trouvez un point de vente partenaire près de chez vous ou contactez l'un de nos "Wewas" distributeurs accrédités à Kinshasa.</p>
         </div>
 
@@ -2063,13 +1814,7 @@
     <div class="ft-distributor-map-header">
 
         <div class="ft-distributor-map-heading">
-            <span class="ft-distributor-map-kicker">
-                Réseau local
-            </span>
-
-            <h3>
-                Zones de distribution
-            </h3>
+        
 
             <p>
                 Explorez les points de vente partenaires et les zones couvertes
@@ -2663,6 +2408,257 @@
 </section>
 
 
+<!-- Section 3 - About -->
+<section id="about" class="py-32 bg-ft-dark relative border-b border-ft-lightgray">
+    <div class="bg-noise"></div>
+    <div class="container mx-auto px-4 md:px-12 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div class="lg:col-span-5 relative">
+                <!-- Image conceptuelle -->
+                <div class="aspect-[3/4] bg-ft-gray relative overflow-hidden group">
+                    <img src="FullTech.jpeg" alt="FullTech Heritage" class="w-full h-full object-cover  mix-blend-screen">
+                    <div class="absolute inset-0 border border-ft-lightgray m-4"></div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 border-b-2 border-r-2 border-ft-red"></div>
+                </div>
+            </div>
+            <div class="lg:col-span-7 font-sans">
+                <h2 class="font-heading text-4xl md:text-5xl uppercase tracking-widest mb-12 text-white flex items-center gap-4">
+                    <span class="w-12 h-px bg-ft-red inline-block"></span>
+                    L'Empreinte FullTech
+                </h2>
+                
+                <div class="text-xl md:text-2xl text-ft-white/90 leading-relaxed font-light italic mb-8 border-l-4 border-ft-lightgray pl-6">
+                    "Notre mission n'est pas seulement de vendre des pneus. C'est de garantir que chaque trajet, sur les routes de Kinshasa ou les pistes du pays, se fasse avec la fiabilité exigée par les professionnels."
+                </div>
+                
+                <p class="text-ft-white/60 mb-6 leading-loose">
+                    Conçus selon des standards industriels rigoureux, les pneumatiques FullTech Congo empruntent l'héritage des grandes marques mondiales pour l'adapter aux réalités spécifiques de nos terrains. Que vous soyez un pilote exigeant ou un professionnel du transport (Wewa), notre ingénierie se concentre sur trois piliers : la structure de la carcasse, la chimie de la gomme, et le dessin de la bande de roulement.
+                </p>
+                
+                <div class="mt-12">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y0ZjRmNSIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMTAgNDBjNS0xMCAxNS0yMCAzMC0xNXMyMCAyMCAzNSAxMWMxNS0xMCAyNS0yMCA0MC0xNXMyMCAxNSAzMCAxMWMxMC01IDE1LTEwIDI1LThzMTAgNSAxNSA1Ii8+PC9zdmc+" alt="Signature" class="h-12 opacity-50 mb-2">
+                    <p class="font-heading uppercase tracking-widest text-sm text-ft-red">Direction Technique, FullTech Congo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section  - Carrousel d'images -->
+<section id="brand-gallery" class="py-24 md:py-32 bg-ft-dark relative border-b border-ft-lightgray ft-brand-carousel">
+    <div class="bg-noise"></div>
+
+    <div class="container mx-auto px-4 md:px-12 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10 md:mb-14">
+            <div>
+                
+
+                <h2 class="font-heading text-3xl md:text-5xl tracking-widest text-white">
+                    L'image de la marque
+                </h2>
+            </div>
+
+            <p class="font-sans text-sm md:text-base text-ft-white/50 max-w-md leading-relaxed md:text-right">
+                Découvrez l'univers FullTech Congo à travers une sélection d'images de la marque.
+            </p>
+        </div>
+
+        <div
+            id="ft-brand-carousel"
+            class="ft-brand-carousel-track"
+            tabindex="0"
+            aria-roledescription="carrousel"
+            aria-label="Galerie d'images FullTech Congo"
+        >
+           
+            <article class="ft-brand-carousel-slide is-active" aria-hidden="false">
+                <img src="image_1.jpeg" alt="FullTech Congo — image de marque 1" loading="eager">
+                <div class="ft-brand-carousel-caption">
+                    <span>01 / Identité</span>
+                    <h3>L'empreinte<br>FullTech</h3>
+                    <p>Une identité pensée pour la route, la performance et les réalités du terrain.</p>
+                </div>
+            </article>
+
+            <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_2.jpeg" alt="FullTech Congo — image de marque 2" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>02 / Performance</span>
+                    <h3>Conçu pour<br>avancer</h3>
+                    <p>Une présence visuelle forte au service d'une marque pneumatique tournée vers l'action.</p>
+                </div>
+            </article>
+
+            <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_3.jpeg" alt="FullTech Congo — image de marque 3" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>03 / Terrain</span>
+                    <h3>Quel que soit<br>le terrain</h3>
+                    <p>La marque au cœur des usages urbains et des conditions de route du pays.</p>
+                </div>
+            </article>
+
+            <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_4.jpeg" alt="FullTech Congo — image de marque 4" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>04 / Héritage</span>
+                    <h3>Une vision<br>industrielle</h3>
+                    <p>Une esthétique sobre, technique et reconnaissable, fidèle à l'univers FullTech Congo.</p>
+                </div>
+            </article>
+
+            <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_5.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>05 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_6.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>06 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_7.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>07 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_8.jpeg" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>08 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_9.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>09 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_10.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>10 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+             <article class="ft-brand-carousel-slide" aria-hidden="true">
+                <img src="image_11.PNG" alt="FullTech Congo — image de marque 5" loading="lazy">
+                <div class="ft-brand-carousel-caption">
+                    <span>11 / FullTech Congo</span>
+                    <h3>La route<br>nous appartient</h3>
+                    <p>Une galerie immersive pour présenter la marque avec une finition premium.</p>
+                </div>
+            </article>
+
+            <button type="button" class="ft-brand-carousel-arrow prev" aria-label="Image précédente">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+                </svg>
+            </button>
+
+            <button type="button" class="ft-brand-carousel-arrow next" aria-label="Image suivante">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="ft-brand-carousel-footer">
+            <div id="ft-brand-pagination" class="ft-brand-carousel-pagination" role="tablist" aria-label="Pagination de la galerie"></div>
+
+            <div class="ft-brand-carousel-counter">
+                <strong id="ft-brand-current">01</strong>
+                <span> / </span>
+                <span id="ft-brand-total">05</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 6 - News 
+<section class="py-32 bg-ft-black relative">
+    <div class="container mx-auto px-4 md:px-8">
+        <div class="flex justify-between items-end mb-16 border-b border-ft-gray pb-6">
+            <h2 class="font-heading text-4xl uppercase tracking-widest">Actualités</h2>
+            <a href="#" class="font-heading text-sm text-ft-red uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2">
+                Tout lire <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>-->
+
+        <!-- CSS Grid Staggered 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[250px]">-->
+            
+            <!-- Article 1: Grand format 
+            <article class="lg:col-span-2 lg:row-span-2 relative group overflow-hidden border border-ft-gray bg-ft-dark flex flex-col justify-end p-6">
+                <img src="kin_pro.png" class="absolute inset-0 w-full h-full object-cover  group-hover:scale-105 transition-all duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-ft-black via-ft-black/50 to-transparent"></div>
+                <div class="relative z-10">
+                    <span class="text-xs font-heading text-ft-red uppercase tracking-widest mb-2 block">Communiqué Officiel</span>
+                    <h3 class="font-heading text-3xl tracking-wider mb-2 leading-tight">Lancement de la gamme "Kin-Pro" pour Motos-Taxis</h3>
+                    <p class="font-sans text-sm text-ft-white/60 mb-4 line-clamp-2">Une nouvelle structure renforcée conçue spécifiquement pour l'usage intensif urbain et les charges lourdes en République Démocratique du Congo.</p>
+                </div>
+            </article>
+
+            <!-- Article 2 
+            <article class="relative group overflow-hidden border border-ft-gray bg-ft-lightgray p-6 flex flex-col justify-between hover:border-ft-red transition-colors">
+                <div>
+                    <span class="text-xs font-heading text-ft-gray uppercase tracking-widest mb-2 block bg-white w-fit px-2 py-1">Partenariat</span>
+                    <h3 class="font-heading text-xl  tracking-wider leading-snug mt-4">Accord de distribution avec la marque TVS</h3>
+                </div>
+                <div class="mt-4 flex justify-between items-center text-ft-white">
+                    <span class="font-sans text-ft-white">24 Fév 2026</span>
+                </div>
+            </article>
+
+            <!-- Article 3 
+            <article class="relative group overflow-hidden border border-ft-gray bg-ft-dark p-6 flex flex-col justify-between hover:border-ft-red transition-colors">
+                 <div>
+                    <span class="text-xs font-heading text-ft-gray uppercase tracking-widest mb-2 block bg-white w-fit px-2 py-1">Produit</span>
+                    <h3 class="font-heading text-xl tracking-wider leading-snug mt-4">Nouveau profil Tout-Terrain X-Trek disponible</h3>
+                </div>
+                <div class="mt-4 flex justify-between items-center text-ft-white">
+                    <span class="font-sans text-ft-white">18 Fév 2026</span>
+                </div>
+            </article>
+
+            <!-- Article 4 
+            <article class="lg:col-span-2 relative group overflow-hidden border border-ft-gray bg-ft-dark flex items-center p-0">
+                 <div class="w-1/3 h-full border-r border-ft-gray  relative overflow-hidden">
+                    <img src="ouverture.png" class="absolute inset-0 w-full h-full object-cover">
+                 </div>
+                 <div class="w-2/3 p-6 flex flex-col justify-center h-full hover:bg-ft-lightgray transition-colors">
+                    <span class="text-xs font-heading text-ft-red uppercase tracking-widest mb-2 block">Distribution</span>
+                    <h3 class="font-heading text-2xl tracking-wider mb-2 leading-tight">Ouverture de 3 nouveaux dépôts à Lubumbashi</h3>
+                    <p class="font-sans text-sm text-ft-white/60">L'expansion nationale continue pour assurer une disponibilité immédiate.</p>
+                 </div>
+            </article>
+
+        </div>
+    </div>
+</section>-->
+
+
+
 <!-- Section 8 - Partenaires -->
 <section id="partners" class="py-12 bg-ft-black overflow-hidden border-y border-ft-gray relative">
      <div>
@@ -2734,13 +2730,13 @@
     </div>
 </section>
 
-<!-- Section 9 - Politique de commande & Réclamations -->
+<!-- Section 9 - Politique de commande & Réclamations
 
 <section id="order-information" class="py-20 bg-ft-black border-b border-ft-gray relative overflow-hidden">
 
 <div class="max-w-7xl mx-auto px-6 md:px-10">
 
-    <!-- En-tête principal -->
+    
     <div class="mb-14">
 
 
@@ -2752,9 +2748,6 @@
     </div>
 
 
-    <!-- ========================================================= -->
-    <!-- BLOC 1 : POLITIQUE DE COMMANDE -->
-    <!-- ========================================================= -->
 <section id="politique_achat">
     <div id="order-policy"
          class="mb-10 bg-ft-dark border border-ft-gray p-6 md:p-10 relative overflow-hidden">
@@ -2777,10 +2770,10 @@
                 </div>
             </div>
 
-            <!-- Étapes -->
+            
             <div class="space-y-6 mt-8">
 
-                <!-- Étape I -->
+            
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
                                 flex items-center justify-center">
@@ -2800,7 +2793,7 @@
                 </div>
 
 
-                <!-- Étape II -->
+                
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
                                 flex items-center justify-center">
@@ -2821,7 +2814,7 @@
                 </div>
 
 
-                <!-- Étape III -->
+                
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
                                 flex items-center justify-center">
@@ -2843,8 +2836,6 @@
                     </div>
                 </div>
 
-
-                <!-- Étape IV -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
                                 flex items-center justify-center">
@@ -2864,8 +2855,6 @@
                     </div>
                 </div>
 
-
-                <!-- Étape V -->
                 <div class="flex gap-4">
                     <div class="flex-shrink-0 w-9 h-9 rounded-full border border-ft-red
                                 flex items-center justify-center">
@@ -2890,7 +2879,6 @@
             </div>
 
 
-            <!-- Note -->
             <div class="mt-10 p-4 border border-ft-gray bg-ft-black/50">
                 <p class="font-sans text-xs md:text-sm text-ft-white/50 leading-relaxed">
                     <span class="text-ft-red font-semibold">Important :</span>
@@ -2902,12 +2890,9 @@
 
         </div>
     </div>
-</section>
+</section>-->
 
-    <section id="reclamations">
-    <!-- ========================================================= -->
-    <!-- BLOC 2 : RÉCLAMATIONS -->
-    <!-- ========================================================= -->
+  <!--<section id="reclamations">
 
     <div id="claims"
          class="bg-ft-dark border border-ft-gray p-6 md:p-10 relative overflow-hidden">
@@ -2930,8 +2915,6 @@
                 </div>
             </div>
 
-
-            <!-- Introduction -->
             <div class="mt-8 mb-6">
                 <p class="font-sans text-sm md:text-base text-ft-white/70 leading-relaxed">
                     Pour permettre à notre équipe de retrouver rapidement votre transaction,
@@ -2939,11 +2922,9 @@
                 </p>
             </div>
 
-
-            <!-- Informations à envoyer -->
             <div class="space-y-5">
 
-                <!-- Information I -->
+    
                 <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
                     <div class="flex-shrink-0 w-9 h-9 border border-ft-red
                                 flex items-center justify-center">
@@ -2963,7 +2944,6 @@
                 </div>
 
 
-                <!-- Information II -->
                 <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
                     <div class="flex-shrink-0 w-9 h-9 border border-ft-red
                                 flex items-center justify-center">
@@ -2982,8 +2962,6 @@
                     </div>
                 </div>
 
-
-                <!-- Information III -->
                 <div class="flex gap-4 p-4 border border-ft-gray bg-ft-black/40">
                     <div class="flex-shrink-0 w-9 h-9 border border-ft-red
                                 flex items-center justify-center">
@@ -3003,8 +2981,6 @@
 
             </div>
 
-
-            <!-- Adresse e-mail -->
             <div class="mt-8 p-5 border border-ft-red/40 bg-ft-black/60">
 
                 <p class="font-sans text-xs tracking-widest text-ft-white/40 mb-2">
@@ -3028,8 +3004,6 @@
 
             </div>
 
-
-            <!-- Délais -->
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <div class="p-5 border border-ft-gray bg-ft-black/40">
@@ -3058,8 +3032,6 @@
 
             </div>
 
-
-            <!-- Rappel final -->
             <div class="mt-8 flex gap-3 items-start">
                 <span class="text-ft-red text-lg">!</span>
 
@@ -3076,15 +3048,11 @@
 </div>
 </section>
 
-</section>
+</section>-->
 
 
 <!-- Section 9 - Footer -->
 <footer class="bg-ft-black border-t-2 border-ft-white pt-20 pb-10 relative overflow-hidden">
-    <!-- Big background text -->
-    <div class="absolute -bottom-20 -left-10 font-heading text-[15vw] font-bold text-white/[0.02] tracking-tighter leading-none whitespace-nowrap pointer-events-none select-none">
-        FULLTECH
-    </div>
 
     <div class="container mx-auto px-4 md:px-8 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -3103,10 +3071,11 @@
             <div>
                 <h4 class="font-heading uppercase tracking-widest text-white mb-6 text-sm">Liens Utiles</h4>
                 <ul class="flex flex-col gap-3 font-sans text-sm text-ft-white/60">
+                    <li><a href="#about" class="hover:text-ft-red transition-colors">FullTechCongo</a></li>
                     <li><a href="#catalog" class="hover:text-ft-red transition-colors">Catalogue complet</a></li>
                     <li><a href="#distributors" class="hover:text-ft-red transition-colors">Devenir Distributeur</a></li>
-                    <li><a href="#reclamations" class="hover:text-ft-red transition-colors">Réclamations</a></li>
-                    <li><a href="#politique_achat" class="hover:text-ft-red transition-colors">Politique de commande</a></li>
+                  <!--  <li><a href="#reclamations" class="hover:text-ft-red transition-colors">Réclamations</a></li>
+                    <li><a href="#politique_achat" class="hover:text-ft-red transition-colors">Politique de commande</a></li>-->
                 </ul>
             </div>
 
@@ -3123,10 +3092,10 @@
                 <h4 class="font-heading uppercase tracking-widest text-white mb-6 text-sm">Réseaux</h4>
                 <!-- Social Icons Row - Hover Scale -->
                 <div class="flex items-center gap-4">
+                    <!-- TikTok SVG 
                     <a href="#" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
-                        <!-- TikTok SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                    </a>
+                    </a>-->
                     <a href="https://www.instagram.com/fulltechcongo?stkn=NTZqY3lzZzcxcmlw&utm_source=qr" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
                         <!-- Instagram SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -3135,10 +3104,11 @@
                         <!-- Facebook SVG -->
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
                     </a>
+                    <!-- X/Twitter SVG 
                     <a href="#" class="w-10 h-10 bg-ft-dark border border-ft-gray flex items-center justify-center text-white hover:bg-ft-red hover:border-ft-red hover:scale-110 transition-all duration-300 group">
-                        <!-- X/Twitter SVG -->
+                        
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
+                    </a>-->
                 </div>
             </div>
         </div>
