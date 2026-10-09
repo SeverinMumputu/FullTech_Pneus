@@ -1,13 +1,13 @@
     // --- Configuration & Données Mockées ---
-    const TAUX_CONVERSION = 2800; // 1 USD = 2800 CDF
+    const TAUX_CONVERSION = 2250; // 1 USD = 2800 CDF
     let cart = []; // { product, quantity }
     
     // Base de données des produits
   const productsDB = [
     {
-        id: 'p1', ref: 'FT-R-1207017', name: 'Chambre à air Turbo', category: 'durable', 
+        id: 'p1', ref: 'FT-R-1207017', name: 'Chambre à air FT Fulloption', category: 'durable', 
         width: 300, ratio: 17, rim: 17, type: 'Tubeless', position: 'Arrière',
-        index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 65,
+        index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 4,
         desc: 'Conçu pour la durabilité sur asphalte. Bande de roulement optimisée pour l\'évacuation d\'eau, garantissant une sécurité maximale même pendant la saison des pluies.',
         img_bg: 'chambre_air_1.jpeg',
         img_iso: 'chambre_air_2.jpeg',
@@ -20,9 +20,9 @@
     },
 
     {
-        id: 'p2', ref: 'FT-A-909021', name: 'Pneu Cross', category: 'avant, tout-terrain', 
+        id: 'p2', ref: 'FT-A-909021', name: 'Pneu FT Tout terrain pro', category: 'avant, tout-terrain', 
         width: 300, ratio: 17, rim: 17, type: 'Tube Type', position: 'Avant',
-        index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 55,
+        index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 23,
         desc: 'Crampons espacés pour un débourrage parfait de la boue. Carcasse ultra-rigide pour résister aux chocs sur les pistes non aménagées du pays.',
         img_bg: 'pneu_cross.jpeg',
         img_iso: 'pneu_cross_2.jpeg',
