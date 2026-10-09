@@ -8,7 +8,7 @@
         id: 'p1', ref: 'FT-R-1207017', name: 'Chambre à air FT Fulloption', category: 'durable', 
         width: 300, ratio: 17, rim: 17, type: 'Tubeless', position: 'Arrière',
         index: '58W', usage: 'Route/Urbain', warranty: '6 mois', price_usd: 4,
-        desc: 'Conçu pour la durabilité sur asphalte. Bande de roulement optimisée pour l\'évacuation d\'eau, garantissant une sécurité maximale même pendant la saison des pluies.',
+        desc: 'Conçues pour accompagner vos déplacements au quotidien, les chambres à air FulltechCongo allient résistance, fiabilité et praticité. Elles contribuent à maintenir une bonne pression des pneus et à assurer une conduite plus sereine, sur différents types de routes et de terrains.\nQue ce soit pour vos déplacements quotidiens ou vos activités professionnelles, faites confiance à FulltechCongo pour vous accompagner kilomètre après kilomètre.\n FulltechCongo, conçu pour avancer, quel que soit le terrain.',
         img_bg: 'chambre_air_1.jpeg',
         img_iso: 'chambre_air_2.jpeg',
 
@@ -23,7 +23,7 @@
         id: 'p2', ref: 'FT-A-909021', name: 'Pneu FT Tout terrain pro', category: 'avant, tout-terrain', 
         width: 300, ratio: 17, rim: 17, type: 'Tube Type', position: 'Avant',
         index: '54R', usage: 'Piste/Tout-Terrain', warranty: '3 mois', price_usd: 23,
-        desc: 'Crampons espacés pour un débourrage parfait de la boue. Carcasse ultra-rigide pour résister aux chocs sur les pistes non aménagées du pays.',
+        desc: 'Les pneus FulltechCongo sont pensés pour accompagner vos déplacements et relever les défis de la route au quotidien. Avec un design adapté aux exigences du terrain, ils allient robustesse, adhérence et fiabilité pour vous accompagner dans vos activités, même dans des conditions de conduite exigeantes.\nEn ville comme sur les routes plus difficiles, FulltechCongo vous accompagne kilomètre après kilomètre.\nFulltechCongo, la confiance sur toutes vos routes.',
         img_bg: 'pneu_cross.jpeg',
         img_iso: 'pneu_cross_2.jpeg',
 
