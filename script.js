@@ -411,14 +411,20 @@ const heroPagination = document.getElementById('hero-pagination');
 const heroSlides = [
     {
         type: 'video',
-        src: 'video.mp4',
+        src: 'video_fulltech.mp4',
         alt: 'FullTech Congo - Pneus moto'
     },
+     {
+        type: 'video',
+        src: 'video_fulltech.mp4',
+        alt: 'FullTech Congo - Pneus moto'
+    }
+    /*
     {
         type: 'image',
         src: 'image_6.jpeg',
         alt: 'FullTech Congo - Performance et adhérence'
-    }
+    }*/
 ];
 
 let currentHeroSlide = 0;

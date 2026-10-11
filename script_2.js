@@ -155,3 +155,31 @@
         goToSlide(0);
         startAutoplay();
     })();
+
+    //Vidéo section About
+
+(() => {
+    const section = document.getElementById('about');
+    const video = document.getElementById('about-presentation-video');
+
+    if (!section || !video) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                video.play().catch((error) => {
+                    console.warn(
+                        'La lecture automatique de la vidéo a échoué :',
+                        error
+                    );
+                });
+            } else {
+                video.pause();
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    observer.observe(section);
+})();
